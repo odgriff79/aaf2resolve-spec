@@ -1,0 +1,13 @@
+[project]
+name = "aaf-to-resolve-fcpxml"
+version = "0.1.0"
+description = "CLI tools to convert AAF to FCPXML 1.13 for Resolve, via canonical JSON and SQLite"
+authors = [{ name = "odgriff79" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pyaaf2"
+]
+
+[tool.setuptools]
+packages = ["src", "src.tools"]
