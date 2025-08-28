@@ -18,3 +18,12 @@ This project provides a robust, JSON-first pipeline to convert Avid AAF sequence
 - `/tests`: Holds sample AAFs and expected outputs for validation.
 
 See `/docs/project_brief.md` for the full design brief.
+
+## Design docs
+
+- [Canonical JSON Data Model](docs/data_model_json.md)
+- [FCPXML 1.13 Rules](docs/fcpxml_rules.md)
+- [SQLite Schema](docs/db_schema.sql)
+- **In-Memory Canonical Pipeline** → [`docs/in_memory_pipeline.md`](docs/in_memory_pipeline.md)
+- **Inspector Rule Pack (Traversal, UMID, Effects)** → [`docs/inspector_rule_pack.md`](docs/inspector_rule_pack.md)
+- **Backlog / Task Board** → [`docs/backlog.md`](docs/backlog.md)
