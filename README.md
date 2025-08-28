@@ -1,94 +1,73 @@
-AAF to Resolve FCPXML Converter
-🎯 Purpose
+# aaf2resolve-spec
 
-This project defines a spec-first, JSON-first pipeline for converting Avid AAF sequences into FCPXML 1.13 for DaVinci Resolve.
-It avoids proprietary APIs and ensures lossless, deterministic extraction of AAF semantics, metadata, and effects.
+**Spec-first, JSON-first pipeline for converting Avid AAF → Resolve FCPXML 1.13**
 
-🔑 Core Workflow
+This repository defines a deterministic, lossless approach to timeline interchange.  
+It is **not just code**, but a **knowledge base + specification** to guide robust, professional-grade implementations.
 
-Parse AAF (via pyaaf2)
+---
 
-Traverse the top-level CompositionMob (picture track only).
+## 🎯 Purpose
+- Convert **Avid AAF sequences** into **DaVinci Resolve FCPXML 1.13**
+- Avoid proprietary APIs by using **open-source pyaaf2**
+- Preserve **all metadata and effects** with authoritative fidelity
 
-Yield events for SourceClips and OperationGroups.
+---
 
-Resolve authoritative source metadata via UMID chain.
+## 📚 Key Principles
+- **Canonical JSON** (`/docs/data_model_json.md`) is the **single source of truth**
+- **Authoritative-first UMID resolution**:  
+  `SourceClip → MasterMob → SourceMob → ImportDescriptor → Locator(URLString)`
+- **Path fidelity**: preserve UNC, percent-encoding, drive letters exactly (no normalization)
+- **No filtering**: capture *all* OperationGroups, including filler effects
+- **Spec-first discipline**: `/docs` defines contracts, `/src` follows them strictly
 
-Canonical JSON Schema
+---
 
-All extracted data is written into the canonical JSON structure (docs/data_model_json.md).
+## 🧭 Roadmap (Hybrid Strategy)
 
-This JSON is the single source of truth for all writers.
+We adopt a **synthesis of three credible pitches**:
 
-Optional SQLite Layer
+- **ChatGPT → Execution Discipline**  
+  30/60/90 milestone roadmap (Golden AAFs, schema validator, MVP parser, FCPXML writer)
 
-Normalized relational schema (docs/db_schema.sql) for analysis, queries, and validation.
+- **Claude → Quality & Trust**  
+  Validation-first approach, contract-driven tests, extensive logging, professional rigor
 
-Export FCPXML 1.13
+- **GitHub Copilot → Extensible Architecture**  
+  Plugin/rule-pack design, effect parameter explorer, interactive inspector, long-term maintainability
 
-Writers consume the canonical JSON only.
+**Progression:**  
+1. *Get it working* (ChatGPT structure)  
+2. *Get it right* (Claude validation)  
+3. *Get it sustainable* (Copilot modularity)
 
-Output follows Resolve quirks (docs/fcpxml_rules.md).
+---
 
-📖 Project Principles
+## 📂 Repository Layout
+- `/docs` — Specifications & rules (the “Brain”)  
+- `/src` — Implementation scaffolding (the “Hands”)  
+- `/tests` — Golden AAFs and validation harnesses (future)
 
-Schema-driven: Canonical JSON defines the contract; all code must follow it.
+Key docs:
+- [`project_brief.md`](docs/project_brief.md) — Goals, context
+- [`data_model_json.md`](docs/data_model_json.md) — Canonical JSON schema
+- [`inspector_rule_pack.md`](docs/inspector_rule_pack.md) — Traversal, UMID, effect rules
+- [`fcpxml_rules.md`](docs/fcpxml_rules.md) — Resolve FCPXML quirks
+- [`legacy_compressed_json_rules.md`](docs/legacy_compressed_json_rules.md) — Traceability from past workflows
+- [`pitches/synthesis.md`](docs/pitches/synthesis.md) — Agreed hybrid strategy
 
-Authoritative-first resolution:
+---
 
-Source path, TapeID, DiskLabel, timecode/rate/drop are always taken from the end of the UMID chain:
-SourceClip → MasterMob → SourceMob → ImportDescriptor → Locator(URLString)
+## ✅ Next Steps
+- Create Golden AAF test suite  
+- Implement schema validator & contract tests  
+- Build minimal parser with max logging  
+- Refactor into plugin/rule-pack architecture  
+- Add FCPXML writer + round-trip validation  
 
-Comp-level mirrors are used only if the chain is broken.
+---
 
-Legacy compressed JSON looked self-contained because the Inspector exporter had already inlined chain-end values.
-
-Lossless capture: All timeline semantics, AVX/AFX/DVE effects, parameters, keyframes, and external refs are preserved.
-
-Path fidelity: UNC paths, percent-encoding, drive letters are preserved exactly. No normalization.
-
-No filtering: All OperationGroups are captured, even filler effects.
-
-Required fields: Always present in JSON. Missing values = null.
-
-📚 Documentation Map
-
-This repository is primarily a knowledge base.
-All rules and semantics are in /docs. The /src code scaffolding must follow them.
-
-Project Brief → goals, pain points, context (docs/project_brief.md)
-
-Canonical Data Model → JSON schema (single source of truth) (docs/data_model_json.md)
-
-Database Schema → optional relational model (docs/db_schema.sql)
-
-FCPXML Rules → Resolve 1.13 quirks & compliance (docs/fcpxml_rules.md)
-
-In-Memory Pipeline → architecture for direct parsing with pyaaf2 (docs/in_memory_pipeline.md)
-
-Inspector Rule Pack → traversal, UMID resolution, effect extraction (docs/inspector_rule_pack.md)
-
-Legacy Compressed JSON Rules → flattened export method (kept for traceability) (docs/legacy_compressed_json_rules.md)
-
-Backlog → open features & tasks (docs/backlog.md)
-
-💡 Key principle: Writers and downstream tools must always consume canonical JSON.
-The database and legacy compressed JSON paths are optional helpers, not dependencies.
-
-📦 Implementation Status
-
-/docs → fully populated specifications.
-
-/src → scaffolding for parser, writer, DB loader. Must follow docs.
-
-Tests and examples to follow.
-
-🔗 References & Prerequisites
-
-AAF SDK / pyaaf2 docs → pyaaf.readthedocs.io
-
-AAF Inspector (lawson-tanner) → github.com/lawson-tanner/AAFInspector
-
-FCPXML specification → fcp.cafe/developers/fcpxml
-
-✅ This README ensures any new contributor (Claude, Copilot, or human) has the full context up front, including the authoritative-first rule and why legacy JSON looked different.
+💡 **Reminder:** This is a **spec-first project**.  
+Documentation defines the rules. Implementations must follow them exactly.  
+The canonical JSON is the only interface between parsing and writing.  
