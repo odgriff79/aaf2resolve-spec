@@ -1,177 +1,127 @@
-Legacy Rules Derived from Compressed JSON (Top-Level CompositionMob)
+Legacy Compressed JSON Rules
 
-⚠️ Important:
-This document records one proven method (via compressed JSON dump of the top-level CompositionMob, produced by Enhanced AAF Inspector → SuperEDL).
-It shows traversal & extraction rules that worked in practice and must be preserved semantically.
+These rules document how the Enhanced AAF Inspector + SuperEDL workflow operated when exporting compressed JSON from the top-level CompositionMob.
 
-✅ However, this is not the only acceptable method.
-Any approach that can:
-
-Explore a top-level CompositionMob directly in an AAF,
-
-Derive equivalent events, source metadata, and effects, and
-
-Produce the canonical JSON structure defined in docs/data_model_json.md
-
-…is equally valid. This doc exists for traceability and proven semantics, not to lock us into one path.
-
-Purpose
-
-Capture the exact traversal & extraction rules we proved using the compressed JSON export of the top-level CompositionMob, so they can be ported 1:1 into the new in-memory pyaaf2 parser.
-
-These rules originated from the SuperEDL/Inspector tooling and its CSV/JSON pipeline, not from direct AAF access. Function names below reference that implementation for traceability (recursive_search, find_timeline_effects, extract_effect_details, decode_filepath, etc.).
+They exist for traceability: to show what worked in the legacy flow and to validate against the new in-memory pyaaf2 parser.
 
 Origin & Scope
 
-Origin: Enhanced AAF Inspector → export compressed JSON of the top-level CompositionMob → analyze & reduce → SuperEDL + FX CSV.
+Origin: The Enhanced AAF Inspector exported a compressed JSON dump of the top-level CompositionMob.
 
-Goal now: preserve these rules verbatim but bind them directly to pyaaf2 (no intermediate JSON required), producing the canonical in-memory model defined in docs/data_model_json.md
-.
+That export already inlined values normally found further down the UMID chain (e.g., ImportDescriptor paths, SourceMob timecodes).
 
-Scope: Timeline traversal, UMID resolution, metadata precedence, effect extraction, and event packaging.
+The SuperEDL/CSV logic ran against this compressed tree, applying heuristics for effects, keyframes, and still paths.
 
-Timeline Selection (Top-Level CompositionMob)
+⚠️ Important: In compressed JSON, the values look comp-local, but that’s only because the exporter resolved and flattened the UMID chain before output.
 
-Choose the CompositionMob that contains the picture Sequence; when multiple exist, prefer a name ending *.Exported.01, else the first valid picture sequence.
+Event Model
 
-Derive timeline edit rate (fps) from the slot’s EditRate; detect DF/NDF from the nearest Timecode.drop.
+Traverse the picture Sequence of the CompositionMob.
 
-Default start_tc_frames = 3600 (01:00:00:00) if no better value is available.
+Yield an event for each:
 
-Traversal (Sequence → Components)
+SourceClip → becomes a clip event.
 
-Walk Sequence.Components in order, accumulating timeline_offset in frames at the timeline rate.
+OperationGroup on filler → becomes an effect event.
 
-Skip audio/data tracks; operate on picture only.
+Record:
 
-Yield an Event for:
+timeline_start_frames, length_frames.
 
-SourceClip (on-spine media).
+source object for clips, or null for filler effects.
 
-OperationGroup without nested SourceClip (effect on filler).
+effect object always present ("(none)" for clips).
 
-Resulting event fields:
+Source Resolution (flattened)
 
-timeline_start_frames, length_frames (both ints).
+The compressed JSON already exposed:
 
-For filler FX, source = null and an effect object is emitted.
+source.path (resolved ImportDescriptor → Locator URL).
 
-For plain clips, effect.name = "(none)".
+tape_id (UserComments/MobAttributeList).
 
-Source Resolution (UMID Chain → Path/Metadata)
+disk_label (_IMPORTDISKLABEL).
 
-Build a mob map for fast ID→mob lookups (create_mob_map).
+src_tc_start_frames (SourceMob.Timecode).
 
-For each timeline SourceClip, follow MasterMob → SourceMob → ImportDescriptor → Locator(URLString) to find the original file path.
+src_rate_fps (slot rate).
 
-Keep a umid_chain (nearest→furthest).
+src_drop (drop-frame flag).
 
-Metadata precedence:
+No UMID traversal was needed in the JSON, because the exporter had inlined this data under the comp.
 
-TapeID: UserComments first, else MobAttributeList.
+Effects
 
-DiskLabel: _IMPORTSETTING → TaggedValueAttributeList → _IMPORTDISKLABEL.
+All OperationGroups were captured (no filtering).
 
-Source TC: use SourceMob Timecode.start @ source rate, plus IsDropFrame.
+Names from _EFFECT_PLUGIN_NAME, _EFFECT_PLUGIN_CLASS, or op label.
 
-Do not normalize paths (keep UNC, percent-encoding, drive letters as-is).
+Parameters captured from Value fields.
 
-Effect Extraction (OperationGroup: AVX/AFX/DVE — No Filtering)
+Keyframes captured from PointList → ControlPoint (Time/Value).
 
-Naming: prefer _EFFECT_PLUGIN_NAME; fall back to _EFFECT_PLUGIN_CLASS; else sanitize operation label.
+Pan & Zoom stills were detected by heuristics:
 
-Static parameters: capture any parameter with a direct Value.
+UTF-16LE byte arrays, stripped nulls.
 
-Animated parameters: capture all keyframes via PointList → ControlPoint(Time/Value) into arrays of { "t": seconds, "v": number|string }.
+Checked extensions (.jpg, .png, .tif, etc.).
 
-External references: collect file-like values from parameters (strings or binary blobs that decode to paths). Tag as image|matte|unknown.
+External refs recorded as { "kind": "image|matte|unknown", "path": "..." }.
 
-Special: Pan & Zoom still paths
+Event Enrichment (heuristics used in CSV)
 
-Handle UTF-16LE byte arrays from AVX pickers (decode_filepath).
+Pan & Zoom on clip: replaced path with still image path.
 
-Strip nulls, preserve drive letters/UNC.
+Filler FX: placeholder PNGs used in reports.
 
-Validate extensions (.jpg .png .tif …).
+Original source length sometimes read from descriptor Length.
 
-Only record the string if plausible; do not rewrite/normalize.
+These enrichments were reporting conveniences, not canonical data.
 
-Event Enrichment Heuristics (Optional)
+Limitations of the Compressed JSON Approach
 
-Effects coinciding with a clip and resembling Pan & Zoom were treated as “override” rows with the still path surfaced.
+Depended on the exporter’s flattening logic (key names like "SourceClip", "Parameters", etc.).
 
-Generic filler FX got placeholder names/paths so they remained visible in reports.
+If the exporter changed, parsing could break.
 
-A best-effort original source length was probed from the MasterMob’s EssenceDescriptor.Length.
+Some AAF semantics were lost or simplified.
 
-➡️ In the canonical JSON, we keep only truthful, parseable fields, and avoid synthetic placeholders unless explicitly marked.
+Heuristics (e.g., UTF-16LE decode) worked for discovery but were not guaranteed across all AVX packages.
 
-Known Constraints of the Compressed-JSON Approach
+Porting to In-Memory Parser
 
-Depended on the exporter’s structure (node names like "SourceClip", "Parameters"). A change in exporter could break parsing.
+Semantic rules stay the same:
 
-Some AAF semantics (complex mob linkages, parameter typing) were flattened, requiring heuristics (e.g., UTF-16LE decode).
+Event definition (SourceClip vs OperationGroup-on-filler).
 
-Good for discovery, but not guaranteed across all AVX packages.
+Metadata precedence (TapeID, DiskLabel).
 
-Porting Rules to In-Memory pyaaf2
+Effect extraction (name, params, keyframes, refs).
 
-Stays identical (semantic rules):
+Path fidelity (no normalization).
 
-What qualifies as an Event.
+Mechanics change:
 
-UMID chain resolution and metadata precedence (TapeID/DiskLabel).
+In direct AAF (pyaaf2), authoritative values must be read from the end of the UMID chain.
 
-Effect naming preference.
+Comp-level mirrors are only used as fallback if chain resolution fails.
 
-Static/animated parameter capture.
+Legacy JSON looked self-contained only because values were already inlined.
 
-External ref detection (including Pan&Zoom UTF-16LE decode).
-
-No path normalization.
-
-Canonical output shape (docs/data_model_json.md).
-
-Changes (mechanics only):
-
-Traverse pyaaf2 objects instead of JSON trees.
-
-Inspector hooks can test these functions live on AAFs.
-
-JSON export is now optional (diagnostics/CI only).
-
-Acceptance (Capturing the Rules)
-
-Events appear in the same order, with correct timeline_start_frames and length_frames.
-
-Source objects match legacy output for path, TapeID, DiskLabel, source TC/rate/drop.
-
-Effect objects include all static params, all keyframes, and any external refs (e.g. Pan&Zoom stills).
-
-All canonical keys exist; unknown values = null.
-
-Paths, UNC, percent-encoding are preserved.
-
-Function Parallels (Traceability Map)
-Legacy function (compressed JSON)	In-memory replacement
-find_main_sequence_mob_and_start_tc	select_top_sequence(aaf)
-recursive_search	walk_sequence_components(seq, fps)
-create_mob_map	build_mob_map(aaf)
-get_genuine_source_info + extract_metadata	resolve_sourceclip(sc, mob_map)
-find_timeline_effects + extract_effect_details	extract_operationgroup(op)
-decode_filepath / find_filepath	_coerce_value() + _decode_utf16le_best_effort()
 Why Keep This Doc
 
-Makes it explicit that our rules were battle-tested on compressed JSON of the top-level CompositionMob.
+It preserves the rules and heuristics that were proven to work on real productions.
 
-Ensures the in-memory system is a mechanical port of those semantics, not a reinvention.
+It prevents accidental “rule drift” when porting to in-memory AAF traversal.
 
-Prevents accidental “creative” reinterpretation by LLMs.
+It documents the difference between compressed JSON (flattened) and direct AAF parsing (chain traversal).
 
-How to Use This with Claude/Copilot
+Any approach that produces the same canonical JSON defined in docs/data_model_json.md is valid.
 
-Follow docs/legacy_compressed_json_rules.md for semantics.
-Follow docs/inspector_rule_pack.md for live traversal contracts.
-Emit the structure defined in docs/data_model_json.md.
+✅ With this doc, we explicitly state:
 
-✅ This merged version preserves all detail and makes clear that any working approach is valid as long as it reaches the same canonical structure.
+Legacy JSON was already chain-resolved.
+
+Direct AAF must resolve UMID chain explicitly.
+
+Both must yield the same canonical structure for downstream tools.
