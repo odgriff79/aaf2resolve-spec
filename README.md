@@ -27,3 +27,35 @@ See `/docs/project_brief.md` for the full design brief.
 - **In-Memory Canonical Pipeline** → [`docs/in_memory_pipeline.md`](docs/in_memory_pipeline.md)
 - **Inspector Rule Pack (Traversal, UMID, Effects)** → [`docs/inspector_rule_pack.md`](docs/inspector_rule_pack.md)
 - **Backlog / Task Board** → [`docs/backlog.md`](docs/backlog.md)
+
+📚 Documentation Map
+
+This repository is primarily a knowledge base for building reliable AAF → Resolve FCPXML pipelines.
+All rules and semantics are defined in /docs. The /src code is scaffolding that must follow these specifications.
+
+Project Brief
+ — goals, pain points, context
+
+Canonical Data Model
+ — single source of truth JSON schema
+
+Database Schema
+ — optional relational model for analysis
+
+FCPXML Rules
+ — Resolve 1.13 quirks & compliance rules
+
+In-Memory Pipeline
+ — architecture for direct parsing with pyaaf2
+
+Inspector Rule Pack
+ — traversal, UMID resolution, effect extraction
+
+Legacy Compressed JSON Rules
+ — proven method based on compressed JSON dumps of top-level CompositionMobs (kept for traceability; any approach that produces the same canonical structure is valid)
+
+Backlog
+ — future features and open tasks
+
+💡 Key principle: Writers and downstream tools must always consume the canonical JSON defined in data_model_json.md.
+The database and legacy compressed JSON paths are optional helpers, not required dependencies.
