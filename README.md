@@ -28,6 +28,34 @@ See `/docs/project_brief.md` for the full design brief.
 - **Inspector Rule Pack (Traversal, UMID, Effects)** → [`docs/inspector_rule_pack.md`](docs/inspector_rule_pack.md)
 - **Backlog / Task Board** → [`docs/backlog.md`](docs/backlog.md)
 
+📖 Prerequisites & References
+
+Anyone implementing or extending this project is expected to have full working knowledge of the following references:
+
+Avid AAF SDK
+The canonical reference for Avid’s Advanced Authoring Format (AAF).
+Understanding of CompositionMob, SourceMob, OperationGroup, Descriptor, and Locator structures is mandatory.
+
+pyaaf2 (Python binding for AAF2)
+Referred to in Python as aaf2.
+Documentation: https://pyaaf.readthedocs.io/en/latest/index.html
+
+Used in this project for in-memory traversal of AAF structures.
+
+AAFInspector (Lawson-Tanner repo)
+https://github.com/lawson-tanner/AAFInspector/tree/main
+
+Valuable for exploring and visualizing AAF internals. Many of our early rules were cross-checked against its dumps.
+
+FCPXML Developer Documentation
+https://fcp.cafe/developers/fcpxml/
+
+Defines the official FCPXML 1.13 spec and quirks relevant for DaVinci Resolve.
+
+⚠️ Note:
+All traversal, resolution, and effect extraction logic in this repo assumes deep familiarity with the above sources. This repository does not duplicate them — it builds rules, patterns, and canonical mappings on top of them.
+
+
 📚 Documentation Map
 
 This repository is primarily a knowledge base for building reliable AAF → Resolve FCPXML pipelines.
