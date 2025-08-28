@@ -1,6 +1,6 @@
 # [Tool/Model] Pitch
 Date: 2025-08-28
-Source: Conversation with [model name]
+Source: Conversation with copilot_ms
 
 ## Overview
 (then paste the full pitch text exactly as written)
