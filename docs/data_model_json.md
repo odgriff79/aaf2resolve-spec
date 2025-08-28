@@ -1,14 +1,16 @@
-Canonical JSON Data Model
+Canonical  Data Model
 
 This document defines the single source of truth JSON emitted by the AAF parser and consumed by the FCPXML writer (and optionally loaded into SQLite). It is schema-first, human-readable, git-diffable, and designed for lossless capture of AAF timeline semantics.
 
 Golden rule: Writers read JSON, not the DB. The DB is optional for querying/analytics.
 
 Top-level structure
+```json
 {
   "project": { ... },
   "timeline": { ... }
 }
+```
 
 Types used
 
@@ -63,7 +65,7 @@ Field	Type	Req	Description
 name	string	✓	Plugin/effect label (from _EFFECT_PLUGIN_NAME/_CLASS if present).
 on_filler	bool	✓	true if the effect sits on filler (no clip input).
 parameters	object	✓	Map of static parameter values (numbers/strings).
-keyframes	object	✓	Map: param → array of objects `{ "t": <float seconds>, "v": <number
+keyframes	object	✓	Map: param → array of objects `{ "t": <float seconds>, "v": <number|string> }`
 external_refs	array<ExternalRef>	✓	File references discovered in parameters (stills, mattes, etc.).
 
 ExternalRef (object)
@@ -107,6 +109,7 @@ Animated via PointList → ControlPoint (Time/Value).
 Convert rationals to floats where possible. If not possible, keep textual form in parameters or keyframes[*].v.
 
 Minimal valid example
+```json
 {
   "project": { "name": "MyTimeline", "edit_rate_fps": 25.0, "tc_format": "NDF" },
   "timeline": {
@@ -192,17 +195,17 @@ Rich example (clip + effect on filler)
     ]
   }
 }
+```
+ND option (streaming)
 
-NDJSON option (streaming)
-
-Instead of one large JSON, you may stream one event per line (plus a header record). Example:
-
+Instead of one large , you may stream one event per line (plus a header record). Example:
+```json
 {"project":{"name":"DocSeries_EP1","edit_rate_fps":25.0,"tc_format":"NDF"},"timeline":{"name":"DocSeries_EP1.Exported.01","start_tc_frames":3600}}
 {"event":{"id":"ev_0001","...":"..."}}
 {"event":{"id":"ev_0002","...":"..."}}
+```
 
-
-When using NDJSON, ensure consumers reconstruct the header before reading events.
+When using ND, ensure consumers reconstruct the header before reading events.
 
 Validation checklist
 
