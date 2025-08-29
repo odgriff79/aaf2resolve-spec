@@ -1,0 +1,13 @@
+# Normalize text files to LF in the repo (Windows converts on checkout)
+*.py     text eol=lf
+*.json   text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.md     text eol=lf
+*.toml   text eol=lf
+*.sql    text eol=lf
+
+# Keep binaries untouched
+*.png binary
+*.jpg binary
+*.pdf binary
