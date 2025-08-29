@@ -1,90 +1,157 @@
 # Collaboration Protocol: Multi-AI Coding & Execution Workflow
 
-This document defines how multiple AI systems (Claude, GitHub Copilot, ChatGPT) will collaborate on the **aaf2resolve-spec** project.
-The intent is to maximize quality, redundancy, and validation by combining their different strengths.
+This protocol defines how Claude (CL), ChatGPT (GPT), and GitHub Copilot (CO) collaborate on **aaf2resolve-spec** with high uptime, deterministic handoffs, and auditability.
+
+## Core principles
+- **/docs are gospel.** Code must implement the specs; specs don’t adapt to code.
+- **Canonical JSON is the only contract** between parsing and writing.
+- **Baton-pass continuity**: CL → GPT → CO, with automatic fallbacks and explicit handoff notes.
+- **Everything traceable**: file headers, handoff YAML, and PR descriptions reference spec sections.
 
 ---
 
-## 🎭 Roles
+## Roles
 
-### Claude (Spec Guardian + Coder)
-- Confirms exact rules from `/docs` before implementation.
-- Produces **end-to-end code drafts** that are clear, verbose, and aligned to the spec.
-- Always includes **logging, intermediate state dumps, and validation hooks**.
-- Acts as the **quality bar setter**: correctness and traceability first.
+### Claude (CL) — Spec Guardian + Coder
+- Confirms rules from `/docs` before writing code.
+- Produces **verbose, end-to-end drafts** with logging and intermediate state dumps.
+- Includes **handoff notes** and **resume markers** in drafts.
+- Treats correctness and traceability as the quality bar.
 
-### GitHub Copilot (Architect & Refiner)
-- Produces **diff-style patches** for integration into `/src`.
-- Focuses on **modularity, plugin/rule-pack architecture, and long-term maintainability**.
-- Refactors Claude’s verbose drafts into sustainable, reusable components.
-- Ensures interfaces remain clean and aligned with the spec.
+### ChatGPT (GPT) — Executor + Verifier + Patcher
+- Runs Python (incl. `aaf2`/`pyaaf2`) in sandbox or on the user’s PC when asked.
+- Executes CL/CO outputs, validates against schema, and compares to Golden JSONs.
+- Produces **reports, diffs, and targeted patches**.
+- Continues CL’s work when sessions expire.
 
-### ChatGPT (Executor + Patcher)
-- Runs **pyaaf2** and Python code in sandbox or on the user’s PC.
-- Executes both Claude and Copilot’s implementations, comparing outputs.
-- Validates canonical JSON against `/docs/data_model_json.md`.
-- Provides **logs, diffs vs Golden JSONs, and validation reports**.
-- Suggests **patches or simplifications** when code fails tests.
+### GitHub Copilot (CO) — Architect & Refiner
+- Converts drafts into **modular, maintainable components**.
+- Implements **plugin/rule-pack architecture** post-MVP.
+- Submits **PRs with atomic diffs**, spec references, and rationales.
+- Keeps interfaces clean and future-proof.
 
-### User (Integrator)
-- Opens GitHub issues describing tasks, with acceptance criteria referencing `/docs`.
-- Decides when to request input from one or more AIs.
-- Curates outputs, selects the best combination, and commits validated changes.
-- Guards the rule: **“/docs are gospel; code must follow docs, never redefine them.”**
+### User — Integrator & Spec Guardian
+- Opens issues with acceptance criteria referencing `/docs`.
+- Chooses which agent to start with, approves merges.
+- Ensures spec ambiguities found by code are resolved in `/docs`.
 
 ---
 
-## 🔄 Workflow
+## Baton-Pass & Fallback Rules
 
-### 1. Spec/Issue Creation (User)
-- Open a GitHub issue with clear acceptance criteria.
-- Example: *“Implement authoritative UMID chain traversal for SourceClips per inspector_rule_pack.md §3.1–3.5.”*
+**Default order:** **CL → GPT → CO**
 
-### 2. Spec/QA Pass (Claude)
-- Reviews relevant `/docs`.
-- Restates the rules in plain language for traceability.
-- Produces an **initial full implementation draft**, prioritizing clarity and logging.
+**Auto-pass triggers**
+- **CL session timeout / token limit** → **GPT continues** from last resume marker.
+- **CL unavailable > 5 hours** → **GPT continues**, mark handoff “CL-unavailable fallback”.
+- **GPT blocked by tool limits or needs refactor** → **CO** refactors or modularizes; hands back to GPT for execution.
+- **CO waiting on draft** → **CL** produces draft; if CL unavailable, **GPT** provides minimal draft and flags “CO-first refactor”.
 
-### 3. Architectural Pass (Copilot)
-- Refactors or rewrites Claude’s draft into **modular components**.
-- Provides diff-style patches scoped to `/src`.
-- Ensures future extensibility via **rule-pack/plugin architecture**.
-
-### 4. Execution & Debugging (ChatGPT)
-- Runs both implementations against test AAFs.
-- Validates output JSON against the canonical schema.
-- Diffs against **Golden JSONs** when available.
-- Reports errors, logs, and proposes targeted patches.
-
-### 5. Integration (User)
-- Reviews outputs from Claude, Copilot, and ChatGPT.
-- Selects the best blend (e.g., Claude’s logging + Copilot’s modularity + ChatGPT’s patch).
-- Commits only **validated and schema-compliant** code.
-- Updates `/docs` if ambiguities or gaps are revealed.
+**Continuity guarantees**
+- Every artifact has a header block (see below) and an entry in `/handoff/handoff.yml`.
+- Each draft includes **“GPT Resume Here”** comments at safe breakpoints.
+- Each baton pass updates `handoff.yml` with `owner`, `status`, `next_action`, and `artifacts`.
 
 ---
 
-## ⚖️ Why This Works
+## Handoff YAML (store at `/handoff/handoff.yml`)
 
-- **Claude** = Quality and Spec Fidelity (get it *right*).
-- **Copilot** = Modularity and Extensibility (keep it *maintainable*).
-- **ChatGPT** = Execution and Verification (prove it *works*).
-- **User** = Integrator and Spec Guardian (keep it *on-track*).
+```yaml
+owner: "CL"                  # CL | GPT | CO
+status: "in_progress"        # in_progress | needs_review | blocked | completed
+artifacts:
+  - path: "src/validate_canonical.py"
+    revision: "1.001"
+    last_editor: "CL"
+    handoff_notes: "Complete through reason code mapping. GPT should implement additional validations starting line 180."
+outputs_expected:
+  - "reports/validation/minimal_example.json"
+  - "reports/validation/failing_examples.json"
+acceptance_criteria:
+  - "Schema validates minimal example"
+  - "40+ reason codes implemented"
+next_action: "GPT: Execute validator on test cases, generate reports"
+budget:
+  token_daily_max: 100000
+  calls_daily_max: 1000
+  if_exceeded: "Gracefully halt, update handoff.yml, pass baton to next agent"
+Keep historical snapshots in /handoff/archive/.
 
-This redundancy ensures:
-- At least **two independent code proposals** per issue.
-- Automated execution and schema validation.
-- Incremental confidence: get it working → get it right → keep it sustainable.
+File Header Metadata (top of any generated/edited file)
+text
+Copy code
+# @created_by: CL | GPT | CO
+# @created_at: 2025-08-29T12:00:00Z
+# @revision: 1.001
+# @last_editor: CL | GPT | CO
+# @draft_kind: first_draft | edit | refactor | patch
+# @spec_compliance: ["inspector_rule_pack.md §1.1", "data_model_json.md §Event"]
+# @handoff_ready: true
+# @integration_points: ["validate_canonical_json()", "write_fcpxml()"]
+# @inputs: ["tests/samples/minimal_valid.json"]
+# @outputs: ["reports/validation/minimal_example.json"]
+# @ci_run: "<GITHUB_RUN_ID or SHA>"
+# @dependencies: ["jsonschema>=4.0"]
+# @reviewed_by: "owen"
+# @notes: "Resume at 'GPT Resume Here' marker if CL unavailable."
+CI “Must Pass” Gates
+Block merges if any fail:
 
----
+Canonical JSON schema validation (all samples).
 
-## 📌 Key Rules
-- `/docs` define truth. `/src` must follow, not improvise.
-- Writers **only consume canonical JSON** — never AAF or DB directly.
-- Path strings (UNC, percent-encoding, drive letters) must be preserved byte-for-byte.
-- All OperationGroups (effects) must be captured — **no filtering**.
-- All required JSON keys must exist — missing values = `null`, never omission.
+Golden tests (generated vs expected canonical JSON).
 
----
+Spec lint: files quote exact spec sections used (simple text check).
+
+Path fidelity tests: no normalization of UNC/percent-encoding/drive letters.
+
+Required keys present; unknowns = null (never omit required keys).
+
+Python lint/format: Black, Ruff.
+
+No writer reading AAF/DB directly (import safety).
+
+(Post-MVP) Plugin loading/integrity tests.
+
+Orchestration & Storage
+Start with GitHub Actions (no extra hosting cost).
+
+Use GitHub Secrets for API keys (rotate quarterly; least privilege).
+
+Put logs & outputs in:
+
+/logs/ for traversal/debug logs
+
+/reports/ for validator & diff reports
+
+/handoff/ for baton state
+
+Large AAF inputs live outside the repo; keep tiny goldens or pointers only.
+
+Repo Structure Additions
+bash
+Copy code
+/handoff/
+  handoff.yml
+  templates/
+  archive/
+/logs/
+/reports/
+/docs/design_notes/
+VS Code & Local Automation
+VS Code recommended for local dev.
+
+CL/GPT/CO will reference commands and paths that work in a VS Code terminal.
+
+If a PR needs local generation (e.g., pyaaf2 over a test AAF), GPT will provide a ready-to-run command block and expected outputs under /reports/.
+
+Incident & Budget Handling
+If any agent exceeds daily token/call budgets, they must:
+
+update /handoff/handoff.yml with status: blocked, reason, and consumption,
+
+set next_action to pass baton,
+
+stop gracefully without partial commits.
 
 End of protocol.
