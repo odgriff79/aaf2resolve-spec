@@ -1,5 +1,9 @@
 {
-  "project": { "name": "MyTimeline", "edit_rate_fps": 25.0, "tc_format": "NDF" },
+  "project": {
+    "name": "MyTimeline",
+    "edit_rate_fps": 25.0,
+    "tc_format": "NDF"
+  },
   "timeline": {
     "name": "MyTimeline.Exported.01",
     "start_tc_frames": 3600,
@@ -18,9 +22,7 @@
             "src_rate_fps": 25.0,
             "src_drop": false,
             "source_duration_frames": null
-          },
-          "derived": {},
-          "extensions": {}
+          }
         },
         "effect": {
           "name": "(none)",
@@ -29,7 +31,7 @@
           "keyframes": {},
           "external_refs": []
         }
-      ]
-    }
+      }
+    ]
   }
 }
