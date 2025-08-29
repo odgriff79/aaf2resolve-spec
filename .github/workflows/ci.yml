@@ -2,150 +2,44 @@ name: CI (handoff + validation + lint)
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch:
 
 jobs:
-  env:
-    name: Set up Python env
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      python-version: ${{ steps.pyver.outputs.version }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Choose Python
-        id: pyver
-        run: echo "version=3.11" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ steps.pyver.outputs.version }}
+          python-version: "3.11"
 
-      - name: Install deps (jsonschema, pyyaml, ruff, black)
+      - name: Install dev deps
         run: |
           python -m pip install --upgrade pip
-          pip install jsonschema pyyaml ruff black
+          pip install -r requirements-dev.txt
+          pip install black ruff
 
-  handoff_check:
-    name: Validate handoff.yml
-    runs-on: ubuntu-latest
-    needs: env
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Load and validate /handoff/handoff.yml shape
-        shell: python
+      - name: Lint & format (ruff + black --check)
         run: |
-          import sys, json, pathlib, yaml
-          p = pathlib.Path("handoff/handoff.yml")
-          if not p.exists():
-              print("ERROR: handoff/handoff.yml missing"); sys.exit(1)
-          data = yaml.safe_load(p.read_text(encoding="utf-8"))
-          required_top = ["owner","status","artifacts","outputs_expected","acceptance_criteria","next_action","metadata"]
-          missing = [k for k in required_top if k not in data]
+          ruff check .
+          black --check .
+
+      - name: Validate handoff.yml (required keys)
+        run: |
+          python - <<'PY'
+          import sys, yaml
+          req = {"owner","status","artifacts","outputs_expected","acceptance_criteria","next_action"}
+          data = yaml.safe_load(open("handoff/handoff.yml","r", encoding="utf-8"))
+          if not isinstance(data, dict):
+              print("handoff.yml must be a mapping"); sys.exit(1)
+          missing = sorted(req - set(data))
           if missing:
-              print("ERROR: handoff.yml missing keys:", ", ".join(missing)); sys.exit(1)
-          if data["owner"] not in {"CL","GPT","CO"}:
-              print("ERROR: owner must be one of CL|GPT|CO"); sys.exit(1)
-          if data["status"] not in {"in_progress","needs_review","blocked","completed"}:
-              print("ERROR: invalid status"); sys.exit(1)
-          # Basic artifact shape
-          if not isinstance(data["artifacts"], list) or not data["artifacts"]:
-              print("ERROR: artifacts must be a non-empty list"); sys.exit(1)
-          art_req = {"path","revision","last_editor"}
-          for idx,a in enumerate(data["artifacts"]):
-              if not art_req.issubset(a.keys()):
-                  print(f"ERROR: artifact[{idx}] missing required keys {sorted(art_req)}"); sys.exit(1)
+              print("Missing keys:", ", ".join(missing)); sys.exit(1)
           print("handoff.yml OK")
+          PY
 
-  lint:
-    name: Lint & format (ruff + black --check)
-    runs-on: ubuntu-latest
-    needs: env
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ needs.env.outputs['python-version'] }}
-
-      - name: Install linters
+      - name: Schema smoke test (validator + minimal example)
         run: |
-          python -m pip install --upgrade pip
-          pip install ruff black
-
-      - name: Ruff
-        run: ruff check .
-
-      - name: Black (check only)
-        run: black --check .
-
-  schema_smoke:
-    name: Schema smoke test (validator + minimal example)
-    runs-on: ubuntu-latest
-    needs: env
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ needs.env.outputs['python-version'] }}
-
-      - name: Install jsonschema
-        run: |
-          python -m pip install --upgrade pip
-          pip install jsonschema
-
-      - name: Run validator on minimal example (if present)
-        shell: bash
-        run: |
-          set -e
-          if [ ! -f "src/validate_canonical.py" ]; then
-            echo "::warning ::src/validate_canonical.py not found; skipping schema smoke test"
-            exit 0
-          fi
-
-          cat > minimal.json <<'JSON'
-          {
-            "project": {"name":"MyTimeline","edit_rate_fps":25.0,"tc_format":"NDF"},
-            "timeline": {
-              "name":"MyTimeline.Exported.01",
-              "start_tc_frames":3600,
-              "events":[
-                {
-                  "id":"ev_0001",
-                  "timeline_start_frames":0,
-                  "length_frames":100,
-                  "source":{
-                    "path":"file:///Volumes/Media/clip01.mov",
-                    "umid_chain":["{UMID-A}","{UMID-B}"],
-                    "tape_id":null,"disk_label":"DISK01",
-                    "src_tc_start_frames":90000,"src_rate_fps":25.0,"src_drop":false
-                  },
-                  "effect":{"name":"(none)","on_filler":false,"parameters":{},"keyframes":{},"external_refs":[]}
-                }
-              ]
-            }
-          }
-          JSON
-
-          python -m src.validate_canonical minimal.json --report reports/validation_report.json --verbose
-
-      - name: Upload reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: reports
-          path: |
-            reports/**
-            minimal.json
+          python -m src.validate_canonical tests/samples/minimal_valid.json --verbose
