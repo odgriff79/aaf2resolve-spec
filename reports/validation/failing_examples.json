@@ -1,0 +1,39 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "CANON-REQ-006",
+      "path": "$.project",
+      "message": "'tc_format' is a required property",
+      "doc": "docs/data_model_json.md"
+    },
+    {
+      "code": "CANON-REQ-020",
+      "path": "$.timeline.events.0.id",
+      "message": "'event1' does not match '^ev_\\\\d{4}$'",
+      "doc": "docs/data_model_json.md"
+    },
+    {
+      "code": "CANON-REQ-037",
+      "path": "$.timeline.events[0].effect.keyframes.Scale",
+      "message": "Keyframes not ordered by time: [2.0, 1.0]",
+      "doc": "docs/data_model_json.md#parameter--keyframe-capture"
+    },
+    {
+      "code": "CANON-REQ-028",
+      "path": "$.timeline.events[0].source.umid_chain[1]",
+      "message": "UMID must be non-empty string, found: ''",
+      "doc": "docs/data_model_json.md#identifiers"
+    }
+  ],
+  "summary": {
+    "checked": 4,
+    "failed": 4,
+    "reason_codes": [
+      "CANON-REQ-006",
+      "CANON-REQ-020",
+      "CANON-REQ-037",
+      "CANON-REQ-028"
+    ]
+  }
+}
