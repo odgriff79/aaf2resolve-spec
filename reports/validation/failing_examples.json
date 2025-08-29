@@ -21,7 +21,7 @@
     },
     {
       "code": "CANON-REQ-028",
-      "path": "$.timeline.events[0].source.umid_chain[1]",
+      "path": "$.timeline.events[0].source.original.umid_chain[1]",
       "message": "UMID must be non-empty string, found: ''",
       "doc": "docs/data_model_json.md#identifiers"
     }
