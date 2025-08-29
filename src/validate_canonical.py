@@ -108,10 +108,20 @@ class ValidationReport:
 
 
 def get_canonical_json_schema() -> Dict[str, Any]:
-    """Return draft-07 schema for canonical JSON per docs/data_model_json.md."""
+    """
+    Return JSON Schema (draft-07) for canonical JSON per docs/data_model_json.md.
+
+    This schema enforces:
+    - Required keys always present (nullability handled via type unions)
+    - Correct types per specification
+    - Enumeration constraints (tc_format, external_ref.kind)
+    - Array/object structure validation
+    """
     return {
         "$schema": "https://json-schema.org/draft-07/schema#",
+        "$id": "https://github.com/odgriff79/aaf2resolve-spec/canonical-json-schema",
         "title": "AAF→Resolve Canonical JSON Schema",
+        "description": "Schema for canonical JSON format per docs/data_model_json.md",
         "type": "object",
         "required": ["project", "timeline"],
         "additionalProperties": False,
@@ -122,9 +132,17 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                 "additionalProperties": False,
                 "properties": {
                     "name": {"type": "string"},
-                    "edit_rate_fps": {"type": "number", "exclusiveMinimum": 0},
-                    "tc_format": {"type": "string", "enum": ["DF", "NDF"]},
-                },
+                    "edit_rate_fps": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "description": "Timeline frame rate (e.g., 25.0, 23.976)"
+                    },
+                    "tc_format": {
+                        "type": "string",
+                        "enum": ["DF", "NDF"],
+                        "description": "Drop-frame or non-drop-frame"
+                    }
+                }
             },
             "timeline": {
                 "type": "object",
@@ -132,29 +150,47 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                 "additionalProperties": False,
                 "properties": {
                     "name": {"type": "string"},
-                    "start_tc_frames": {"type": "integer", "minimum": 0},
-                    "events": {"type": "array", "items": {"$ref": "#/definitions/event"}},
-                },
-            },
+                    "start_tc_frames": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Starting timecode in frames"
+                    },
+                    "events": {
+                        "type": "array",
+                        "items": {"$ref": "#/definitions/event"}
+                    }
+                }
+            }
         },
         "definitions": {
             "event": {
                 "type": "object",
-                "required": [
-                    "id",
-                    "timeline_start_frames",
-                    "length_frames",
-                    "source",
-                    "effect",
-                ],
+                "required": ["id", "timeline_start_frames", "length_frames", "source", "effect"],
                 "additionalProperties": False,
                 "properties": {
-                    "id": {"type": "string", "pattern": r"^ev_\d{4}$"},
-                    "timeline_start_frames": {"type": "integer", "minimum": 0},
-                    "length_frames": {"type": "integer", "minimum": 1},
-                    "source": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/source"}]},
-                    "effect": {"$ref": "#/definitions/effect"},
-                },
+                    "id": {
+                        "type": "string",
+                        "pattern": "^ev_\\d{4}$",
+                        "description": "Stable event ID (e.g., ev_0001)"
+                    },
+                    "timeline_start_frames": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Absolute timeline offset in frames"
+                    },
+                    "length_frames": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Event duration in frames"
+                    },
+                    "source": {
+                        "oneOf": [
+                            {"type": "null"},
+                            {"$ref": "#/definitions/source"}
+                        ]
+                    },
+                    "effect": {"$ref": "#/definitions/effect"}
+                }
             },
             "source": {
                 "type": "object",
@@ -166,64 +202,118 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                     "src_tc_start_frames",
                     "src_rate_fps",
                     "src_drop",
+                    "orig_length_frames"
                 ],
                 "additionalProperties": False,
                 "properties": {
-                    "path": {"oneOf": [{"type": "string"}, {"type": "null"}]},
-                    "umid_chain": {"type": "array", "items": {"type": "string"}},
-                    "tape_id": {"oneOf": [{"type": "string"}, {"type": "null"}]},
-                    "disk_label": {"oneOf": [{"type": "string"}, {"type": "null"}]},
-                    "src_tc_start_frames": {
-                        "oneOf": [{"type": "integer", "minimum": 0}, {"type": "null"}]
+                    "path": {
+                        "oneOf": [{"type": "string"}, {"type": "null"}],
+                        "description": "Original media URI/UNC path (preserved exactly)"
                     },
-                    "src_rate_fps": {"type": "number", "exclusiveMinimum": 0},
-                    "src_drop": {"type": "boolean"},
-                },
+                    "umid_chain": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "String UMIDs traversed (nearest → furthest)"
+                    },
+                    "tape_id": {
+                        "oneOf": [{"type": "string"}, {"type": "null"}],
+                        "description": "From UserComments/MobAttributeList"
+                    },
+                    "disk_label": {
+                        "oneOf": [{"type": "string"}, {"type": "null"}],
+                        "description": "From _IMPORTDISKLABEL"
+                    },
+                    "src_tc_start_frames": {
+                        "oneOf": [{"type": "integer", "minimum": 0}, {"type": "null"}],
+                        "description": "SourceMob Timecode.start (frames @ source rate)"
+                    },
+                    "src_rate_fps": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "description": "Source frame rate"
+                    },
+                    "src_drop": {
+                        "type": "boolean",
+                        "description": "Drop-frame flag for source timecode"
+                    },
+                    "orig_length_frames": {
+                        "oneOf": [{"type": "integer", "minimum": 0}, {"type": "null"}],
+                        "description": "Original full source clip length in frames (from descriptor)"
+                    }
+                }
             },
             "effect": {
                 "type": "object",
                 "required": ["name", "on_filler", "parameters", "keyframes", "external_refs"],
                 "additionalProperties": False,
                 "properties": {
-                    "name": {"type": "string"},
-                    "on_filler": {"type": "boolean"},
+                    "name": {
+                        "type": "string",
+                        "description": "Effect plugin name (or '(none)' for plain clips)"
+                    },
+                    "on_filler": {
+                        "type": "boolean",
+                        "description": "True if effect sits on filler"
+                    },
                     "parameters": {
                         "type": "object",
+                        "description": "Static parameter values (numbers/strings)",
                         "patternProperties": {
-                            ".*": {"oneOf": [{"type": "number"}, {"type": "string"}, {"type": "null"}]}
-                        },
+                            ".*": {
+                                "oneOf": [{"type": "number"}, {"type": "string"}, {"type": "null"}]
+                            }
+                        }
                     },
                     "keyframes": {
                         "type": "object",
+                        "description": "Animated parameters as param → keyframe array",
                         "patternProperties": {
-                            ".*": {"type": "array", "items": {"$ref": "#/definitions/keyframe"}}
-                        },
+                            ".*": {
+                                "type": "array",
+                                "items": {"$ref": "#/definitions/keyframe"}
+                            }
+                        }
                     },
                     "external_refs": {
                         "type": "array",
                         "items": {"$ref": "#/definitions/external_ref"},
-                    },
-                },
+                        "description": "File references discovered in parameters"
+                    }
+                }
             },
             "keyframe": {
                 "type": "object",
                 "required": ["t", "v"],
                 "additionalProperties": False,
                 "properties": {
-                    "t": {"type": "number", "minimum": 0},
-                    "v": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-                },
+                    "t": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Time in seconds from event start"
+                    },
+                    "v": {
+                        "oneOf": [{"type": "number"}, {"type": "string"}],
+                        "description": "Parameter value at this time"
+                    }
+                }
             },
             "external_ref": {
                 "type": "object",
                 "required": ["kind", "path"],
                 "additionalProperties": False,
                 "properties": {
-                    "kind": {"type": "string", "enum": ["image", "matte", "unknown"]},
-                    "path": {"type": "string"},
-                },
-            },
-        },
+                    "kind": {
+                        "type": "string",
+                        "enum": ["image", "matte", "unknown"],
+                        "description": "Best guess at reference type"
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "Path/URI as found (preserved exactly)"
+                    }
+                }
+            }
+        }
     }
 
 
