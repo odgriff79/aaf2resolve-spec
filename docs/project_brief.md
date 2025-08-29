@@ -1,7 +1,7 @@
 # 🎬 AAF → Resolve Conversion Project (SuperEDL / FX)
 
 ## Goal
-Build a **direct AAF → Resolve FCPXML 1.13 pipeline** (no Resolve API).  
+Build a **direct AAF → Resolve FCPXML 1.13 pipeline** (no Resolve API).
 The pipeline must:
 - Use `pyaaf2==1.4.0` to parse AAF files.
 - Resolve **original source clips** via UMID + SourceMobSlotID.

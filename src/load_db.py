@@ -25,11 +25,10 @@ from __future__ import annotations
 from typing import Dict, Any
 import argparse
 import json
-import sqlite3
-import sys
 
 
 # --------------------------- Public API ---------------------------
+
 
 def load_canonical_into_db(canon: Dict[str, Any], db_path: str) -> None:
     """
@@ -67,6 +66,7 @@ def load_canonical_into_db(canon: Dict[str, Any], db_path: str) -> None:
 
 # --------------------------- CLI (spec harness) ---------------------------
 
+
 def main(argv: list[str] | None = None) -> int:
     """
     CLI:
@@ -80,7 +80,9 @@ def main(argv: list[str] | None = None) -> int:
       - This CLI must not alter canonical values.
       - DB is optional — use only when analysis/queries needed.
     """
-    ap = argparse.ArgumentParser(description="Load canonical JSON into SQLite (spec-first scaffold).")
+    ap = argparse.ArgumentParser(
+        description="Load canonical JSON into SQLite (spec-first scaffold)."
+    )
     ap.add_argument("canon_json", help="Path to canonical JSON file")
     ap.add_argument("-o", "--out", required=True, help="Output SQLite DB path")
     args = ap.parse_args(argv)

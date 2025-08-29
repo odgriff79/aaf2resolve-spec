@@ -59,9 +59,9 @@ Build comparison utilities to diff actual vs. expected canonical JSON
 
 1.3 Contract Testing Framework
 bash# Validation pipeline
-tests/run_golden_tests.py 
+tests/run_golden_tests.py
   ├── Schema validation (required keys, types, nullability)
-  ├── UMID chain integrity checks  
+  ├── UMID chain integrity checks
   ├── Timeline math verification (frame arithmetic)
   └── Path preservation audits (byte-for-byte comparison)
 Phase 2: Real-World Robustness (3-4 weeks)
@@ -135,10 +135,10 @@ pythondef test_resolve_sourceclip_authoritative_first():
     # Given: AAF with complete UMID chain
     # When: resolve_sourceclip() called
     # Then: path from Locator(URLString), not comp-level mirror
-    
+
 def test_path_preservation_byte_for_byte():
     # Given: UNC path with percent-encoding
-    # When: canonical JSON generated  
+    # When: canonical JSON generated
     # Then: exact string match (no normalization)
 Real-World Validation
 

@@ -30,14 +30,13 @@ otherwise represent them minimally without distorting timing or content.
 """
 
 from __future__ import annotations
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 import argparse
 import json
-import sys
-from xml.etree.ElementTree import Element, SubElement, tostring  # Implementation may use lxml instead.
 
 
 # --------------------------- Public API ---------------------------
+
 
 def write_fcpxml_from_canonical(canon: Dict[str, Any], out_path: str) -> None:
     """
@@ -87,6 +86,7 @@ def write_fcpxml_from_canonical(canon: Dict[str, Any], out_path: str) -> None:
 
 # --------------------------- CLI (spec harness) ---------------------------
 
+
 def main(argv: list[str] | None = None) -> int:
     """
     CLI:
@@ -100,7 +100,9 @@ def main(argv: list[str] | None = None) -> int:
       - This CLI must not alter or enrich the canonical dict.
       - No DB/AAF access here; this is a pure JSON→XML transform.
     """
-    ap = argparse.ArgumentParser(description="Write FCPXML 1.13 from canonical JSON (spec-first scaffold).")
+    ap = argparse.ArgumentParser(
+        description="Write FCPXML 1.13 from canonical JSON (spec-first scaffold)."
+    )
     ap.add_argument("canon_json", help="Path to canonical JSON file")
     ap.add_argument("-o", "--out", required=True, help="Output FCPXML path")
     args = ap.parse_args(argv)

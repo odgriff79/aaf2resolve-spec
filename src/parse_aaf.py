@@ -29,7 +29,6 @@ from __future__ import annotations
 from typing import Dict, Any
 import argparse
 import json
-import sys
 
 # Import the SPEC-FIRST builder (no logic here).
 from .build_canonical import build_canonical_from_aaf  # type: ignore
@@ -49,9 +48,13 @@ def main(argv: list[str] | None = None) -> int:
       - This file must not add ad-hoc fields or transform the dict in any way.
       - No traversal/extraction logic is allowed here.
     """
-    ap = argparse.ArgumentParser(description="Parse AAF → canonical JSON (spec-first wrapper).")
+    ap = argparse.ArgumentParser(
+        description="Parse AAF → canonical JSON (spec-first wrapper)."
+    )
     ap.add_argument("aaf", help="Path to AAF file")
-    ap.add_argument("-o", "--out", default="-", help="Output JSON path (default: stdout)")
+    ap.add_argument(
+        "-o", "--out", default="-", help="Output JSON path (default: stdout)"
+    )
     args = ap.parse_args(argv)
 
     canon: Dict[str, Any] = build_canonical_from_aaf(args.aaf)

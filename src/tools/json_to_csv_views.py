@@ -14,6 +14,7 @@ import json
 import csv
 import sys
 
+
 def events_to_csv(json_data, out_file):
     # TODO: Implement real CSV flattening.
     # For demo, just dump all event basics.
@@ -31,6 +32,7 @@ def events_to_csv(json_data, out_file):
             }
             out_file.writerow(row)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Flatten canonical JSON events to CSV")
     parser.add_argument("json", help="Input canonical JSON")
@@ -40,9 +42,17 @@ def main():
     with open(args.json) as f:
         data = json.load(f)
 
-    fieldnames = ["timeline", "event_id", "type", "start", "duration", "track", "source"]
+    fieldnames = [
+        "timeline",
+        "event_id",
+        "type",
+        "start",
+        "duration",
+        "track",
+        "source",
+    ]
     if args.output:
-        with open(args.output, "w", newline='') as csvfile:
+        with open(args.output, "w", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             events_to_csv(data, writer)
@@ -50,6 +60,7 @@ def main():
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
         events_to_csv(data, writer)
+
 
 if __name__ == "__main__":
     main()

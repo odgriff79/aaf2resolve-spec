@@ -5,7 +5,7 @@ This document consolidates the three credible pitches (ChatGPT, Claude, GitHub C
 ---
 
 ## Core Idea
-A spec-first, JSON-first pipeline for converting Avid AAF → Resolve FCPXML 1.13.  
+A spec-first, JSON-first pipeline for converting Avid AAF → Resolve FCPXML 1.13.
 Implementation must be **deterministic, lossless, and traceable**.
 
 ---
@@ -17,8 +17,8 @@ Implementation must be **deterministic, lossless, and traceable**.
 
 Together, these form a progression:
 
-1. **Get it working** (ChatGPT: structure, milestones)  
-2. **Get it right** (Claude: validation, fidelity, editor trust)  
+1. **Get it working** (ChatGPT: structure, milestones)
+2. **Get it right** (Claude: validation, fidelity, editor trust)
 3. **Get it sustainable** (Copilot: modular plugin/rule-pack design)
 
 ---
@@ -57,14 +57,13 @@ Together, these form a progression:
 ---
 
 ## Roles in the Hybrid
-- **ChatGPT = “Get it done, on time.”**  
-- **Claude = “Get it right, every time.”**  
+- **ChatGPT = “Get it done, on time.”**
+- **Claude = “Get it right, every time.”**
 - **Copilot = “Keep it future-proof and easy to change.”**
 
 ---
 
 ## Next Action
-Lock this synthesis as the north star for the project.  
-Future pitches or contributions should be measured against this strategy:  
+Lock this synthesis as the north star for the project.
+Future pitches or contributions should be measured against this strategy:
 Does it help us **get it working, get it right, or get it sustainable**?
-

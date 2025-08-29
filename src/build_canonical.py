@@ -41,6 +41,7 @@ except Exception:
 
 # --------------------------- Public API ---------------------------
 
+
 def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
     """
     Open an AAF and return the **canonical JSON** dict per docs/data_model_json.md.
@@ -95,10 +96,13 @@ def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
     #           effect["on_filler"] = True
     #           events.append(pack_event(ev, None, effect))
     # - return pack_canonical_project(timeline_name, fps, drop, start_frames, events)
-    raise NotImplementedError("Spec scaffold: implement per docs/inspector_rule_pack.md")
+    raise NotImplementedError(
+        "Spec scaffold: implement per docs/inspector_rule_pack.md"
+    )
 
 
 # --------------------------- Contracts (no logic) ---------------------------
+
 
 def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     """
@@ -193,7 +197,9 @@ def extract_operationgroup(op) -> Dict[str, Any]:
     raise NotImplementedError
 
 
-def pack_event(ev: "EvWrap", source: Optional[Dict[str, Any]], effect: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+def pack_event(
+    ev: "EvWrap", source: Optional[Dict[str, Any]], effect: Optional[Dict[str, Any]]
+) -> Dict[str, Any]:
     """
     Build one Event object per docs/data_model_json.md (required keys always present).
 
@@ -213,7 +219,7 @@ def pack_canonical_project(
     fps: float,
     is_drop: bool,
     start_tc_frames: int,
-    events: List[Dict[str, Any]]
+    events: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
     """
     Build the top-level canonical dict:
@@ -232,6 +238,7 @@ def pack_canonical_project(
 
 # --------------------------- Types (no behavior) ---------------------------
 
+
 class EvWrap:
     """
     Lightweight carrier for traversal results.
@@ -243,9 +250,12 @@ class EvWrap:
       length_frames: int
       index: int    # 1-based, stable
     """
+
     __slots__ = ("kind", "node", "timeline_start_frames", "length_frames", "index")
 
-    def __init__(self, kind: str, node: Any, start: int, length: int, index: int) -> None:
+    def __init__(
+        self, kind: str, node: Any, start: int, length: int, index: int
+    ) -> None:
         self.kind = kind
         self.node = node
         self.timeline_start_frames = int(start)
@@ -254,6 +264,7 @@ class EvWrap:
 
 
 # --------------------------- CLI (spec harness) ---------------------------
+
 
 def _cli() -> None:
     """
@@ -265,9 +276,13 @@ def _cli() -> None:
     NOTE: This harness MUST NOT implement traversal here. It only calls
     build_canonical_from_aaf() when implemented.
     """
-    ap = argparse.ArgumentParser(description="Build canonical JSON from an AAF (spec-first scaffold).")
+    ap = argparse.ArgumentParser(
+        description="Build canonical JSON from an AAF (spec-first scaffold)."
+    )
     ap.add_argument("aaf", help="Path to AAF file")
-    ap.add_argument("-o", "--out", default="-", help="Output JSON path (default: stdout)")
+    ap.add_argument(
+        "-o", "--out", default="-", help="Output JSON path (default: stdout)"
+    )
     args = ap.parse_args()
 
     canon = build_canonical_from_aaf(args.aaf)
