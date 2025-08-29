@@ -1,28 +1,41 @@
 {
-  "project": { "name": "BadTimeline", "edit_rate_fps": 23.976 },
+  "project": {
+    "name": "BadTimeline",
+    "edit_rate_fps": 23.976
+  },
   "timeline": {
-    "name": "BadTimeline.Exported.01",
+    "name": "Bad.Exported.01",
     "start_tc_frames": 0,
     "events": [
       {
         "id": "event1",
-        "timeline_start_frames": 10,
+        "timeline_start_frames": 0,
         "length_frames": 50,
         "source": {
-          "path": null,
-          "umid_chain": ["{UMID-X}", ""],
-          "tape_id": null,
-          "disk_label": null,
-          "src_tc_start_frames": null,
-          "src_rate_fps": 23.976,
-          "src_drop": false
+          "original": {
+            "path": null,
+            "umid_chain": ["{UMID-X}", ""],
+            "tape_id": null,
+            "disk_label": null,
+            "src_tc_start_frames": null,
+            "src_rate_fps": 23.976,
+            "src_drop": false,
+            "source_duration_frames": null
+          },
+          "derived": {},
+          "extensions": {}
         },
         "effect": {
-          "name": "AVX:SomeVendor:PanZoomLike",
-          "on_filler": true,
-          "parameters": { "Scale": 1.05 },
-          "keyframes": { "Scale": [ { "t": 2.0, "v": 1.05 }, { "t": 1.0, "v": 1.0 } ] },
-          "external_refs": [ { "kind": "image", "path": "file:///bad/still.jpg" } ]
+          "name": "(none)",
+          "on_filler": false,
+          "parameters": {},
+          "keyframes": {
+            "Scale": [
+              { "t": 2.0, "v": 1.1 },
+              { "t": 1.0, "v": 1.0 }
+            ]
+          },
+          "external_refs": []
         }
       }
     ]
