@@ -1,0 +1,21 @@
+# Handoff Template (v1.0)
+# Purpose: Track baton-passing between AIs (CL → GPT → CO)
+
+owner: "CL"   # CL | GPT | CO
+status: "in_progress"   # in_progress | needs_review | blocked | completed
+
+artifacts:
+  - path: "src/example_module.py"
+    revision: "1.001"
+    last_editor: "CL"
+    handoff_notes: "Describe what’s complete and what needs continuation."
+
+outputs_expected:
+  - "validation_report.json"
+  - "schema_compliance.md"
+
+acceptance_criteria:
+  - "Schema validates minimal example"
+  - "40+ reason codes implemented"
+
+next_action: "GPT: Continue implementing additional validations from line 180."
