@@ -1,37 +1,59 @@
 # handoff/handoff.yml
 version: 1.0
-owner: "CL"            # current baton holder: CL | GPT | CO
-status: "ready"        # ready | in_progress | needs_review | blocked | completed
+owner: "GPT"        # current baton holder: CL | GPT | CO
+status: "in_progress"   # ready | in_progress | needs_review | blocked | completed
 
 artifacts:
   - path: "src/validate_canonical.py"
-    revision: "1.001"
+    revision: "1.002"
+    last_editor: "GPT"
+    handoff_notes: |
+      Schema and additional validations implemented. Orchestrator runs single-sample and commits reports.
+
+  - path: "app.py"
+    revision: "1.004" 
     last_editor: "CL"
     handoff_notes: |
-      Complete through schema + reason code mapping. 
-      GPT: run validator locally & in CI; generate sample reports; raise issues for any spec gaps.
-    spec_compliance:
-      - "docs/data_model_json.md §Top-level, §Event, §Source, §Effect"
-      - "docs/inspector_rule_pack.md §Parameter & keyframe capture"
+      Health check, reports viewer, single-run, auto-commit/push working.
+      COMPLETE: batch runner + summary badge implemented.
+      - list_samples() discovers tests/samples/*.json
+      - batch_run_and_commit() runs all samples, single commit
+      - Summary badge shows ✅ All passing (N) or ❌ K failing of N
+      - UI refreshes table/dropdown after batch runs
+
+  - path: "tests/README.md"
+    revision: "1.001"
+    last_editor: "CL" 
+    handoff_notes: |
+      Test pack documentation complete. Explains sample structure, validation flow,
+      how to add new tests, integration with Orchestrator batch runner.
+
+spec_compliance:
+  - "docs/data_model_json.md §Top-level, §Event, §Source, §Effect"
+  - "docs/inspector_rule_pack.md §Parameter & keyframe capture"
 
 outputs_expected:
-  - "reports/validation/minimal_example.json"
-  - "reports/validation/failing_examples.json"
-  - "reports/summary/schema_compliance.md"
+  - "reports/validation/*.json"          # individual reports (single or batch)
+  - "reports/summary/schema_compliance.md" # (future)
 
 acceptance_criteria:
-  - "Minimal example passes validator with 0 errors"
-  - "Known-bad samples trigger expected reason codes"
-  - "CI ‘Python setup and validation’ workflow passes on main"
+  - "✅ Orchestrator: batch run produces 1 commit covering all samples"
+  - "✅ Badge reflects all-pass vs failing counts" 
+  - "✅ Tests pack documented (tests/README.md) and discoverable"
+  - "✅ UI refreshes after batch runs"
+  - "✅ Both single-sample and batch workflows functional"
 
-next_action: "GPT: run validator on test samples and commit JSON reports under /reports/validation/"
+next_action: "CO: Refactor batch helpers into app/orchestrator.py (pure functions) + reports/index.json manifest; set owner→CO after refactor PR merges"
+
 ci:
   budget:
     calls_per_day: 1000
     tokens_per_day: 100000
   fail_safes:
-    on_budget_exceeded: "handoff owner → GPT; set status=blocked; open issue"
+    on_budget_exceeded: "handoff owner → next; set status=blocked; open issue"
+
 metadata:
   created_at: "2025-08-29T00:00:00Z"
-  last_updated_by: "OD"
-  notes: "Baton file is the single source of truth for agent orchestration."
+  last_updated_by: "CL"
+  last_updated_at: "2025-08-29T12:00:00Z"
+  notes: "Baton file is the single source of truth for agent orchestration. Batch functionality complete, ready for Copilot refactor."
