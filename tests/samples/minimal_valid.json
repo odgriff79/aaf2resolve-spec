@@ -19,7 +19,7 @@
             "src_drop": false,
             "source_duration_frames": null
           },
-          "derived": null,
+          "derived": {},
           "extensions": {}
         },
         "effect": {
@@ -29,7 +29,7 @@
           "keyframes": {},
           "external_refs": []
         }
-      }
-    ]
+      ]
+    }
   }
 }
