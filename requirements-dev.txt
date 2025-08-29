@@ -1,0 +1,3 @@
+# Minimal dependencies needed by CI jobs
+jsonschema>=4.18
+PyYAML>=6.0
