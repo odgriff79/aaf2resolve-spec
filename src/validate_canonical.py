@@ -1,10 +1,10 @@
 # @owner: GPT   # CL → GPT → CO
-# @version: 1.001
+# @version: 1.010
 # @status: in_progress
 # @spec_compliance: ["docs/data_model_json.md", "docs/collaboration_protocol.md"]
 # @handoff_ready: true
 # @integration_points: ["validate_canonical_json()", "CLI entrypoint main()"]
-# @notes: Clean, lint-safe baseline. JSON Schema + additional validations. Designed to pass pre-commit.
+# @notes: Aligns schema with Option B (source.original + derived + extensions). Adds source_duration_frames, updates UMID checks.
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from typing import Any, Dict, List, Optional
 
 try:
     from jsonschema import Draft7Validator, ValidationError  # type: ignore
-except Exception as e:  # pragma: no cover
+except Exception:  # pragma: no cover
     print(
         "ERROR: jsonschema library required. Install with: pip install jsonschema",
         file=sys.stderr,
@@ -58,7 +58,7 @@ class ReasonCodes:
     INVALID_LENGTH_FRAMES = "CANON-REQ-019"
     INVALID_EVENT_ID_FORMAT = "CANON-REQ-020"
 
-    # Source objects
+    # Source objects (map only when missing fields under source.original)
     MISSING_SOURCE_PATH = "CANON-REQ-021"
     MISSING_SOURCE_UMID_CHAIN = "CANON-REQ-022"
     MISSING_SOURCE_TAPE_ID = "CANON-REQ-023"
@@ -135,14 +135,14 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                     "edit_rate_fps": {
                         "type": "number",
                         "exclusiveMinimum": 0,
-                        "description": "Timeline frame rate (e.g., 25.0, 23.976)"
+                        "description": "Timeline frame rate (e.g., 25.0, 23.976)",
                     },
                     "tc_format": {
                         "type": "string",
                         "enum": ["DF", "NDF"],
-                        "description": "Drop-frame or non-drop-frame"
-                    }
-                }
+                        "description": "Drop-frame or non-drop-frame",
+                    },
+                },
             },
             "timeline": {
                 "type": "object",
@@ -153,94 +153,122 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                     "start_tc_frames": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "Starting timecode in frames"
+                        "description": "Starting timecode in frames",
                     },
                     "events": {
                         "type": "array",
-                        "items": {"$ref": "#/definitions/event"}
-                    }
-                }
-            }
+                        "items": {"$ref": "#/definitions/event"},
+                    },
+                },
+            },
         },
         "definitions": {
             "event": {
                 "type": "object",
-                "required": ["id", "timeline_start_frames", "length_frames", "source", "effect"],
+                "required": [
+                    "id",
+                    "timeline_start_frames",
+                    "length_frames",
+                    "source",
+                    "effect",
+                ],
                 "additionalProperties": False,
                 "properties": {
                     "id": {
                         "type": "string",
                         "pattern": "^ev_\\d{4}$",
-                        "description": "Stable event ID (e.g., ev_0001)"
+                        "description": "Stable event ID (e.g., ev_0001)",
                     },
                     "timeline_start_frames": {
                         "type": "integer",
                         "minimum": 0,
-                        "description": "Absolute timeline offset in frames"
+                        "description": "Absolute timeline offset in frames",
                     },
                     "length_frames": {
                         "type": "integer",
                         "minimum": 1,
-                        "description": "Event duration in frames"
+                        "description": "Event duration in frames",
                     },
                     "source": {
                         "oneOf": [
                             {"type": "null"},
-                            {"$ref": "#/definitions/source"}
+                            {"$ref": "#/definitions/source"},
                         ]
                     },
-                    "effect": {"$ref": "#/definitions/effect"}
-                }
+                    "effect": {"$ref": "#/definitions/effect"},
+                },
             },
             "source": {
                 "type": "object",
-                "required": [
-                    "path",
-                    "umid_chain",
-                    "tape_id",
-                    "disk_label",
-                    "src_tc_start_frames",
-                    "src_rate_fps",
-                    "src_drop",
-                    "orig_length_frames"
-                ],
+                "required": ["original"],
                 "additionalProperties": False,
                 "properties": {
-                    "path": {
-                        "oneOf": [{"type": "string"}, {"type": "null"}],
-                        "description": "Original media URI/UNC path (preserved exactly)"
+                    "original": {
+                        "type": "object",
+                        "required": [
+                            "path",
+                            "umid_chain",
+                            "tape_id",
+                            "disk_label",
+                            "src_tc_start_frames",
+                            "src_rate_fps",
+                            "src_drop",
+                        ],
+                        "additionalProperties": False,
+                        "properties": {
+                            "path": {
+                                "oneOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "Original media URI/UNC path (preserved exactly)",
+                            },
+                            "umid_chain": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "String UMIDs traversed (nearest → furthest)",
+                            },
+                            "tape_id": {
+                                "oneOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "From UserComments/MobAttributeList",
+                            },
+                            "disk_label": {
+                                "oneOf": [{"type": "string"}, {"type": "null"}],
+                                "description": "From _IMPORTDISKLABEL",
+                            },
+                            "src_tc_start_frames": {
+                                "oneOf": [
+                                    {"type": "integer", "minimum": 0},
+                                    {"type": "null"},
+                                ],
+                                "description": "SourceMob Timecode.start (frames @ source rate)",
+                            },
+                            "src_rate_fps": {
+                                "type": "number",
+                                "exclusiveMinimum": 0,
+                                "description": "Source frame rate",
+                            },
+                            "src_drop": {
+                                "type": "boolean",
+                                "description": "Drop-frame flag for source timecode",
+                            },
+                            "source_duration_frames": {
+                                "oneOf": [
+                                    {"type": "integer", "minimum": 0},
+                                    {"type": "null"},
+                                ],
+                                "description": "Original full source clip length in frames (from descriptor)",
+                            },
+                        },
                     },
-                    "umid_chain": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "String UMIDs traversed (nearest → furthest)"
+                    "derived": {
+                        "type": "object",
+                        "additionalProperties": True,
+                        "description": "Optional computed fields; non-canonical and safe to ignore",
                     },
-                    "tape_id": {
-                        "oneOf": [{"type": "string"}, {"type": "null"}],
-                        "description": "From UserComments/MobAttributeList"
+                    "extensions": {
+                        "type": "object",
+                        "additionalProperties": True,
+                        "description": "Vendor/tool-specific extras; non-canonical and safe to ignore",
                     },
-                    "disk_label": {
-                        "oneOf": [{"type": "string"}, {"type": "null"}],
-                        "description": "From _IMPORTDISKLABEL"
-                    },
-                    "src_tc_start_frames": {
-                        "oneOf": [{"type": "integer", "minimum": 0}, {"type": "null"}],
-                        "description": "SourceMob Timecode.start (frames @ source rate)"
-                    },
-                    "src_rate_fps": {
-                        "type": "number",
-                        "exclusiveMinimum": 0,
-                        "description": "Source frame rate"
-                    },
-                    "src_drop": {
-                        "type": "boolean",
-                        "description": "Drop-frame flag for source timecode"
-                    },
-                    "orig_length_frames": {
-                        "oneOf": [{"type": "integer", "minimum": 0}, {"type": "null"}],
-                        "description": "Original full source clip length in frames (from descriptor)"
-                    }
-                }
+                },
             },
             "effect": {
                 "type": "object",
@@ -249,20 +277,24 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                 "properties": {
                     "name": {
                         "type": "string",
-                        "description": "Effect plugin name (or '(none)' for plain clips)"
+                        "description": "Effect plugin name (or '(none)' for plain clips)",
                     },
                     "on_filler": {
                         "type": "boolean",
-                        "description": "True if effect sits on filler"
+                        "description": "True if effect sits on filler",
                     },
                     "parameters": {
                         "type": "object",
                         "description": "Static parameter values (numbers/strings)",
                         "patternProperties": {
                             ".*": {
-                                "oneOf": [{"type": "number"}, {"type": "string"}, {"type": "null"}]
+                                "oneOf": [
+                                    {"type": "number"},
+                                    {"type": "string"},
+                                    {"type": "null"},
+                                ]
                             }
-                        }
+                        },
                     },
                     "keyframes": {
                         "type": "object",
@@ -270,16 +302,16 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                         "patternProperties": {
                             ".*": {
                                 "type": "array",
-                                "items": {"$ref": "#/definitions/keyframe"}
+                                "items": {"$ref": "#/definitions/keyframe"},
                             }
-                        }
+                        },
                     },
                     "external_refs": {
                         "type": "array",
                         "items": {"$ref": "#/definitions/external_ref"},
-                        "description": "File references discovered in parameters"
-                    }
-                }
+                        "description": "File references discovered in parameters",
+                    },
+                },
             },
             "keyframe": {
                 "type": "object",
@@ -289,13 +321,13 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                     "t": {
                         "type": "number",
                         "minimum": 0,
-                        "description": "Time in seconds from event start"
+                        "description": "Time in seconds from event start",
                     },
                     "v": {
                         "oneOf": [{"type": "number"}, {"type": "string"}],
-                        "description": "Parameter value at this time"
-                    }
-                }
+                        "description": "Parameter value at this time",
+                    },
+                },
             },
             "external_ref": {
                 "type": "object",
@@ -305,15 +337,15 @@ def get_canonical_json_schema() -> Dict[str, Any]:
                     "kind": {
                         "type": "string",
                         "enum": ["image", "matte", "unknown"],
-                        "description": "Best guess at reference type"
+                        "description": "Best guess at reference type",
                     },
                     "path": {
                         "type": "string",
-                        "description": "Path/URI as found (preserved exactly)"
-                    }
-                }
-            }
-        }
+                        "description": "Path/URI as found (preserved exactly)",
+                    },
+                },
+            },
+        },
     }
 
 
@@ -355,7 +387,8 @@ def map_validation_error_to_reason_code(error: ValidationError) -> ValidationErr
                 "source": ReasonCodes.MISSING_EVENT_SOURCE,
                 "effect": ReasonCodes.MISSING_EVENT_EFFECT,
             }.get(missing, ReasonCodes.EXTRA_TOP_LEVEL_KEYS)
-        elif "source" in path:
+        elif "source" in path and "original" in path:
+            # Map missing fields inside source.original
             code = {
                 "path": ReasonCodes.MISSING_SOURCE_PATH,
                 "umid_chain": ReasonCodes.MISSING_SOURCE_UMID_CHAIN,
@@ -408,11 +441,13 @@ def _run_additional_validations(data: Dict[str, Any]) -> List[ValidationErrorRep
     try:
         events = data.get("timeline", {}).get("events", [])
         for ei, ev in enumerate(events):
-            effect = ev.get("effect", {})
-            kfs = effect.get("keyframes", {})
+            effect = ev.get("effect", {}) or {}
+            kfs = effect.get("keyframes", {}) or {}
             for pname, arr in kfs.items():
                 if isinstance(arr, list) and len(arr) > 1:
-                    times = [k.get("t") for k in arr if isinstance(k, dict) and "t" in k]
+                    times: List[float] = [
+                        k.get("t") for k in arr if isinstance(k, dict) and "t" in k
+                    ]  # type: ignore
                     if times != sorted(times):
                         errors.append(
                             ValidationErrorReport(
@@ -432,19 +467,20 @@ def _run_additional_validations(data: Dict[str, Any]) -> List[ValidationErrorRep
             )
         )
 
-    # UMID chain sanity: non-empty strings
+    # UMID chain sanity: non-empty strings (now under source.original.umid_chain)
     events = data.get("timeline", {}).get("events", [])
     for ei, ev in enumerate(events):
         src = ev.get("source")
         if src and isinstance(src, dict):
-            chain = src.get("umid_chain", [])
+            orig = src.get("original") if isinstance(src.get("original"), dict) else None
+            chain = orig.get("umid_chain", []) if orig else []
             if isinstance(chain, list):
                 for ui, u in enumerate(chain):
                     if not isinstance(u, str) or not u.strip():
                         errors.append(
                             ValidationErrorReport(
                                 code=ReasonCodes.INVALID_UMID_CHAIN,
-                                path=f"$.timeline.events[{ei}].source.umid_chain[{ui}]",
+                                path=f"$.timeline.events[{ei}].source.original.umid_chain[{ui}]",
                                 message=f"UMID must be non-empty string, found: {repr(u)}",
                                 doc="docs/data_model_json.md#identifiers",
                             )
@@ -463,9 +499,10 @@ def validate_canonical_json(data: Dict[str, Any], verbose: bool = False) -> Vali
 
     for e in validator.iter_errors(data):
         checked += 1
-        errors.append(map_validation_error_to_reason_code(e))
+        mapped = map_validation_error_to_reason_code(e)
+        errors.append(mapped)
         if verbose:
-            print(f"❌ {errors[-1].code}: {errors[-1].message} at {errors[-1].path}", file=sys.stderr)
+            print(f"❌ {mapped.code}: {mapped.message} at {mapped.path}", file=sys.stderr)
 
     extra = _run_additional_validations(data)
     errors.extend(extra)
@@ -490,7 +527,10 @@ def load_and_validate_json_file(file_path: str, verbose: bool = False) -> Valida
             ok=False,
             errors=[
                 ValidationErrorReport(
-                    code="CANON-FILE-ERROR", path="$", message=f"File not found: {file_path}", doc="docs/data_model_json.md"
+                    code="CANON-FILE-ERROR",
+                    path="$",
+                    message=f"File not found: {file_path}",
+                    doc="docs/data_model_json.md",
                 )
             ],
             summary={"checked": 0, "failed": 1, "reason_codes": ["CANON-FILE-ERROR"]},
@@ -500,7 +540,10 @@ def load_and_validate_json_file(file_path: str, verbose: bool = False) -> Valida
             ok=False,
             errors=[
                 ValidationErrorReport(
-                    code="CANON-PARSE-ERROR", path=f"line {e.lineno}", message=f"Invalid JSON: {e.msg}", doc="docs/data_model_json.md"
+                    code="CANON-PARSE-ERROR",
+                    path=f"line {e.lineno}",
+                    message=f"Invalid JSON: {e.msg}",
+                    doc="docs/data_model_json.md",
                 )
             ],
             summary={"checked": 0, "failed": 1, "reason_codes": ["CANON-PARSE-ERROR"]},
@@ -523,7 +566,9 @@ def write_validation_report(report: ValidationReport, output_path: Optional[str]
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate canonical JSON against docs/data_model_json.md schema")
+    parser = argparse.ArgumentParser(
+        description="Validate canonical JSON against docs/data_model_json.md schema"
+    )
     parser.add_argument("json_file", help="Path to canonical JSON file to validate")
     parser.add_argument("--report", "-r", help="Write JSON validation report to file (default: stdout)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose logging to stderr")
