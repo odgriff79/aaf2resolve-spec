@@ -1,0 +1,41 @@
+# Handoff Record (v1.0) — aaf2resolve-spec
+# Tracks the current baton across CL → GPT → CO
+
+owner: "CL"                     # CL | GPT | CO
+status: "in_progress"           # in_progress | needs_review | blocked | completed
+
+artifacts:
+  - path: "src/validate_canonical.py"
+    revision: "1.001"
+    last_editor: "CL"
+    handoff_notes: >
+      Validator draft is complete through schema + reason-code mapping and CLI.
+      Additional custom validations are stubbed; expand as needed. Ready for GPT to
+      sandbox-run against example JSONs and produce reports.
+
+outputs_expected:
+  - "reports/validation_report.json"
+  - "reports/schema_compliance.md"
+
+acceptance_criteria:
+  - "Minimal valid example passes (docs/data_model_json.md)"
+  - "Invalid samples trigger appropriate reason codes"
+  - "CLI exit codes behave as specified (0/1/2)"
+  - "Report written to --report when provided"
+
+next_action: "GPT: sandbox-execute validator on sample JSONs and attach reports"
+
+metadata:
+  spec_compliance:
+    - "docs/data_model_json.md §Top-level structure"
+    - "docs/data_model_json.md §Event"
+    - "docs/data_model_json.md §Source"
+    - "docs/data_model_json.md §Effect"
+  handoff_ready: true
+  integration_points:
+    - "validate_canonical_json()"
+    - "load_and_validate_json_file()"
+    - "CLI main()"
+  notes: >
+    After GPT runs sandbox tests and attaches reports, set status=needs_review
+    and pass baton to CO for refactor/packaging into /src/validators/.
