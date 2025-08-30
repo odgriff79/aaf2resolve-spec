@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 #!/usr/bin/env python3
 import re
 
@@ -7,7 +9,6 @@ import re
 Validation utilities for the canonical AAF2Resolve JSON schema.
 """
 
-from __future__ import annotations
 
 import json
 import sys

@@ -8,7 +8,7 @@ def _ok(cmd: list[str]) -> bool:
 
 
 def test_validate_canonical() -> None:
-    assert _ok([sys.executable, "src/validate_canonical.py", "--help"])
+    assert _ok([sys.executable, "-m", "src.validate_canonical", "-h"])
 
 
 def test_build_canonical() -> None:
