@@ -68,9 +68,7 @@ def _run_additional_validations(
         kfs = data["keyframes"]
         for pname, arr in kfs.items():
             if isinstance(arr, list) and len(arr) > 1:
-                times: list[float] = [
-                    k.get("t") for k in arr if isinstance(k, dict) and "t" in k
-                ]  # type: ignore
+                times: list[float] = [k.get("t") for k in arr if isinstance(k, dict) and "t" in k]
                 for earlier, later in zip(times, times[1:], strict=False):
                     if earlier > later:
                         errors.append(

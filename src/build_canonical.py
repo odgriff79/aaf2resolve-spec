@@ -35,7 +35,7 @@ from typing import Any
 # External dependency (pyaaf2 is imported as "aaf2" in Python)
 # DO NOT remove this; implementation will require it.
 try:
-    import aaf2  # type: ignore
+    import aaf2
 except Exception:
     aaf2 = None  # Allowed in scaffold; real implementation must import pyaaf2 successfully.
 

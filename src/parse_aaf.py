@@ -31,7 +31,7 @@ import json
 from typing import Any
 
 # Import the SPEC-FIRST builder (no logic here).
-from .build_canonical import build_canonical_from_aaf  # type: ignore
+from .build_canonical import build_canonical_from_aaf
 
 
 def main(argv: list[str] | None = None) -> int:
