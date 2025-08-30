@@ -97,9 +97,7 @@ def build_canonical_from_aaf(aaf_path: str) -> dict[str, Any]:
     #           effect["on_filler"] = True
     #           events.append(pack_event(ev, None, effect))
     # - return pack_canonical_project(timeline_name, fps, drop, start_frames, events)
-    raise NotImplementedError(
-        "Spec scaffold: implement per docs/inspector_rule_pack.md"
-    )
+    raise NotImplementedError("Spec scaffold: implement per docs/inspector_rule_pack.md")
 
 
 # --------------------------- Contracts (no logic) ---------------------------
@@ -254,9 +252,7 @@ class EvWrap:
 
     __slots__ = ("kind", "node", "timeline_start_frames", "length_frames", "index")
 
-    def __init__(
-        self, kind: str, node: Any, start: int, length: int, index: int
-    ) -> None:
+    def __init__(self, kind: str, node: Any, start: int, length: int, index: int) -> None:
         self.kind = kind
         self.node = node
         self.timeline_start_frames = int(start)
@@ -281,9 +277,7 @@ def _cli() -> None:
         description="Build canonical JSON from an AAF (spec-first scaffold)."
     )
     ap.add_argument("aaf", help="Path to AAF file")
-    ap.add_argument(
-        "-o", "--out", default="-", help="Output JSON path (default: stdout)"
-    )
+    ap.add_argument("-o", "--out", default="-", help="Output JSON path (default: stdout)")
     args = ap.parse_args()
 
     canon = build_canonical_from_aaf(args.aaf)

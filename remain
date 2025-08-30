@@ -1,0 +1,21 @@
+[35msrc/validate_canonical.py[m[36m:[m[32m32[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/validate_canonical.py[m[36m:[m[32m33[m[36m:[m[1;31m=======[m
+[35msrc/validate_canonical.py[m[36m:[m[32m38[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
+[35msrc/validate_canonical.py[m[36m:[m[32m69[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/validate_canonical.py[m[36m:[m[32m86[m[36m:[m[1;31m=======[m
+[35msrc/validate_canonical.py[m[36m:[m[32m188[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
+[35msrc/validate_canonical.py[m[36m:[m[32m198[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/validate_canonical.py[m[36m:[m[32m202[m[36m:[m[1;31m=======[m
+[35msrc/validate_canonical.py[m[36m:[m[32m205[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
+[35msrc/validate_canonical.py[m[36m:[m[32m257[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/validate_canonical.py[m[36m:[m[32m261[m[36m:[m[1;31m=======[m
+[35msrc/validate_canonical.py[m[36m:[m[32m264[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
+[35msrc/write_fcpxml.py[m[36m:[m[32m2[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/write_fcpxml.py[m[36m:[m[32m4[m[36m:[m[1;31m=======[m
+[35msrc/write_fcpxml.py[m[36m:[m[32m5[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
+[35msrc/write_fcpxml.py[m[36m:[m[32m11[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/write_fcpxml.py[m[36m:[m[32m18[m[36m:[m[1;31m=======[m
+[35msrc/write_fcpxml.py[m[36m:[m[32m28[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
+[35msrc/write_fcpxml.py[m[36m:[m[32m45[m[36m:[m[1;31m<<<<<<<[m HEAD
+[35msrc/write_fcpxml.py[m[36m:[m[32m48[m[36m:[m[1;31m=======[m
+[35msrc/write_fcpxml.py[m[36m:[m[32m81[m[36m:[m[1;31m>>>>>>>[m 92a31e6 (Fix all lint/style issues: modernize types, wrap long lines, and auto-format)
