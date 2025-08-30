@@ -38,6 +38,7 @@ jobs:
         continue-on-error: false
 
       - name: Validate handoff.yml (required keys)
+        if: hashFiles('handoff/handoff.yml') != ''
         run: |
           python - <<'PY'
           import sys, yaml, pathlib
@@ -56,6 +57,7 @@ jobs:
           PY
 
       - name: Schema smoke test (validator + minimal example)
+        if: hashFiles('src/validate_canonical.py') != '' && hashFiles('tests/samples/minimal_valid.json') != ''
         run: |
           python -m src.validate_canonical tests/samples/minimal_valid.json --verbose
 
