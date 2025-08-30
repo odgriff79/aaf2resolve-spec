@@ -1,4 +1,6 @@
 # aaf2resolve-spec
+
+[![CI](https://github.com/odgriff79/aaf2resolve-spec/actions/workflows/ci.yml/badge.svg)](https://github.com/odgriff79/aaf2resolve-spec/actions/workflows/ci.yml)
 Spec-first, JSON-first pipeline for converting Avid AAF → Resolve FCPXML 1.13
 
 This repository defines a deterministic, lossless approach to timeline interchange.
