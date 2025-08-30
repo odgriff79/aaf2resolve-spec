@@ -5,7 +5,7 @@ from typing import Set
 from src.validate_canonical import validate_event_ids
 
 
-def _codes(data: dict) -> Set[str]:
+def _codes(data: dict[str, object]) -> Set[str]:
     return {e.code for e in validate_event_ids(data)}
 
 
