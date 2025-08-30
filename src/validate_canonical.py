@@ -33,9 +33,8 @@ def get_canonical_json_schema() -> dict[str, Any]:
     """
     Return JSON Schema (draft-07) for canonical JSON per docs/data_model_json.md.
     """
-    # ... (schema definition unchanged, break up long lines as needed) ...
+    # ... (your schema definition here, unchanged for brevity) ...
     schema = {
-        # Example: (this is for illustration, replace with your actual schema)
         "type": "object",
         "properties": {
             "field1": {"type": "string"},
@@ -116,12 +115,13 @@ def validate_canonical_json(
         "reason_codes": [er.code for er in errors],
     }
     if verbose:
+        result_msg = (
+            "✅ Passed"
+            if not errors
+            else f"❌ Failed with {len(errors)} errors"
+        )
         print(
-            (
-                "✅ Passed"
-                if not errors
-                else f"❌ Failed with {len(errors)} errors"
-            ),
+            result_msg,
             file=sys.stderr,
         )
 
@@ -168,7 +168,8 @@ if __name__ == "__main__":
         description="Validate canonical JSON file against schema and custom rules"
     )
     parser.add_argument(
-        "json_file", help="Path to canonical JSON file to validate"
+        "json_file",
+        help="Path to canonical JSON file to validate",
     )
     parser.add_argument(
         "--report",
@@ -176,10 +177,16 @@ if __name__ == "__main__":
         help="Write JSON validation report to file (default: stdout)",
     )
     parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Verbose logging to stderr"
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Verbose logging to stderr",
     )
     parser.add_argument(
-        "--quiet", "-q", action="store_true", help="Suppress stdout"
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Suppress stdout",
     )
 
     args = parser.parse_args()
