@@ -1,43 +1,18 @@
 version: 1.0
 owner: "GPT"
-status: "ready_for_execution"
+status: "needs_implementation"
 
 artifacts:
-  - path: "src/validate_canonical.py"
-    revision: "1.004"
+  - path: "src/build_canonical.py"
+    revision: "2.000"
     last_editor: "CL"
     handoff_notes: |
-      COMPLETED: Added validate_event_ids() function with proper regex pattern validation.
-      COMPLETED: Integrated into _run_additional_validations() function.
-      COMPLETED: Added import re statement.
-      READY: Function validates ev_NNNN pattern per docs/data_model_json.md spec.
-      GPT should now test against tests/samples/*.json files and generate validation report.
+      COMPLETED: Full AAF → canonical JSON implementation with UMID chain resolution,
+      complete OperationGroup capture, path fidelity, logging, event ID generation.
+      READY: For FCPXML writer implementation.
 
-spec_compliance:
-  - "docs/data_model_json.md §identifiers - event ID pattern validation"
-
-outputs_expected:
-  - "Test validation against tests/samples/*.json files"
-  - "Report on any event ID pattern violations found" 
-  - "Confirm integration with existing validation pipeline works"
-
-acceptance_criteria:
-  - "Function correctly validates ev_NNNN pattern"
-  - "Proper ValidationErrorReport objects generated for violations"
-  - "Integration with existing validation pipeline works"
-  - "No regressions in existing functionality"
-
-next_action: "GPT: Test validate_event_ids() function against sample files in tests/samples/, generate comprehensive test report, then update handoff to pass to GEMINI for edge-case test generation"
-
-ci:
-  budget:
-    calls_per_day: 1000
-    tokens_per_day: 100000
-  fail_safes:
-    on_budget_exceeded: "handoff owner → GEMINI; set status=blocked; open issue"
+next_action: "GPT: Implement write_fcpxml_from_canonical() per docs/fcpxml_rules.md"
 
 metadata:
-  created_at: "2025-08-30T12:00:00Z"
-  last_updated_by: "CL"
-  last_updated_at: "2025-08-30T16:30:00Z"
-  notes: "Claude completed event ID validation implementation and integration. Ready for GPT testing phase."
+  last_updated_by: "CL" 
+  notes: "Core parser complete. FCPXML writer needed for end-to-end pipeline."
