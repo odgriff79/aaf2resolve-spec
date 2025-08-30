@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Set
+from typing import Any, Mapping, Set
 
 from src.validate_canonical import validate_event_ids
 
 
-def _codes(data: dict[str, object]) -> Set[str]:
+def _codes(data: Mapping[str, Any]) -> Set[str]:
     return {e.code for e in validate_event_ids(data)}
 
 
