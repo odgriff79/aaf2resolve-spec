@@ -7,9 +7,9 @@ def _ok(cmd: list[str]) -> bool:
     return p.returncode == 0
 
 
-def test_validate_canonical():
+def test_validate_canonical() -> None:
     assert _ok([sys.executable, "src/validate_canonical.py", "--help"])
 
 
-def test_build_canonical():
+def test_build_canonical() -> None:
     assert _ok([sys.executable, "src/build_canonical.py", "--help"])
