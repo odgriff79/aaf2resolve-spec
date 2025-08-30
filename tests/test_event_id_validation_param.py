@@ -42,5 +42,5 @@ def test_non_string_id_fails(bad_id: Any) -> None:
 
 
 def test_missing_id_field_fails() -> None:
-    data = {"timeline": {"events": [{}]}}
+    data: dict[str, Any] = {"timeline": {"events": [{}]}}
     assert "CANON-REQ-020" in _codes(data)
