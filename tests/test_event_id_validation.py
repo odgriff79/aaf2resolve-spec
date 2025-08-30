@@ -6,7 +6,7 @@ from src.validate_canonical import validate_event_ids
 
 
 def _codes(data: Mapping[str, Any]) -> Set[str]:
-    return {e.code for e in validate_event_ids(data)}
+    return {e.code for e in validate_event_ids(dict(data))}
 
 
 def test_invalid_event_id_alpha() -> None:
