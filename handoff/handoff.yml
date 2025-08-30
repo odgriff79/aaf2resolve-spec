@@ -1,29 +1,33 @@
 version: 1.0
 owner: "GEMINI"
-status: "needs_review"
+status: "needs_work"
 
 artifacts:
   - path: "src/validate_canonical.py"
-    revision: "1.004"
+    revision: "current"
     last_editor: "GPT"
     handoff_notes: |
-      Event ID validator in place (pattern ^ev_\d{4}$).
-      Added failing samples and pytests asserting CANON-REQ-020.
+      Event ID validator implemented and unit-tested.
+      Please generate additional edge-case tests focused on identifiers.
 
 spec_compliance:
-  - "docs/data_model_json.md §identifiers - event ID pattern validation"
+  - "docs/data_model_json.md §identifiers - event ID pattern '^ev_\\d{4}$'"
 
 outputs_expected:
-  - "More edge-case JSONs: ev_12345, EV_1234, ev_000a, missing id, null id, empty string"
-  - "One passing JSON (e.g., ev_0000) to confirm zeros are valid"
+  - "New test cases in tests/test_event_id_validation.py (or a new file)"
+  - "Sample JSONs in tests/samples/ that trigger each edge case"
 
 acceptance_criteria:
-  - "Validator emits CANON-REQ-020 for bad IDs"
-  - "All existing tests still pass"
+  - "Detects: non-string IDs, uppercase variants, extra digits, underscores, whitespace, leading/trailing spaces, duplicates"
+  - "All tests pass locally and in CI"
 
-next_action: "GEMINI: Generate edge cases and add tests."
+next_action: "GEMINI: add edge cases + tests; then set owner='COPILOT' with status='needs_review' for PR polish"
+
+ci:
+  budget:
+    calls_per_day: 1000
+    tokens_per_day: 100000
 
 metadata:
-  created_at: "2025-08-30T00:00:00Z"
   last_updated_by: "GPT"
-  last_updated_at: "2025-08-30T00:00:00Z"
+  notes: "System is green; ready for broader identifier coverage."
