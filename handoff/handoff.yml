@@ -1,33 +1,57 @@
 version: 1.0
 owner: "GEMINI"
-status: "needs_work"
+status: "needs_action"
 
 artifacts:
   - path: "src/validate_canonical.py"
-    revision: "current"
+    revision: "1.004"
     last_editor: "GPT"
     handoff_notes: |
-      Event ID validator implemented and unit-tested.
-      Please generate additional edge-case tests focused on identifiers.
+      validate_event_ids(data) is implemented and integrated via _run_additional_validations().
+      Error code: CANON-REQ-020. Pattern: ^ev_\d{4}$.
+
+  - path: "tests/test_event_id_validation.py"
+    revision: "1.001"
+    last_editor: "GPT"
+    handoff_notes: |
+      Contains basic unit-level tests for validate_event_ids(). Expand with parameterized edge cases
+      (valid + invalid, missing/None/non-string) to lock behavior and prevent regressions.
 
 spec_compliance:
-  - "docs/data_model_json.md §identifiers - event ID pattern '^ev_\\d{4}$'"
+  - "docs/data_model_json.md §identifiers — event ID pattern validation"
 
 outputs_expected:
-  - "New test cases in tests/test_event_id_validation.py (or a new file)"
-  - "Sample JSONs in tests/samples/ that trigger each edge case"
+  - "Comprehensive, parameterized pytest covering valid/invalid event IDs"
+  - "Negative cases: missing id, non-string id, wrong prefix, wrong length, non-digits"
+  - "Positive cases: ev_0000, ev_0123, ev_9999"
+  - "All checks green: ruff/black/mypy/pytest"
 
 acceptance_criteria:
-  - "Detects: non-string IDs, uppercase variants, extra digits, underscores, whitespace, leading/trailing spaces, duplicates"
+  - "pytest param suite added under tests/"
+  - "Zero lint/type errors (ruff/black/mypy pass)"
   - "All tests pass locally and in CI"
+  - "handoff.yml updated to owner=Copilot with concrete next_action"
 
-next_action: "GEMINI: add edge cases + tests; then set owner='COPILOT' with status='needs_review' for PR polish"
+next_action: |
+  GEMINI: Add a parameterized pytest (e.g., tests/test_event_id_validation_param.py) that exercises:
+    - Valid:    ev_0000, ev_0123, ev_9999  → expect no CANON-REQ-020
+    - Invalid:  event_1234, ev_99, ev_123, ev_12345, ev_12a4, ev-, ev_, "ev 1234"
+    - Also:     missing 'id', id=None, id=1234 (int), id={} (dict)
+  Assert presence/absence of error code CANON-REQ-020 only (message can vary).
+  Keep ruff/black/mypy/pytest all green. Then set:
+    owner: "COPILOT"
+    status: "needs_review"
+    next_action: "Copilot: review coverage, propose tiny refactor (helper for ID check) without behavior change."
 
 ci:
   budget:
     calls_per_day: 1000
     tokens_per_day: 100000
+  fail_safes:
+    on_budget_exceeded: "handoff owner → GPT; set status=blocked; open issue"
 
 metadata:
+  created_at: "2025-08-30T12:00:00Z"
   last_updated_by: "GPT"
-  notes: "System is green; ready for broader identifier coverage."
+  last_updated_at: "2025-08-30T12:45:00Z"
+  notes: "Baton to Gemini for param tests; Copilot follows with review/refactor."
