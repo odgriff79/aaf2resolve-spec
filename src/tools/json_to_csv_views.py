@@ -10,8 +10,8 @@ Not part of the main pipeline.
 """
 
 import argparse
-import json
 import csv
+import json
 import sys
 
 

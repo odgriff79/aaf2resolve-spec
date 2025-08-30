@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 load_db.py — SPEC-FIRST SCAFFOLD (no implementation yet)
 
@@ -22,15 +21,15 @@ Key principles:
 """
 
 from __future__ import annotations
-from typing import Dict, Any
+
 import argparse
 import json
-
+from typing import Any
 
 # --------------------------- Public API ---------------------------
 
 
-def load_canonical_into_db(canon: Dict[str, Any], db_path: str) -> None:
+def load_canonical_into_db(canon: dict[str, Any], db_path: str) -> None:
     """
     Load canonical JSON into a SQLite database at `db_path`.
 
@@ -87,8 +86,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("-o", "--out", required=True, help="Output SQLite DB path")
     args = ap.parse_args(argv)
 
-    with open(args.canon_json, "r", encoding="utf-8") as f:
-        canon: Dict[str, Any] = json.load(f)
+    with open(args.canon_json, encoding="utf-8") as f:
+        canon: dict[str, Any] = json.load(f)
 
     load_canonical_into_db(canon, args.out)
     return 0

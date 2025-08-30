@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 parse_aaf.py — SPEC-FIRST CLI WRAPPER (no business logic)
 
@@ -26,9 +25,10 @@ from the spec. Implementation lives in src/build_canonical.py.
 """
 
 from __future__ import annotations
-from typing import Dict, Any
+
 import argparse
 import json
+from typing import Any
 
 # Import the SPEC-FIRST builder (no logic here).
 from .build_canonical import build_canonical_from_aaf  # type: ignore
@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    canon: Dict[str, Any] = build_canonical_from_aaf(args.aaf)
+    canon: dict[str, Any] = build_canonical_from_aaf(args.aaf)
 
     text = json.dumps(canon, indent=2)
     if args.out == "-" or args.out.lower() == "stdout":

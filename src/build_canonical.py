@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 build_canonical.py — SPEC-FIRST SCAFFOLD (no implementation yet)
 
@@ -27,9 +26,11 @@ CORE PRINCIPLE (repeat in every implementation):
 """
 
 from __future__ import annotations
-from typing import Dict, Any, Iterable, Optional, Tuple, List
+
 import argparse
 import json
+from collections.abc import Iterable
+from typing import Any
 
 # External dependency (pyaaf2 is imported as "aaf2" in Python)
 # DO NOT remove this; implementation will require it.
@@ -42,7 +43,7 @@ except Exception:
 # --------------------------- Public API ---------------------------
 
 
-def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
+def build_canonical_from_aaf(aaf_path: str) -> dict[str, Any]:
     """
     Open an AAF and return the **canonical JSON** dict per docs/data_model_json.md.
 
@@ -104,7 +105,7 @@ def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
 # --------------------------- Contracts (no logic) ---------------------------
 
 
-def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
+def select_top_sequence(aaf) -> tuple[Any, float, bool, int, str]:
     """
     Return (sequence_node, fps, is_drop, start_tc_frames, timeline_name).
 
@@ -119,7 +120,7 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     raise NotImplementedError
 
 
-def walk_sequence_components(seq, fps: float) -> Iterable["EvWrap"]:
+def walk_sequence_components(seq, fps: float) -> Iterable[EvWrap]:
     """
     Yield EvWrap objects in **playback order**, flattening nested Sequences.
 
@@ -141,7 +142,7 @@ def walk_sequence_components(seq, fps: float) -> Iterable["EvWrap"]:
     raise NotImplementedError
 
 
-def build_mob_map(aaf) -> Dict[str, Any]:
+def build_mob_map(aaf) -> dict[str, Any]:
     """
     Return a dict mapping string mob_id/UMID → mob object.
 
@@ -153,7 +154,7 @@ def build_mob_map(aaf) -> Dict[str, Any]:
     raise NotImplementedError
 
 
-def resolve_sourceclip(sc, mob_map) -> Dict[str, Any]:
+def resolve_sourceclip(sc, mob_map) -> dict[str, Any]:
     """
     Return the "source" object for a SourceClip event (authoritative-first).
 
@@ -176,7 +177,7 @@ def resolve_sourceclip(sc, mob_map) -> Dict[str, Any]:
     raise NotImplementedError
 
 
-def extract_operationgroup(op) -> Dict[str, Any]:
+def extract_operationgroup(op) -> dict[str, Any]:
     """
     Return the "effect" object for an OperationGroup (AVX/AFX/DVE).
 
@@ -198,8 +199,8 @@ def extract_operationgroup(op) -> Dict[str, Any]:
 
 
 def pack_event(
-    ev: "EvWrap", source: Optional[Dict[str, Any]], effect: Optional[Dict[str, Any]]
-) -> Dict[str, Any]:
+    ev: EvWrap, source: dict[str, Any] | None, effect: dict[str, Any] | None
+) -> dict[str, Any]:
     """
     Build one Event object per docs/data_model_json.md (required keys always present).
 
@@ -219,8 +220,8 @@ def pack_canonical_project(
     fps: float,
     is_drop: bool,
     start_tc_frames: int,
-    events: List[Dict[str, Any]],
-) -> Dict[str, Any]:
+    events: list[dict[str, Any]],
+) -> dict[str, Any]:
     """
     Build the top-level canonical dict:
       {
