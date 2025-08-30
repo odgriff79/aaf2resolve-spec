@@ -1,25 +1,29 @@
 version: 1.0
-owner: "GPT"
+owner: "GEMINI"
 status: "needs_review"
 
 artifacts:
   - path: "src/validate_canonical.py"
-    revision: "1.003"
-    last_editor: "CL"
+    revision: "1.004"
+    last_editor: "GPT"
     handoff_notes: |
-      Added validate_event_ids() function that checks event IDs follow ev_NNNN pattern.
-      Integrated into ValidationErrorReport flow. Requires runtime test against samples.
+      Event ID validator in place (pattern ^ev_\d{4}$).
+      Added failing samples and pytests asserting CANON-REQ-020.
 
 spec_compliance:
   - "docs/data_model_json.md §identifiers - event ID pattern validation"
 
 outputs_expected:
-  - "Validation results over tests/samples/*.json"
-  - "List any event ID violations"
+  - "More edge-case JSONs: ev_12345, EV_1234, ev_000a, missing id, null id, empty string"
+  - "One passing JSON (e.g., ev_0000) to confirm zeros are valid"
 
 acceptance_criteria:
-  - "Correct ev_NNNN enforcement"
-  - "Proper ValidationErrorReport instances"
-  - "No regressions in existing checks"
+  - "Validator emits CANON-REQ-020 for bad IDs"
+  - "All existing tests still pass"
 
-next_action: "GPT: run validator against sample files; confirm behavior; then pass to GEMINI for edge-case generation"
+next_action: "GEMINI: Generate edge cases and add tests."
+
+metadata:
+  created_at: "2025-08-30T00:00:00Z"
+  last_updated_by: "GPT"
+  last_updated_at: "2025-08-30T00:00:00Z"

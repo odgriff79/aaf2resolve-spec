@@ -1,0 +1,40 @@
+{
+  "project": {
+    "name": "MyTimeline",
+    "edit_rate_fps": 25.0,
+    "tc_format": "NDF"
+  },
+  "timeline": {
+    "name": "MyTimeline.Exported.01",
+    "start_tc_frames": 3600,
+    "events": [
+      {
+        "id": "event_1234",
+        "timeline_start_frames": 0,
+        "length_frames": 100,
+        "source": {
+          "original": {
+            "path": "file:///Volumes/Media/clip01.mov",
+            "umid_chain": [
+              "{UMID-A}",
+              "{UMID-B}"
+            ],
+            "tape_id": null,
+            "disk_label": "DISK01",
+            "src_tc_start_frames": 90000,
+            "src_rate_fps": 25.0,
+            "src_drop": false,
+            "source_duration_frames": null
+          }
+        },
+        "effect": {
+          "name": "(none)",
+          "on_filler": false,
+          "parameters": {},
+          "keyframes": {},
+          "external_refs": []
+        }
+      }
+    ]
+  }
+}
