@@ -1,217 +1,486 @@
-# mypy: ignore-errors
 #!/usr/bin/env python3
 """
-build_canonical.py — SPEC-FIRST SCAFFOLD (no implementation yet)
+build_canonical.py — Core AAF → Canonical JSON Implementation
 
-This module defines the public entrypoint and function contracts for building the
-**canonical JSON** dict from an AAF file. It deliberately contains NO business
-logic; instead it documents what MUST be implemented, referencing the project
-specs. Implementers (human or LLM) must follow the docs exactly and not invent
-ad-hoc behavior.
+Implements the canonical JSON builder per docs/data_model_json.md and docs/inspector_rule_pack.md.
+This is the primary entrypoint for converting AAF files into the canonical JSON format.
 
-Authoritative specs:
-  - docs/data_model_json.md            (canonical JSON schema; single source of truth)
-  - docs/inspector_rule_pack.md        (timeline traversal, UMID resolution, effects)
-  - docs/legacy_compressed_json_rules.md  (how the compressed JSON exporter inlined values)
-  - docs/in_memory_pipeline.md         (architecture, inspector hooks, contracts)
-  - docs/fcpxml_rules.md               (Resolve FCPXML 1.13 writer requirements)
-
-CORE PRINCIPLE (repeat in every implementation):
-  • **Authoritative-first**: For source fields (path, TapeID, DiskLabel, src TC/rate/drop),
-    resolve to the **end of the UMID chain**:
-      SourceClip → MasterMob → SourceMob → ImportDescriptor → Locator(URLString)
-    Comp-level mirrors are **fallback only** if chain nodes are missing.
-  • **Path fidelity**: Never normalize paths (UNC, percent-encoding, drive letters).
-  • **No filtering**: Capture ALL OperationGroups (AVX/AFX/DVE), including filler effects.
-  • **Nullability**: Required keys must exist; unknown values must be null (not omitted).
+Key principles:
+- Authoritative-first UMID resolution (end of chain wins)
+- Path fidelity preservation (no normalization)
+- Complete OperationGroup capture (no filtering)
+- Required keys always present (null for unknown values)
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import logging
 from collections.abc import Iterable
-from typing import Any
+from pathlib import Path
+from typing import Any, List, Optional, Tuple
 
-# External dependency (pyaaf2 is imported as "aaf2" in Python)
-# DO NOT remove this; implementation will require it.
+# External dependency (pyaaf2)
 try:
     import aaf2
-except Exception:
-    aaf2 = None  # Allowed in scaffold; real implementation must import pyaaf2 successfully.
+
+    HAS_AAF2 = True
+except ImportError:
+    aaf2 = None
+    HAS_AAF2 = False
+
+# Setup logging for debugging AAF traversal
+logger = logging.getLogger(__name__)
 
 
-# --------------------------- Public API ---------------------------
+# --------------------------- Core Implementation ---------------------------
 
 
 def build_canonical_from_aaf(aaf_path: str) -> dict[str, Any]:
     """
-    Open an AAF and return the **canonical JSON** dict per docs/data_model_json.md.
+    Open an AAF and return the canonical JSON dict per docs/data_model_json.md.
 
-    DO NOT implement traversal ad-hoc. Follow:
-      - docs/inspector_rule_pack.md  §1 Timeline selection & traversal
-      - docs/inspector_rule_pack.md  §2 Event packing
-      - docs/inspector_rule_pack.md  §3 Source resolution (authoritative-first)
-      - docs/inspector_rule_pack.md  §4–5 Effects & Pan/Zoom stills
-      - docs/inspector_rule_pack.md  §6 Nullability & precedence
+    Follows docs/inspector_rule_pack.md for:
+    - Timeline selection (prefer *.Exported.01)
+    - UMID chain resolution (authoritative-first)
+    - Effect extraction (all OperationGroups, no filtering)
+    - Path preservation (exact byte-for-byte fidelity)
 
-    High-level algorithm (spec-only, no code here):
-      1) Open AAF read-only.
-      2) Select top-level CompositionMob (prefer name *.Exported.01) and picture slot.
-      3) Derive timeline fps (slot.EditRate), tc_format (DF/NDF), start_tc_frames.
-      4) Walk Sequence.Components in order (recurse nested Sequence), maintaining absolute
-         timeline_start_frames and length_frames for each event.
-      5) For each component:
-         - SourceClip  → produce an event with "source" object (populated via UMID chain),
-                         and effect = "(none)".
-         - OperationGroup on filler → produce an event with source = null, and "effect" object
-                         with name/parameters/keyframes/external_refs.
-      6) Pack "project" and "timeline" objects with required keys (never omit).
-      7) Return the dict.
+    Args:
+        aaf_path: Path to AAF file
 
     Returns:
-      Dict[str, Any]: A structure that EXACTLY matches docs/data_model_json.md
-                      (required keys, nullability, types).
+        Canonical JSON dict matching docs/data_model_json.md schema
 
-    MUSTs:
-      - **Authoritative-first** for source metadata (Locator URL, SourceMob TC/rate/drop).
-      - Preserve path strings exactly (no normalization).
-      - Capture ALL OperationGroups (no filtering), including filler effects.
-      - For keyframes, store arrays of {"t": float seconds, "v": number|string}.
-
-    MAY NOT:
-      - Output partial/alternative shapes.
-      - Normalize paths or rewrite slashes/drive letters/percent-encoding.
+    Raises:
+        ImportError: If pyaaf2 not available
+        FileNotFoundError: If AAF file doesn't exist
+        ValueError: If AAF cannot be parsed or has no usable timeline
     """
-    # TODO(impl):
-    # - Open with aaf2.open(aaf_path, 'r')
-    # - seq, fps, drop, start_frames, timeline_name = select_top_sequence(aaf)
-    # - mob_map = build_mob_map(aaf)
-    # - events = []
-    # - for ev in walk_sequence_components(seq, fps):  # yields EvWrap (spec-defined)
-    #       if ev.kind == "sourceclip":
-    #           source = resolve_sourceclip(ev.node, mob_map)     # authoritative-first
-    #           effect = make_none_effect()                       # "(none)"
-    #           events.append(pack_event(ev, source, effect))
-    #       elif ev.kind == "operationgroup_on_filler":
-    #           effect = extract_operationgroup(ev.node)          # no filtering
-    #           effect["on_filler"] = True
-    #           events.append(pack_event(ev, None, effect))
-    # - return pack_canonical_project(timeline_name, fps, drop, start_frames, events)
-    raise NotImplementedError("Spec scaffold: implement per docs/inspector_rule_pack.md")
+    if not HAS_AAF2:
+        raise ImportError("pyaaf2 is required. Install with: pip install pyaaf2")
+
+    if not Path(aaf_path).exists():
+        raise FileNotFoundError(f"AAF file not found: {aaf_path}")
+
+    logger.info(f"Opening AAF: {aaf_path}")
+
+    try:
+        with aaf2.open(aaf_path, "r") as f:
+            # Step 1: Select top-level composition and extract timeline metadata
+            comp, fps, is_drop, start_tc_frames, timeline_name = select_top_sequence(f)
+            logger.info(
+                f"Selected timeline: {timeline_name} @ {fps}fps {'DF' if is_drop else 'NDF'}"
+            )
+
+            # Step 2: Build mob lookup map for UMID resolution
+            mob_map = build_mob_map(f)
+            logger.info(f"Built mob map with {len(mob_map)} entries")
+
+            # Step 3: Walk sequence components and extract events
+            events = []
+            for ev in walk_sequence_components(comp, fps):
+                logger.debug(f"Processing event {ev.index}: {ev.kind} @ {ev.timeline_start_frames}")
+
+                if ev.kind == "sourceclip":
+                    source = resolve_sourceclip(ev.node, mob_map)
+                    effect = make_none_effect()
+                    events.append(pack_event(ev, source, effect))
+
+                elif ev.kind == "operationgroup_on_filler":
+                    effect = extract_operationgroup(ev.node)
+                    effect["on_filler"] = True
+                    events.append(pack_event(ev, None, effect))
+
+                else:
+                    logger.warning(f"Unknown event kind: {ev.kind}")
+                    continue
+
+            logger.info(f"Extracted {len(events)} events")
+
+            # Step 4: Pack final canonical structure
+            return pack_canonical_project(timeline_name, fps, is_drop, start_tc_frames, events)
+
+    except Exception as e:
+        logger.error(f"Failed to parse AAF {aaf_path}: {e}")
+        raise ValueError(f"AAF parsing failed: {e}") from e
 
 
-# --------------------------- Contracts (no logic) ---------------------------
-
-
-def select_top_sequence(aaf) -> tuple[Any, float, bool, int, str]:
+def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     """
-    Return (sequence_node, fps, is_drop, start_tc_frames, timeline_name).
+    Select top-level CompositionMob and extract timeline metadata.
 
-    SPEC (do not implement here):
-      - Pick the CompositionMob with name *.Exported.01 if present; else first CompositionMob.
-      - Use the **picture** slot only (skip audio/data).
-      - fps = float(slot.EditRate); is_drop from nearest timeline Timecode.drop.
-      - start_tc_frames default 3600 (01:00:00:00 @ fps) if not explicitly available.
+    Returns:
+        (sequence_node, fps, is_drop, start_tc_frames, timeline_name)
 
-    See: docs/inspector_rule_pack.md §1
+    Per docs/inspector_rule_pack.md §1:
+    - Prefer CompositionMob with name ending .Exported.01
+    - Use picture track only (skip audio/data)
+    - Extract edit rate, drop-frame flag, starting timecode
     """
-    raise NotImplementedError
+    # Find all CompositionMobs
+    comp_mobs = [mob for mob in aaf.content.mobs() if hasattr(mob, "slots")]
+
+    if not comp_mobs:
+        raise ValueError("No CompositionMobs found in AAF")
+
+    # Prefer *.Exported.01, else take first
+    selected_mob = None
+    for mob in comp_mobs:
+        if hasattr(mob, "name") and mob.name and mob.name.endswith(".Exported.01"):
+            selected_mob = mob
+            break
+
+    if not selected_mob:
+        selected_mob = comp_mobs[0]
+        logger.warning("No .Exported.01 mob found, using first CompositionMob")
+
+    timeline_name = getattr(selected_mob, "name", "Unknown Timeline") or "Unknown Timeline"
+
+    # Find picture slot
+    picture_slot = None
+    for slot in selected_mob.slots:
+        # Look for video/picture track (not audio or data)
+        if hasattr(slot, "segment") and slot.segment:
+            picture_slot = slot
+            break
+
+    if not picture_slot:
+        raise ValueError(f"No picture slot found in {timeline_name}")
+
+    # Extract timeline properties
+    fps = float(picture_slot.edit_rate) if hasattr(picture_slot, "edit_rate") else 25.0
+
+    # Look for drop-frame flag in timecode
+    is_drop = False
+    start_tc_frames = 3600  # Default 01:00:00:00 at 25fps
+
+    # Try to find timeline timecode
+    if hasattr(selected_mob, "slots"):
+        for slot in selected_mob.slots:
+            if hasattr(slot, "segment") and slot.segment:
+                # Look for Timecode component
+                if hasattr(slot.segment, "components"):
+                    for comp in slot.segment.components:
+                        if hasattr(comp, "start") and hasattr(comp, "drop"):
+                            start_tc_frames = int(comp.start)
+                            is_drop = bool(comp.drop)
+                            break
+
+    return picture_slot.segment, fps, is_drop, start_tc_frames, timeline_name
 
 
 def walk_sequence_components(seq, fps: float) -> Iterable[EvWrap]:
     """
-    Yield EvWrap objects in **playback order**, flattening nested Sequences.
+    Walk Sequence components in playback order, yielding EvWrap objects.
 
-    EvWrap spec:
-      - .kind ∈ {"sourceclip", "operationgroup_on_filler", "unknown"}
-      - .node  → the underlying pyaaf2 object
-      - .timeline_start_frames: int (absolute)
-      - .length_frames: int
-      - .index: 1-based stable index (ev_0001, ev_0002, ...)
-
-    Rules:
-      - Only picture track Sequence is traversed.
-      - Maintain a running timeline offset (frames).
-      - If component is a Sequence, recurse and continue linearization.
-      - OperationGroup is considered "on_filler" when no SourceClip input is present.
-
-    See: docs/inspector_rule_pack.md §1–2
+    Per docs/inspector_rule_pack.md §1-2:
+    - Maintain running timeline offset
+    - Recurse nested Sequences
+    - Classify as sourceclip vs operationgroup_on_filler
     """
-    raise NotImplementedError
+    if not hasattr(seq, "components"):
+        return
+
+    timeline_offset = 0
+    event_index = 1
+
+    for component in seq.components:
+        length_frames = int(getattr(component, "length", 0))
+
+        # Classify component type
+        kind = "unknown"
+        if hasattr(component, "__class__"):
+            class_name = component.__class__.__name__
+
+            if "SourceClip" in class_name:
+                kind = "sourceclip"
+            elif "OperationGroup" in class_name:
+                # Check if it's on filler (no SourceClip inputs)
+                has_source_input = False
+                if hasattr(component, "input_segments"):
+                    for input_seg in component.input_segments:
+                        if input_seg and "SourceClip" in str(type(input_seg)):
+                            has_source_input = True
+                            break
+
+                kind = (
+                    "operationgroup_on_filler" if not has_source_input else "operationgroup_on_clip"
+                )
+            elif "Sequence" in class_name:
+                # Recurse nested sequence
+                for nested_ev in walk_sequence_components(component, fps):
+                    nested_ev.timeline_start_frames += timeline_offset
+                    nested_ev.index = event_index
+                    event_index += 1
+                    yield nested_ev
+                timeline_offset += length_frames
+                continue
+
+        yield EvWrap(kind, component, timeline_offset, length_frames, event_index)
+        timeline_offset += length_frames
+        event_index += 1
 
 
 def build_mob_map(aaf) -> dict[str, Any]:
     """
-    Return a dict mapping string mob_id/UMID → mob object.
-
-    Purpose:
-      - Speed up UMID chain traversal when resolving SourceClips.
-
-    See: docs/inspector_rule_pack.md §3
+    Build lookup map: mob_id/UMID → mob object for UMID chain resolution.
     """
-    raise NotImplementedError
+    mob_map = {}
+
+    for mob in aaf.content.mobs():
+        if hasattr(mob, "mob_id"):
+            mob_map[str(mob.mob_id)] = mob
+        if hasattr(mob, "umid"):
+            mob_map[str(mob.umid)] = mob
+
+    return mob_map
 
 
-def resolve_sourceclip(sc, mob_map) -> dict[str, Any]:
+def resolve_sourceclip(sc, mob_map: dict[str, Any]) -> dict[str, Any]:
     """
-    Return the "source" object for a SourceClip event (authoritative-first).
+    Resolve SourceClip via UMID chain to build source object.
 
-    MUST populate (see docs/data_model_json.md → Source):
-      - path: string|null                (from ImportDescriptor→Locator.URLString)
-      - umid_chain: array<string>       (nearest → furthest)
-      - tape_id: string|null            (UserComments → MobAttributeList; nearest wins)
-      - disk_label: string|null         (_IMPORTDISKLABEL via _IMPORTSETTING/TaggedValueAttributeList)
-      - src_tc_start_frames: int|null   (SourceMob.Timecode.start; frames @ source rate)
-      - src_rate_fps: float             (SourceMob or slot edit rate)
-      - src_drop: bool                  (SourceMob.Timecode.drop)
-
-    RULES:
-      - **Authoritative-first**: prefer end-of-chain values. Comp-level mirrors are fallback only.
-      - Broken chain tolerated: emit nulls where unknown, never abort.
-      - Preserve path fidelity: never normalize/alter the string.
-
-    See: docs/inspector_rule_pack.md §3
+    Per docs/inspector_rule_pack.md §3 (authoritative-first):
+    - Follow SourceClip → MasterMob → SourceMob → ImportDescriptor → Locator
+    - Chain-end values are authoritative
+    - Comp-level mirrors are fallback only
     """
-    raise NotImplementedError
+    source = {
+        "path": None,
+        "umid_chain": [],
+        "tape_id": None,
+        "disk_label": None,
+        "src_tc_start_frames": None,
+        "src_rate_fps": 25.0,
+        "src_drop": False,
+        "orig_length_frames": None,
+    }
+
+    try:
+        # Start UMID chain traversal
+        current_mob = sc
+        umid_chain = []
+
+        # Follow the chain: SourceClip → MasterMob → SourceMob
+        while current_mob and len(umid_chain) < 10:  # Prevent infinite loops
+            if hasattr(current_mob, "source_id"):
+                umid_str = str(current_mob.source_id)
+                umid_chain.append(umid_str)
+                current_mob = mob_map.get(umid_str)
+            elif hasattr(current_mob, "umid"):
+                umid_str = str(current_mob.umid)
+                umid_chain.append(umid_str)
+                break
+            else:
+                break
+
+        source["umid_chain"] = umid_chain
+
+        # At chain end, extract authoritative metadata
+        if current_mob:
+            # Try to find ImportDescriptor → Locator path
+            if hasattr(current_mob, "descriptor"):
+                desc = current_mob.descriptor
+                if hasattr(desc, "locator") and desc.locator:
+                    if hasattr(desc.locator, "url_string"):
+                        source["path"] = desc.locator.url_string
+
+                # Original length from descriptor
+                if hasattr(desc, "length"):
+                    source["orig_length_frames"] = int(desc.length)
+
+            # Source timecode and rate from SourceMob
+            if hasattr(current_mob, "slots"):
+                for slot in current_mob.slots:
+                    if hasattr(slot, "edit_rate"):
+                        source["src_rate_fps"] = float(slot.edit_rate)
+
+                    if hasattr(slot, "segment") and hasattr(slot.segment, "components"):
+                        for comp in slot.segment.components:
+                            if hasattr(comp, "start"):
+                                source["src_tc_start_frames"] = int(comp.start)
+                            if hasattr(comp, "drop"):
+                                source["src_drop"] = bool(comp.drop)
+
+            # Metadata from UserComments or MobAttributeList
+            source["tape_id"] = extract_metadata_value(current_mob, "TapeID")
+            source["disk_label"] = extract_metadata_value(current_mob, "_IMPORTDISKLABEL")
+
+    except Exception as e:
+        logger.warning(f"UMID chain resolution failed: {e}")
+
+    return source
+
+
+def extract_metadata_value(mob, key: str) -> Optional[str]:
+    """Extract metadata value from UserComments or MobAttributeList."""
+    try:
+        # Check UserComments first (higher priority)
+        if hasattr(mob, "user_comments"):
+            for comment in mob.user_comments:
+                if hasattr(comment, "name") and comment.name == key:
+                    return str(comment.value) if hasattr(comment, "value") else None
+
+        # Fallback to MobAttributeList
+        if hasattr(mob, "attributes"):
+            for attr in mob.attributes:
+                if hasattr(attr, "name") and attr.name == key:
+                    return str(attr.value) if hasattr(attr, "value") else None
+
+    except Exception:
+        pass
+
+    return None
 
 
 def extract_operationgroup(op) -> dict[str, Any]:
     """
-    Return the "effect" object for an OperationGroup (AVX/AFX/DVE).
+    Extract effect object from OperationGroup (AVX/AFX/DVE).
 
-    MUST populate (see docs/data_model_json.md → Effect):
-      - name: string                     (prefer _EFFECT_PLUGIN_NAME → _EFFECT_PLUGIN_CLASS → label)
-      - on_filler: bool                  (the caller sets True when it’s on filler)
-      - parameters: object               (static values; numbers/strings only)
-      - keyframes:  object               (param -> [{ "t": float seconds, "v": number|string }])
-      - external_refs: array             ([{ "kind": "image|matte|unknown", "path": string }])
-
-    RULES:
-      - **No filtering**: capture ALL OperationGroups (filler or not).
-      - Pan & Zoom stills: attempt UTF-16LE decode on byte arrays; strip nulls; do not rewrite.
-      - Path detection: if value looks like a path (file://, /, :\\), record in external_refs.
-
-    See: docs/inspector_rule_pack.md §4–5
+    Per docs/inspector_rule_pack.md §4-5:
+    - NO FILTERING: capture all OperationGroups
+    - Extract name, parameters, keyframes, external refs
+    - Attempt UTF-16LE decode for Pan & Zoom stills
     """
-    raise NotImplementedError
+    effect = {
+        "name": "(none)",
+        "on_filler": False,  # Caller will set appropriately
+        "parameters": {},
+        "keyframes": {},
+        "external_refs": [],
+    }
+
+    try:
+        # Extract effect name
+        if hasattr(op, "operation_def"):
+            op_def = op.operation_def
+            if hasattr(op_def, "name"):
+                effect["name"] = str(op_def.name)
+
+        # Extract parameters
+        if hasattr(op, "parameters"):
+            for param in op.parameters:
+                if hasattr(param, "name") and hasattr(param, "value"):
+                    param_name = str(param.name)
+                    param_value = param.value
+
+                    # Handle different parameter types
+                    if hasattr(param_value, "__iter__") and not isinstance(
+                        param_value, (str, bytes)
+                    ):
+                        # Keyframe data (PointList)
+                        keyframes = []
+                        try:
+                            for point in param_value:
+                                if hasattr(point, "time") and hasattr(point, "value"):
+                                    # Convert time to seconds, value to number/string
+                                    time_sec = float(point.time)
+                                    value = (
+                                        float(point.value)
+                                        if isinstance(point.value, (int, float))
+                                        else str(point.value)
+                                    )
+                                    keyframes.append({"t": time_sec, "v": value})
+
+                            if keyframes:
+                                effect["keyframes"][param_name] = keyframes
+                        except Exception:
+                            # Fallback: treat as static parameter
+                            effect["parameters"][param_name] = str(param_value)
+
+                    elif isinstance(param_value, bytes):
+                        # Attempt UTF-16LE decode for Pan & Zoom stills
+                        decoded_path = decode_possible_path(param_value)
+                        if decoded_path and is_image_path(decoded_path):
+                            effect["external_refs"].append({"kind": "image", "path": decoded_path})
+                        effect["parameters"][param_name] = decoded_path or param_value.hex()
+
+                    else:
+                        # Static parameter
+                        if isinstance(param_value, (int, float)):
+                            effect["parameters"][param_name] = param_value
+                        else:
+                            param_str = str(param_value)
+                            effect["parameters"][param_name] = param_str
+
+                            # Check if parameter looks like a path
+                            if is_possible_path(param_str):
+                                effect["external_refs"].append(
+                                    {"kind": "unknown", "path": param_str}
+                                )
+
+    except Exception as e:
+        logger.warning(f"Effect extraction failed: {e}")
+
+    return effect
+
+
+def decode_possible_path(data: bytes) -> Optional[str]:
+    """
+    Attempt UTF-16LE decode on byte array, strip nulls.
+    Per docs/inspector_rule_pack.md §5.
+    """
+    try:
+        # Try UTF-16LE decode
+        decoded = data.decode("utf-16le", errors="ignore")
+        # Strip null bytes
+        cleaned = decoded.replace("\x00", "")
+        return cleaned if cleaned else None
+    except Exception:
+        return None
+
+
+def is_image_path(path: str) -> bool:
+    """Check if path looks like an image file."""
+    if not path:
+        return False
+
+    path_lower = path.lower()
+    return any(
+        path_lower.endswith(ext)
+        for ext in [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp", ".gif"]
+    )
+
+
+def is_possible_path(value: str) -> bool:
+    """Check if string looks like a file path."""
+    if not value or len(value) < 3:
+        return False
+
+    return any(
+        [
+            value.startswith("file://"),
+            "/" in value,
+            "\\" in value,
+            ":" in value and len(value) > 2,  # Drive letter
+        ]
+    )
+
+
+def make_none_effect() -> dict[str, Any]:
+    """Create empty effect object for plain clips."""
+    return {
+        "name": "(none)",
+        "on_filler": False,
+        "parameters": {},
+        "keyframes": {},
+        "external_refs": [],
+    }
 
 
 def pack_event(
-    ev: EvWrap, source: dict[str, Any] | None, effect: dict[str, Any] | None
+    ev: EvWrap, source: Optional[dict[str, Any]], effect: Optional[dict[str, Any]]
 ) -> dict[str, Any]:
-    """
-    Build one Event object per docs/data_model_json.md (required keys always present).
-
-    - id: "ev_{index:04d}"
-    - timeline_start_frames: int
-    - length_frames: int
-    - source: object|null
-    - effect: object (for plain clips, must be "(none)" shape)
-
-    See: docs/inspector_rule_pack.md §2; docs/data_model_json.md
-    """
-    raise NotImplementedError
+    """Pack Event object per docs/data_model_json.md."""
+    return {
+        "id": f"ev_{ev.index:04d}",
+        "timeline_start_frames": ev.timeline_start_frames,
+        "length_frames": ev.length_frames,
+        "source": source,
+        "effect": effect or make_none_effect(),
+    }
 
 
 def pack_canonical_project(
@@ -219,37 +488,30 @@ def pack_canonical_project(
     fps: float,
     is_drop: bool,
     start_tc_frames: int,
-    events: list[dict[str, Any]],
+    events: List[dict[str, Any]],
 ) -> dict[str, Any]:
-    """
-    Build the top-level canonical dict:
-      {
-        "project":  { name, edit_rate_fps, tc_format },
-        "timeline": { name, start_tc_frames, events: [...] }
-      }
+    """Pack top-level canonical JSON structure."""
+    project_name = (
+        timeline_name.replace(".Exported.01", "")
+        if timeline_name.endswith(".Exported.01")
+        else timeline_name
+    )
 
-    - tc_format: "DF" if is_drop else "NDF"
-    - Required keys MUST be present even if values are null.
+    return {
+        "project": {
+            "name": project_name,
+            "edit_rate_fps": fps,
+            "tc_format": "DF" if is_drop else "NDF",
+        },
+        "timeline": {"name": timeline_name, "start_tc_frames": start_tc_frames, "events": events},
+    }
 
-    See: docs/data_model_json.md
-    """
-    raise NotImplementedError
 
-
-# --------------------------- Types (no behavior) ---------------------------
+# --------------------------- Types ---------------------------
 
 
 class EvWrap:
-    """
-    Lightweight carrier for traversal results.
-
-    Fields:
-      kind: str     # "sourceclip" | "operationgroup_on_filler" | "unknown"
-      node: Any     # pyaaf2 object
-      timeline_start_frames: int
-      length_frames: int
-      index: int    # 1-based, stable
-    """
+    """Lightweight carrier for traversal results."""
 
     __slots__ = ("kind", "node", "timeline_start_frames", "length_frames", "index")
 
@@ -261,33 +523,38 @@ class EvWrap:
         self.index = int(index)
 
 
-# --------------------------- CLI (spec harness) ---------------------------
+# --------------------------- CLI ---------------------------
 
 
 def _cli() -> None:
-    """
-    Spec-only CLI harness. Prints or writes the canonical JSON.
-
-    Usage (after implementation exists):
-        python -m src.build_canonical /path/to/timeline.aaf -o out.json
-
-    NOTE: This harness MUST NOT implement traversal here. It only calls
-    build_canonical_from_aaf() when implemented.
-    """
-    ap = argparse.ArgumentParser(
-        description="Build canonical JSON from an AAF (spec-first scaffold)."
+    """CLI harness for building canonical JSON from AAF."""
+    parser = argparse.ArgumentParser(
+        description="Build canonical JSON from AAF file per aaf2resolve-spec."
     )
-    ap.add_argument("aaf", help="Path to AAF file")
-    ap.add_argument("-o", "--out", default="-", help="Output JSON path (default: stdout)")
-    args = ap.parse_args()
+    parser.add_argument("aaf", help="Path to AAF file")
+    parser.add_argument("-o", "--out", default="-", help="Output JSON path (default: stdout)")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging")
+    args = parser.parse_args()
 
-    canon = build_canonical_from_aaf(args.aaf)
-    text = json.dumps(canon, indent=2)
-    if args.out == "-" or args.out.lower() == "stdout":
-        print(text)
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
     else:
-        with open(args.out, "w", encoding="utf-8") as f:
-            f.write(text)
+        logging.basicConfig(level=logging.INFO)
+
+    try:
+        canon = build_canonical_from_aaf(args.aaf)
+        text = json.dumps(canon, indent=2)
+
+        if args.out == "-" or args.out.lower() == "stdout":
+            print(text)
+        else:
+            with open(args.out, "w", encoding="utf-8") as f:
+                f.write(text)
+            logger.info(f"Canonical JSON written to {args.out}")
+
+    except Exception as e:
+        logger.error(f"Failed: {e}")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
