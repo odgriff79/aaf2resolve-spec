@@ -70,7 +70,7 @@ def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorRep
                 times: list[float] = [
                     float(k["t"])
                     for k in arr
-                    if isinstance(k, dict) and isinstance(k.get("t"), (int, float))
+                    if isinstance(k, dict) and isinstance(k.get("t"), int | float)
                 ]
                 for earlier, later in zip(times, times[1:], strict=False):
                     if earlier > later:
