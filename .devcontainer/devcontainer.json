@@ -1,3 +1,4 @@
 {
-  "postCreateCommand": "pip install -U pip && pip install -r requirements-dev.txt || true && make ci || true"
+  // ...
+  "postCreateCommand": "pip install -U pip && pip install -r requirements-dev.txt || true && pip install -U ruff black mypy pytest || true && make ci || true"
 }
