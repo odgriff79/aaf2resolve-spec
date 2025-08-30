@@ -1,0 +1,18 @@
+{
+  "name": "agents-dev",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": { "terminal.integrated.defaultProfile.linux": "bash" },
+      "extensions": [
+        "ms-python.python",
+        "github.copilot-chat",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "postCreateCommand": "pipx install nox || true && pip install -U pip && pip install -r requirements.txt || true",
+  "remoteUser": "vscode",
+  "updateContentCommand": "make help || true"
+}
