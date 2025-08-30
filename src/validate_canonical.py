@@ -26,11 +26,11 @@ class ValidationErrorReport:
     doc: str | None = None
 
 
+@dataclass
 class ValidationReport:
     ok: bool
-    errors: list[ValidationErrorReport]
+    errors: list["ValidationErrorReport"]
     summary: dict[str, Any]
-
 
 def get_canonical_json_schema() -> dict[str, Any]:
     """
@@ -68,7 +68,11 @@ def _run_additional_validations(
         kfs = data["keyframes"]
         for pname, arr in kfs.items():
             if isinstance(arr, list) and len(arr) > 1:
-                times: list[float] = [k.get("t") for k in arr if isinstance(k, dict) and "t" in k]
+        times: list[float] = [
+            float(k["t"]) 
+            for k in arr 
+            if isinstance(k, dict) and isinstance(k.get("t"), (int, float))
+        ]
                 for earlier, later in zip(times, times[1:], strict=False):
                     if earlier > later:
                         errors.append(

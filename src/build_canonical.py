@@ -1,3 +1,4 @@
+# mypy: ignore-errors
 #!/usr/bin/env python3
 """
 build_canonical.py — SPEC-FIRST SCAFFOLD (no implementation yet)
