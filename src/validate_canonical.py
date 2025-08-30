@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import re
+
+#!/usr/bin/env python3
 
 """
 Validation utilities for the canonical AAF2Resolve JSON schema.
@@ -58,6 +61,48 @@ def get_canonical_json_schema() -> dict[str, Any]:
     return schema
 
 
+def validate_event_ids(data: dict[str, Any]) -> list[ValidationErrorReport]:
+    """Validate event IDs follow the pattern ev_NNNN (see docs/data_model_json.md)."""
+    errors: list[ValidationErrorReport] = []
+
+    timeline = data.get("timeline")
+    if not isinstance(timeline, dict):
+        return errors
+
+    events = timeline.get("events")
+    if not isinstance(events, list):
+        return errors
+
+    for i, event in enumerate(events):
+        if not isinstance(event, dict):
+            continue
+
+        event_id = event.get("id")
+        if not isinstance(event_id, str):
+            errors.append(
+                ValidationErrorReport(
+                    code="CANON-REQ-020",
+                    path=["timeline", "events", str(i), "id"],
+                    message="Event ID must be a string",
+                    doc="docs/data_model_json.md#identifiers",
+                )
+            )
+            continue
+
+        # Accept ev_ followed by exactly 4 digits
+        if re.fullmatch(r"ev_\d{4}", event_id) is None:
+            errors.append(
+                ValidationErrorReport(
+                    code="CANON-REQ-020",
+                    path=["timeline", "events", str(i), "id"],
+                    message=f"Event ID {event_id} does not match required pattern ev_NNNN",
+                    doc="docs/data_model_json.md#identifiers",
+                )
+            )
+
+    return errors
+
+
 def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorReport]:
     """Checks not expressible in JSON Schema."""
     errors: list[ValidationErrorReport] = []
@@ -85,6 +130,7 @@ def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorRep
                         break
 
     return errors
+    errors.extend(validate_event_ids(data))
 
 
 def validate_canonical_json(data: dict[str, Any], verbose: bool = False) -> ValidationReport:
