@@ -9,20 +9,6 @@ from typing import Any
 try:
     from jsonschema.validators import Draft7Validator
 except ImportError:
-#!/usr/bin/env python3
-import re
-
-#!/usr/bin/env python3
-
-"""
-Validation utilities for the canonical AAF2Resolve JSON schema.
-"""
-
-import json
-import sys
-from dataclasses import dataclass
-from typing import Any
-
     print("jsonschema is required for validation.", file=sys.stderr)
     raise
 
