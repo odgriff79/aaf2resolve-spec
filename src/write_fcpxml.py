@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+# @created_by: CL
+# @created_at: 2025-08-30T17:35:00Z
+# @revision: 2.001
+# @last_editor: CL
+# @draft_kind: first_draft
+# @spec_compliance: ["docs/fcpxml_rules.md", "docs/data_model_json.md"]
+# @handoff_ready: true
+# @integration_points: ["write_fcpxml_from_canonical()"]
+# @inputs: ["canonical JSON per data_model_json.md"]
+# @outputs: ["FCPXML 1.13 for DaVinci Resolve"]
+# @dependencies: ["xml.etree.ElementTree"]
+# @notes: "Complete FCPXML writer implementation per handoff from GPT baton."
 """
 write_fcpxml.py — Complete FCPXML 1.13 Writer Implementation
 
