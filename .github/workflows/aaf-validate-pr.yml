@@ -1,0 +1,123 @@
+name: AAF Canonical Validation (PR)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "**/*.json"
+      - "src/**"
+      - "pyproject.toml"
+      - "requirements*.txt"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          pip install ruff black mypy pytest PyYAML
+
+      - name: Determine changed JSON files
+        id: files
+        run: |
+          # Base/head come from the PR event
+          git fetch origin ${{ github.base_ref }} --depth=1 || true
+          git fetch origin ${{ github.head_ref }} --depth=1 || true
+
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}"..."origin/${{ github.head_ref }}" | grep -E '\.json$' || true)
+          echo "changed<<EOF" >> $GITHUB_OUTPUT
+          echo "${CHANGED}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate changed JSON (if any)
+        id: validate
+        run: |
+          set -e
+          echo "Changed JSON files:"
+          echo "${{ steps.files.outputs.changed }}"
+          echo
+
+          if [ -z "${{ steps.files.outputs.changed }}" ]; then
+            echo "summary=No JSON files changed." >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          PASSED=()
+          FAILED=()
+          REPORT_DIR="reports/validation/pr_${{ github.run_id }}"
+          mkdir -p "$REPORT_DIR"
+
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            echo "Validating: $f"
+            # Write a report JSON alongside for debugging
+            if python src/validate_canonical.py --report "$REPORT_DIR/$(basename "$f").report.json" "$f" --verbose; then
+              PASSED+=("$f")
+            else
+              FAILED+=("$f")
+            fi
+          done <<EOF
+${{ steps.files.outputs.changed }}
+EOF
+
+          echo
+          echo "### Validation summary"
+          echo "Passed: ${#PASSED[@]}"
+          printf '%s\n' "${PASSED[@]}"
+          echo "Failed: ${#FAILED[@]}"
+          printf '%s\n' "${FAILED[@]}"
+
+          # Build markdown summary for comment
+          MD="## Canonical Validation\n"
+          if [ "${#PASSED[@]}" -gt 0 ]; then
+            MD+="\n**✅ Passed (${#PASSED[@]}):**\n"
+            for p in "${PASSED[@]}"; do MD+="- \`${p}\`\n"; done
+          fi
+          if [ "${#FAILED[@]}" -gt 0 ]; then
+            MD+="\n**❌ Failed (${#FAILED[@]}):**\n"
+            for f in "${FAILED[@]}"; do MD+="- \`${f}\`\n"; done
+          fi
+          MD+="\n_Reports saved to \`${REPORT_DIR}\` in the workflow artifacts._\n"
+
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$MD" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Fail job if any failures
+          if [ "${#FAILED[@]}" -gt 0 ]; then
+            exit 1
+          fi
+
+      - name: Upload reports as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-validation-reports
+          path: reports/validation/
+          if-no-files-found: ignore
+
+      - name: Comment on PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `${{ toJSON(steps.validate.outputs.summary) }}`.replace(/^"|"$/g, '').replace(/\\"/g, '"');
+            const { context, github } = require('@actions/github');
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body
+            });
