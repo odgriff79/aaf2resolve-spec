@@ -1,0 +1,42 @@
+name: agents-on-label
+on:
+  issues:
+    types: [labeled]
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  choose-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Route to Claude on 'agent:build'
+        if: contains(github.event.label.name, 'agent:build')
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Respond to the issue, propose a branch & PR guided by AGENTS.md
+          mode: "issue-to-pr"
+          prompt: |
+            Read AGENTS.md and repo.instructions.md.
+            Implement the requested build feature and open a PR with CI passing.
+
+      - name: Route to Gemini on 'agent:tests'
+        if: contains(github.event.label.name, 'agent:tests')
+        uses: google-github-actions/run-gemini-cli@v0
+        with:
+          api_key: ${{ secrets.GEMINI_API_KEY }}
+          args: >
+            run --task "Generate missing tests for the module referenced in this issue.
+            Ensure ruff+mypy+pytest pass locally."
+
+      - name: (Optional) ChatGPT via REST on 'agent:docs'
+        if: contains(github.event.label.name, 'agent:docs')
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          body="$(jq -n --arg msg "Read AGENTS.md and improve docs per
