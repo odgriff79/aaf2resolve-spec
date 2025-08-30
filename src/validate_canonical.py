@@ -32,6 +32,7 @@ class ValidationReport:
     errors: list["ValidationErrorReport"]
     summary: dict[str, Any]
 
+
 def get_canonical_json_schema() -> dict[str, Any]:
     """
     Return JSON Schema (draft-07) for canonical JSON per docs/data_model_json.md.
@@ -57,31 +58,32 @@ def get_canonical_json_schema() -> dict[str, Any]:
     return schema
 
 
-def _run_additional_validations(
-    data: dict[str, Any],
-) -> list[ValidationErrorReport]:
+def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorReport]:
     """Checks not expressible in JSON Schema."""
     errors: list[ValidationErrorReport] = []
 
-    # Example: keyframe time ordering
-    if "keyframes" in data:
-        kfs = data["keyframes"]
+    # Keyframe time ordering: each parameter's keyframe times must be non-decreasing.
+    kfs = data.get("keyframes")
+    if isinstance(kfs, dict):
         for pname, arr in kfs.items():
             if isinstance(arr, list) and len(arr) > 1:
-        times: list[float] = [
-            float(k["t"]) 
-            for k in arr 
-            if isinstance(k, dict) and isinstance(k.get("t"), (int, float))
-        ]
+                times: list[float] = [
+                    float(k["t"])
+                    for k in arr
+                    if isinstance(k, dict) and isinstance(k.get("t"), (int, float))
+                ]
                 for earlier, later in zip(times, times[1:], strict=False):
                     if earlier > later:
                         errors.append(
                             ValidationErrorReport(
-                                code="ORDER",
-                                path=["keyframes", pname],
-                                message="Keyframes not in time order.",
+                                code="CANON-KF-ORDER",
+                                path=f"keyframes.{pname}",
+                                message="Keyframe times must be non-decreasing",
+                                doc="docs/data_model_json.md#keyframes",
                             )
                         )
+                        break
+
     return errors
 
 
