@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -15,9 +16,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+          cache: pip
+          # Improves cache hits:
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+            pyproject.toml
+            setup.cfg
+            setup.py
 
       - name: Install dev deps
+        env:
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
@@ -25,7 +35,7 @@ jobs:
 
       - name: Lint (ruff) & format check (black)
         run: |
-          ruff check .
+          ruff check --output-format=github .
           black --check .
 
       - name: Type check (mypy)
@@ -34,36 +44,12 @@ jobs:
       - name: Unit tests (pytest)
         run: |
           mkdir -p test-artifacts
-          pytest -q --maxfail=1 --disable-warnings 2>&1 | tee test-artifacts/pytest.log
+          pytest -q --maxfail=1 --disable-warnings \
+            --junitxml=test-artifacts/pytest-junit.xml 2>&1 | tee test-artifacts/pytest.log
         continue-on-error: false
 
       - name: Validate handoff.yml (required keys)
         if: hashFiles('handoff/handoff.yml') != ''
         run: |
           python - <<'PY'
-          import sys, yaml, pathlib
-          p = pathlib.Path("handoff/handoff.yml")
-          if not p.exists():
-              print("handoff/handoff.yml not found; if intentional, skip or create a stub.")
-              sys.exit(1)
-          req = {"owner","status","artifacts","outputs_expected","acceptance_criteria","next_action"}
-          data = yaml.safe_load(p.read_text(encoding="utf-8"))
-          if not isinstance(data, dict):
-              print("handoff.yml must be a mapping"); sys.exit(1)
-          missing = sorted(req - set(data))
-          if missing:
-              print("Missing keys:", ", ".join(missing)); sys.exit(1)
-          print("handoff.yml OK")
-          PY
-
-      - name: Schema smoke test (validator + minimal example)
-        if: hashFiles('src/validate_canonical.py') != '' && hashFiles('tests/samples/minimal_valid.json') != ''
-        run: |
-          python -m src.validate_canonical tests/samples/minimal_valid.json --verbose
-
-      - name: Upload test logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-artifacts
-          path: test-artifacts/
+          import sys, y
