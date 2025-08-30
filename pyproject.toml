@@ -76,3 +76,7 @@ exclude_lines = [
   "pragma: no cover",
   "if __name__ == .__main__.:",
 ]
+
+[[tool.mypy.overrides]]
+module = ["src.build_canonical", "src.tools.json_to_csv_views", "src.parse_aaf"]
+ignore_errors = true

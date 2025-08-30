@@ -8,9 +8,10 @@ from __future__ import annotations
 
 import argparse
 import json
+from typing import Any
 
 
-def write_fcpxml_from_canonical(canon: dict[str, any], out_path: str) -> None:
+def write_fcpxml_from_canonical(canon: dict[str, Any], out_path: str) -> None:
     """
     Write an FCPXML 1.13 document to `out_path`, consuming the canonical dict.
 
@@ -37,5 +38,5 @@ if __name__ == "__main__":
     ap.add_argument("out", help="Path to output FCPXML")
     args = ap.parse_args()
     with open(args.canon_json, encoding="utf-8") as f:
-        canon: dict[str, any] = json.load(f)
+        canon: dict[str, Any] = json.load(f)
     write_fcpxml_from_canonical(canon, args.out)
