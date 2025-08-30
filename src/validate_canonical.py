@@ -77,7 +77,7 @@ def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorRep
                         errors.append(
                             ValidationErrorReport(
                                 code="CANON-KF-ORDER",
-                                path=f"keyframes.{pname}",
+                                path=["keyframes", pname],
                                 message="Keyframe times must be non-decreasing",
                                 doc="docs/data_model_json.md#keyframes",
                             )
