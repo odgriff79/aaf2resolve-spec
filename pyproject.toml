@@ -1,12 +1,73 @@
+# pyproject.toml — aaf2resolve-spec
+# Central config for ruff, mypy, pytest, and black (format check).
+# CI runs: ruff → black --check → mypy → pytest
+
 [tool.ruff]
-line-length = 100
 target-version = "py311"
+line-length = 100
+# Keep it sensible; extend later as the codebase grows.
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort import order
+  "B",   # flake8-bugbear
+  "UP",  # pyupgrade
+]
+ignore = [
+  "E203",  # allow black’s slice spacing
+]
+exclude = [
+  ".git",
+  ".github",
+  ".devcontainer",
+  "docs",
+  "reports",
+  "build",
+  "dist",
+]
+
+[tool.ruff.isort]
+known-first-party = ["aaf2resolve_spec", "src"]
+combine-as-imports = true
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]  # allow re-exports
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
 
 [tool.mypy]
 python_version = "3.11"
 strict = true
 ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+no_implicit_optional = true
+# If you keep tests less strict, relax just for tests below.
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+strict = false
+warn_unused_ignores = false
 
 [tool.pytest.ini_options]
-addopts = "-q"
+addopts = "-q --maxfail=1 --disable-warnings"
 testpaths = ["tests"]
+# If you use the src/ layout (recommended), ensure PYTHONPATH is set in CI
+# or add a conftest to handle imports.
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+skip_empty = true
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+]
+
+# Optional: hatchling/poetry/etc. can be added later if you publish a package.
+
