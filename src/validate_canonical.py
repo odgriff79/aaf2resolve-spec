@@ -12,6 +12,7 @@ except ImportError:
     print("jsonschema is required for validation.", file=sys.stderr)
     raise
 
+
 @dataclass
 class ValidationErrorReport:
     code: str
@@ -19,11 +20,13 @@ class ValidationErrorReport:
     message: str
     doc: str | None = None
 
+
 @dataclass
 class ValidationReport:
     ok: bool
     errors: list["ValidationErrorReport"]
     summary: dict[str, Any]
+
 
 def get_canonical_json_schema() -> dict[str, Any]:
     """
@@ -48,6 +51,7 @@ def get_canonical_json_schema() -> dict[str, Any]:
         "additionalProperties": False,
     }
     return schema
+
 
 def validate_event_ids(data: dict[str, Any]) -> list[ValidationErrorReport]:
     """Validate event IDs follow the pattern ev_NNNN (see docs/data_model_json.md)."""
@@ -90,6 +94,7 @@ def validate_event_ids(data: dict[str, Any]) -> list[ValidationErrorReport]:
 
     return errors
 
+
 def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorReport]:
     """Checks not expressible in JSON Schema."""
     errors: list[ValidationErrorReport] = []
@@ -118,6 +123,7 @@ def _run_additional_validations(data: dict[str, Any]) -> list[ValidationErrorRep
 
     return errors
     errors.extend(validate_event_ids(data))
+
 
 def validate_canonical_json(data: dict[str, Any], verbose: bool = False) -> ValidationReport:
     """Validate canonical JSON against schema + custom rules."""
@@ -156,6 +162,7 @@ def validate_canonical_json(data: dict[str, Any], verbose: bool = False) -> Vali
 
     return ValidationReport(ok=not errors, errors=errors, summary=summary)
 
+
 def load_and_validate_json_file(file_path: str, verbose: bool = False) -> ValidationReport:
     try:
         with open(file_path, encoding="utf-8") as f:
@@ -164,6 +171,7 @@ def load_and_validate_json_file(file_path: str, verbose: bool = False) -> Valida
         print(f"File not found: {file_path}", file=sys.stderr)
         raise
     return validate_canonical_json(data, verbose=verbose)
+
 
 def write_validation_report(report: ValidationReport, output_path: str | None = None) -> None:
     payload = {
@@ -185,6 +193,7 @@ def write_validation_report(report: ValidationReport, output_path: str | None = 
             f.write(out)
     else:
         print(out)
+
 
 if __name__ == "__main__":
     import argparse
