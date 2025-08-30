@@ -14,8 +14,8 @@ def write_fcpxml_from_canonical(
     """
     Write an FCPXML 1.13 document to `out_path`, consuming the canonical dict.
 
-    - Effects on filler become appropriate generator/adjustment/contextual nodes (per doc),
-      and include any parameters that cleanly map (timing preserved).
+    - Effects on filler become appropriate generator/adjustment/contextual nodes
+      (per doc), and include any parameters that cleanly map (timing preserved).
     - If an effect or parameter has no safe mapping, retain minimal representation
       rather than guessing.
 
