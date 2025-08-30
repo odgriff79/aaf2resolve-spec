@@ -1,11 +1,15 @@
-import subprocess, sys
+import subprocess
+import sys
+
 
 def _ok(cmd: list[str]) -> bool:
-    p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.run(cmd, capture_output=True)
     return p.returncode == 0
 
-def test_validate_canonical_help():
-    assert _ok([sys.executable, "-m", "src.validate_canonical", "-h"])
 
-def test_write_fcpxml_help():
-    assert _ok([sys.executable, "-m", "src.write_fcpxml", "-h"])
+def test_validate_canonical():
+    assert _ok([sys.executable, "src/validate_canonical.py", "--help"])
+
+
+def test_build_canonical():
+    assert _ok([sys.executable, "src/build_canonical.py", "--help"])
