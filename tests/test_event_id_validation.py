@@ -1,33 +1,24 @@
 from __future__ import annotations
 
-import json
-import subprocess
-import sys
-from pathlib import Path
+from typing import Set
+
+from src.validate_canonical import validate_event_ids
 
 
-def _run(json_path: str, tmp: Path) -> dict:
-    out = tmp / "report.json"
-    p = subprocess.run(
-        [sys.executable, "-m", "src.validate_canonical", "--report", str(out), json_path],
-        capture_output=True,
-        text=True,
-    )
-    assert p.returncode in (0, 1, 2), f"rc={p.returncode}\nSTDERR:\n{p.stderr}"
-    return json.loads(out.read_text(encoding="utf-8"))
+def _codes(data: dict) -> Set[str]:
+    return {e.code for e in validate_event_ids(data)}
 
 
-def _codes(rep: dict) -> set[str]:
-    return {e.get("code", "") for e in (rep.get("errors") or []) if isinstance(e, dict)}
+def test_invalid_event_id_alpha() -> None:
+    data = {"timeline": {"events": [{"id": "event_1234"}]}}  # wrong prefix
+    assert "CANON-REQ-020" in _codes(data)
 
 
-def test_invalid_event_id_alpha(tmp_path: Path) -> None:
-    rep = _run("tests/samples/invalid_event_id_alpha.json", tmp_path)
-    assert rep.get("ok") is False
-    assert "CANON-REQ-020" in _codes(rep)
+def test_invalid_event_id_short() -> None:
+    data = {"timeline": {"events": [{"id": "ev_99"}]}}  # not 4 digits
+    assert "CANON-REQ-020" in _codes(data)
 
 
-def test_invalid_event_id_short(tmp_path: Path) -> None:
-    rep = _run("tests/samples/invalid_event_id_short.json", tmp_path)
-    assert rep.get("ok") is False
-    assert "CANON-REQ-020" in _codes(rep)
+def test_valid_event_id() -> None:
+    data = {"timeline": {"events": [{"id": "ev_0000"}]}}  # valid pattern
+    assert "CANON-REQ-020" not in _codes(data)
