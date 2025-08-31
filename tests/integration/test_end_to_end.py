@@ -1,4 +1,9 @@
 from __future__ import annotations
+import glob
+import pytest
+import xml.etree.ElementTree as ET
+import json
+from pathlib import Path
 
 def _fcpxml_shape_summary(fcpxml_path: Path) -> dict:
     """
@@ -55,10 +60,6 @@ def _fcpxml_shape_summary(fcpxml_path: Path) -> dict:
     }
 
 
-import json
-import xml.etree.ElementTree as ET
-from pathlib import Path
-import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLES = ROOT / "tests" / "samples"
@@ -125,3 +126,25 @@ def test_fcpxml_shape_report(tmp_path, request):
     report_path.write_text(json.dumps(report_payload, indent=2), encoding="utf-8")
 
     assert summary["ok"], f"FCPXML shape check failed: {json.dumps(summary, indent=2)}"
+
+@pytest.mark.parametrize("fcpxml_path", sorted(glob.glob("reports/integration/*.fcpxml")))
+def test_fcpxml_shape_report_all(fcpxml_path):
+    """
+    Generate a shape report for each FCPXML found in reports/integration/.
+    Writes <stem>.report.json beside the FCPXML.
+    """
+    from pathlib import Path
+    import json
+
+    fcpxml_path = Path(fcpxml_path)
+    summary = _fcpxml_shape_summary(fcpxml_path)
+
+    report_path = fcpxml_path.with_suffix(".report.json")
+    payload = {
+        "test": "fcpxml_shape_report",
+        "fcpxml_path": str(fcpxml_path),
+        "summary": summary,
+    }
+    report_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    assert summary["ok"], f"FCPXML shape check failed for {fcpxml_path}: " + json.dumps(summary, indent=2)
