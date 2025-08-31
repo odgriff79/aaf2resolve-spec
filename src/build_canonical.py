@@ -554,7 +554,7 @@ def _cli() -> None:
 
     except Exception as e:
         logger.error(f"Failed: {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":
