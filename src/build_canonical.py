@@ -368,7 +368,7 @@ def extract_operationgroup(op) -> dict[str, Any]:
 
                     # Handle different parameter types
                     if hasattr(param_value, "__iter__") and not isinstance(
-                        param_value, (str, bytes)
+                        param_value, str | bytes
                     ):
                         # Keyframe data (PointList)
                         keyframes = []
@@ -379,7 +379,7 @@ def extract_operationgroup(op) -> dict[str, Any]:
                                     time_sec = float(point.time)
                                     value = (
                                         float(point.value)
-                                        if isinstance(point.value, (int, float))
+                                        if isinstance(point.value, int | float)
                                         else str(point.value)
                                     )
                                     keyframes.append({"t": time_sec, "v": value})
@@ -399,7 +399,7 @@ def extract_operationgroup(op) -> dict[str, Any]:
 
                     else:
                         # Static parameter
-                        if isinstance(param_value, (int, float)):
+                        if isinstance(param_value, int | float):
                             effect["parameters"][param_name] = param_value
                         else:
                             param_str = str(param_value)

@@ -1,8 +1,7 @@
 from __future__ import annotations
-import json
+
 import subprocess
-import sys
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List, Tuple
 
 SAFE_COMMANDS: Dict[str, List[str]] = {
     "lint": ["ruff", "check", "."],
@@ -11,6 +10,7 @@ SAFE_COMMANDS: Dict[str, List[str]] = {
     "validate_json": ["python", "-m", "src.validate_canonical"],
     "ci": ["make", "ci"],
 }
+
 
 def run_safe(name: str) -> Tuple[int, str]:
     base = SAFE_COMMANDS.get(name)

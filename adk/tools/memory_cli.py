@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-import sys
 import json
+import sys
 from pathlib import Path
 
 # Add project root to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from adk.utils.memory_store import write_entry, read_entry
+from adk.utils.memory_store import read_entry, write_entry
+
 try:
     from adk.utils.memory_store import list_entries  # type: ignore
 except Exception:  # list not available
@@ -24,9 +25,9 @@ def main():
         print("       python memory_cli.py read <key>")
         print("       python memory_cli.py list")
         return 1
-    
+
     command = sys.argv[1]
-    
+
     if command == "write" and len(sys.argv) >= 4:
         key = sys.argv[2]
         try:
@@ -35,7 +36,6 @@ def main():
         except json.JSONDecodeError as e:
             print(f"Invalid JSON: {e}")
             return 1
-            
 
     elif command == "list":
         if callable(list_entries):
@@ -52,7 +52,6 @@ def main():
         else:
             print("List operation not supported by memory store")
             return 1
-
 
     elif command == "list":
         if callable(list_entries):
@@ -77,12 +76,13 @@ def main():
             print(json.dumps(entry, indent=2))
         else:
             print("Entry not found")
-            
+
     else:
         print("Invalid command or arguments")
         return 1
-        
+
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
