@@ -12,3 +12,9 @@ adk/monitoring/memory.sqlite
 adk/monitoring/*.tmp
 adk/monitoring/memory.sqlite
 adk/monitoring/*.json
+# ADK runtime artifacts (do not commit)
+adk/monitoring/memory.jsonl
+adk/monitoring/memory.sqlite
+adk/monitoring/agent_status.json
+adk/monitoring/gui_status.json
+adk/monitoring/pipeline_metrics.json
