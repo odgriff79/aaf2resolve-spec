@@ -1,0 +1,46 @@
+name: CI + Reports
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci-and-reports:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+      checks: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install tooling
+        run: |
+          python -m pip install --upgrade pip
+          # ensure core tools exist (ruff/mypy/pytest); ignore missing req files
+          pip install ruff mypy pytest anyio
+          # optional type stubs used by mypy config (harmless if unused)
+          pip install --no-deps --ignore-installed types-requests types-PyYAML || true
+          # project deps if present
+          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt || true; fi
+
+      - name: Lint + Type + Tests (make ci)
+        run: make ci
+
+      - name: Generate integration reports (make reports)
+        run: make reports
+
+      - name: Upload integration reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-reports
+          path: reports/integration
+          if-no-files-found: warn
