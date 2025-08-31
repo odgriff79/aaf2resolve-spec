@@ -1,51 +1,76 @@
-<<<<<<< HEAD
-# adk/mcp/server.py  (pseudo; adapt to your MCP framework)
-from adk.tools.repo_tools import repo_search
+cat > adk/mcp/server.py <<'PY'
+from __future__ import annotations
 
-TOOLS = {
-    "repo_search": {
-        "description": "Search the repository for a regex pattern",
-        "parameters": {"pattern": "string", "flags": "string", "max_hits": "number"},
-        "handler": lambda args: repo_search(
-            pattern=args.get("pattern",""),
-            flags=args.get("flags","i"),
-            max_hits=int(args.get("max_hits", 500))
-        ),
-    },
-}
-=======
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from adk.tools.repo_tools import repo_search
+from typing import Any, Dict
+
 from adk.utils.memory_store import read_entry, write_entry, list_entries
+from adk.tools.repo_tools import repo_search
 
-PORT = 4010
 
-class MCPHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        length = int(self.headers.get("Content-Length", 0))
-        req = json.loads(self.rfile.read(length).decode("utf-8") or "{}")
-        tool, args = req.get("tool"), req.get("args", {})
+class MCPEndpoint(BaseHTTPRequestHandler):
+    def _send_json(self, status: int, payload: Dict[str, Any]) -> None:
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(payload).encode("utf-8"))
+
+    def do_POST(self) -> None:
         try:
-            if tool == "repo_search":
-                result = repo_search(**args)
-            elif tool == "memory_read":
-                result = read_entry(args.get("key"))
-            elif tool == "memory_write":
-                write_entry(args["key"], args["value"], author=args.get("author","agent")); result = {"ok": True}
-            elif tool == "memory_list":
-                result = list_entries(args.get("prefix",""))
-            else:
-                self.send_response(400); self.end_headers(); self.wfile.write(b'{"error":"unknown tool"}'); return
-            self.send_response(200); self.send_header("Content-Type","application/json"); self.end_headers()
-            self.wfile.write(json.dumps({"result": result}).encode("utf-8"))
-        except Exception as e:
-            self.send_response(500); self.end_headers(); self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+            if self.path != "/tool":
+                self._send_json(404, {"error": "not found"})
+                return
 
-def main():
-    print(f"ADK MCP server listening on http://0.0.0.0:{PORT} (tools: repo_search, memory_read, memory_write, memory_list)")
-    HTTPServer(("0.0.0.0", PORT), MCPHandler).serve_forever()
+            length = int(self.headers.get("Content-Length", "0"))
+            raw = self.rfile.read(length)
+            body = json.loads(raw.decode("utf-8"))
+
+            tool = body.get("tool")
+            args: Dict[str, Any] = body.get("args", {}) or {}
+
+            if tool == "memory_read":
+                key = str(args.get("key", ""))
+                result = read_entry(key)
+                self._send_json(200, {"result": result})
+
+            elif tool == "memory_write":
+                key = str(args.get("key", ""))
+                value = args.get("value", {})
+                author = str(args.get("author", "agent"))
+                write_entry(key, value, author=author)
+                self._send_json(200, {"result": "ok"})
+
+            elif tool == "memory_list":
+                prefix = str(args.get("prefix", ""))
+                result = list_entries(prefix)
+                self._send_json(200, {"result": result})
+
+            elif tool == "repo_search":
+                pattern = str(args.get("pattern", ""))
+                flags = str(args.get("flags", "i"))
+                max_hits = int(args.get("max_hits", 500))
+                result = repo_search(pattern, flags=flags, max_hits=max_hits)
+                self._send_json(200, {"result": result})
+
+            else:
+                self._send_json(400, {"error": "unknown tool", "tool": tool})
+
+        except Exception as e:  # noqa: BLE001
+            self._send_json(500, {"error": str(e)})
+
+
+def main() -> None:
+    server = HTTPServer(("127.0.0.1", 8765), MCPEndpoint)
+    print("MCP server listening on http://127.0.0.1:8765")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
 
 if __name__ == "__main__":
     main()
->>>>>>> 96048c5 (Add MCP server and tools (repo_search, memory_store, memory read/write/list))
+PY
