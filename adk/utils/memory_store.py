@@ -1,36 +1,52 @@
+from __future__ import annotations
+
 import json
 import sqlite3
-import time
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
-BASE_DIR = Path(__file__).parent.parent
-DATA_DIR = BASE_DIR / "monitoring"  
-DB_PATH = DATA_DIR / "memory.sqlite"
+DB_DIR = Path("adk/monitoring")
+DB_DIR.mkdir(parents=True, exist_ok=True)
+DB_PATH = DB_DIR / "memory.sqlite"
 
-def write_entry(key: str, value: Any, author: str = "agent", tags: str = "") -> None:
-    DATA_DIR.mkdir(exist_ok=True)
-    ts = int(time.time())
-    con = sqlite3.connect(DB_PATH)
-    con.execute("""CREATE TABLE IF NOT EXISTS entries(
-        key TEXT PRIMARY KEY, 
-        value TEXT NOT NULL, 
-        author TEXT, 
-        tags TEXT, 
-        updated_at INTEGER NOT NULL
-    )""")
-    con.execute("INSERT OR REPLACE INTO entries(key,value,author,tags,updated_at) VALUES(?,?,?,?,?)",
-                (key, json.dumps(value), author, tags, ts))
-    con.close()
-    print(f"Memory entry written: {key}")
+def _conn() -> sqlite3.Connection:
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS memories ("
+        " key TEXT PRIMARY KEY,"
+        " value TEXT NOT NULL,"
+        " author TEXT,"
+        " updated_at TEXT NOT NULL)"
+    )
+    return conn
+
+def write_entry(key: str, value: Any, author: str = "human") -> None:
+    payload = json.dumps(value, ensure_ascii=False)
+    ts = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+    with _conn() as c:
+        c.execute(
+            "INSERT INTO memories(key,value,author,updated_at) VALUES(?,?,?,?) "
+            "ON CONFLICT(key) DO UPDATE SET value=excluded.value, author=excluded.author, updated_at=excluded.updated_at",
+            (key, payload, author, ts),
+        )
 
 def read_entry(key: str) -> Optional[Dict[str, Any]]:
-    if not DB_PATH.exists():
+    with _conn() as c:
+        row = c.execute(
+            "SELECT key, value, author, updated_at FROM memories WHERE key = ?",
+            (key,),
+        ).fetchone()
+    if not row:
         return None
-    con = sqlite3.connect(DB_PATH)
-    row = con.execute("SELECT key, value, author, tags, updated_at FROM entries WHERE key=?", (key,)).fetchone()
-    con.close()
-    if not row: 
-        return None
-    k, v, a, t, u = row
-    return {"key": k, "value": json.loads(v), "author": a, "tags": t, "updated_at": u}
+    k, v, a, t = row
+    try:
+        js = json.loads(v)
+    except Exception:
+        js = v
+    return {"key": k, "value": js, "author": a, "updated_at": t}
+
+def list_entries() -> List[Dict[str, Any]]:
+    with _conn() as c:
+        rows = c.execute("SELECT key, updated_at, author FROM memories ORDER BY key").fetchall()
+    return [{"key": k, "updated_at": t, "author": a} for (k, t, a) in rows]
