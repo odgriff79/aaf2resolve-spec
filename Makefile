@@ -6,3 +6,6 @@ type:
 	mypy .
 test:
 	pytest
+
+integration:
+	pytest -q tests/integration
