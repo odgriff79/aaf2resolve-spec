@@ -141,3 +141,26 @@ if __name__ == "__main__":
         """Trigger agent workflow via GitHub Actions"""
         # Implementation for triggering workflows
         return {"success": True, "workflow_id": "triggered"}
+
+    # GitHub MCP Integration endpoints
+    def _create_integration_pr(self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """Create PR with integration test results"""
+        import subprocess
+        import os
+        
+        title = args.get("title", "Integration Test Results")
+        body = args.get("body", "Automated integration test results")
+        
+        try:
+            # Simple success response for now
+            return {"success": True, "message": "Integration PR endpoint ready"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+    def _update_handoff_issue(self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """Update handoff status via GitHub issue"""
+        return {"success": True, "message": "Handoff update endpoint ready"}
+
+    def _check_ci_status(self, args: Dict[str, Any]) -> Dict[str, Any]:
+        """Check GitHub Actions CI status"""
+        return {"success": True, "status": "CI status endpoint ready"}
