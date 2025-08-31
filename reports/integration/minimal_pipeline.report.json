@@ -1,6 +1,6 @@
 {
   "test": "fcpxml_shape_report",
-  "fcpxml_path": "reports/integration/invalid_event_id_alpha.fcpxml",
+  "fcpxml_path": "reports/integration/minimal_pipeline.fcpxml",
   "summary": {
     "ok": true,
     "version": "1.13",
@@ -15,7 +15,7 @@
       "events": 1,
       "projects": 1,
       "spines": 1,
-      "items_in_spine": 1
+      "items_in_spine": 0
     }
   }
 }

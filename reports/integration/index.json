@@ -1,7 +1,7 @@
 {
   "totals": {
-    "tests": 5,
-    "ok": 5,
+    "tests": 6,
+    "ok": 6,
     "fail": 0
   },
   "reports": [
@@ -57,6 +57,24 @@
         "projects": 1,
         "spines": 1,
         "items_in_spine": 1
+      }
+    },
+    {
+      "file": "reports/integration/minimal_pipeline.report.json",
+      "test": "fcpxml_shape_report",
+      "ok": true,
+      "version": "1.13",
+      "root_ok": true,
+      "has_library": true,
+      "has_event": true,
+      "has_project": true,
+      "has_sequence": true,
+      "has_spine": true,
+      "counts": {
+        "events": 1,
+        "projects": 1,
+        "spines": 1,
+        "items_in_spine": 0
       }
     },
     {

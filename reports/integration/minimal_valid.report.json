@@ -1,6 +1,21 @@
 {
-  "sample": "tests/samples/minimal_valid.json",
-  "fcpxml": "reports/integration/minimal_valid.fcpxml",
-  "bytes": 506,
-  "status": "ok"
+  "test": "fcpxml_shape_report",
+  "fcpxml_path": "reports/integration/minimal_valid.fcpxml",
+  "summary": {
+    "ok": true,
+    "version": "1.13",
+    "root_ok": true,
+    "version_ok": true,
+    "has_library": true,
+    "has_event": true,
+    "has_project": true,
+    "has_sequence": true,
+    "has_spine": true,
+    "counts": {
+      "events": 1,
+      "projects": 1,
+      "spines": 1,
+      "items_in_spine": 1
+    }
+  }
 }

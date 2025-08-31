@@ -1,6 +1,6 @@
 {
-  "test": "fcpxml_shape_report",
-  "fcpxml_path": "reports/integration/invalid_event_id_alpha.fcpxml",
+  "test": "test_fcpxml_shape_report",
+  "fcpxml_path": "reports/integration/minimal_valid.fcpxml",
   "summary": {
     "ok": true,
     "version": "1.13",
