@@ -1,12 +1,20 @@
+<<<<<<< HEAD
 cat > adk/mcp/server.py <<'PY'
+=======
+>>>>>>> 1addfca (fix(adk): resolve merge markers & semicolon one-liners in MCP server and repo_tools)
 from __future__ import annotations
 
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any, Dict
 
+<<<<<<< HEAD
 from adk.utils.memory_store import read_entry, write_entry, list_entries
 from adk.tools.repo_tools import repo_search
+=======
+from adk.tools.repo_tools import repo_search
+from adk.utils.memory_store import list_entries, read_entry, write_entry
+>>>>>>> 1addfca (fix(adk): resolve merge markers & semicolon one-liners in MCP server and repo_tools)
 
 
 class MCPEndpoint(BaseHTTPRequestHandler):
@@ -73,4 +81,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+<<<<<<< HEAD
 PY
+=======
+>>>>>>> 1addfca (fix(adk): resolve merge markers & semicolon one-liners in MCP server and repo_tools)
