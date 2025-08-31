@@ -3,13 +3,11 @@
 MCP Status Monitor - Real-time multi-agent coordination tracking
 """
 
-import requests
-import json
 import time
-import subprocess
 from datetime import datetime
-from typing import Dict, Any
-import os
+from typing import Any, Dict
+
+import requests
 
 
 def get_internal_mcp_status() -> Dict[str, Any]:
