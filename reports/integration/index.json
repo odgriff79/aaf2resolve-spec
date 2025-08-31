@@ -1,0 +1,79 @@
+{
+  "totals": {
+    "tests": 5,
+    "ok": 1,
+    "fail": 4
+  },
+  "reports": [
+    {
+      "file": "reports/integration/invalid_event_id_alpha.report.json",
+      "test": "invalid_event_id_alpha.report",
+      "ok": false,
+      "version": null,
+      "root_ok": null,
+      "has_library": null,
+      "has_event": null,
+      "has_project": null,
+      "has_sequence": null,
+      "has_spine": null,
+      "counts": {}
+    },
+    {
+      "file": "reports/integration/invalid_event_id_short.report.json",
+      "test": "invalid_event_id_short.report",
+      "ok": false,
+      "version": null,
+      "root_ok": null,
+      "has_library": null,
+      "has_event": null,
+      "has_project": null,
+      "has_sequence": null,
+      "has_spine": null,
+      "counts": {}
+    },
+    {
+      "file": "reports/integration/invalid_missing_keys.report.json",
+      "test": "invalid_missing_keys.report",
+      "ok": false,
+      "version": null,
+      "root_ok": null,
+      "has_library": null,
+      "has_event": null,
+      "has_project": null,
+      "has_sequence": null,
+      "has_spine": null,
+      "counts": {}
+    },
+    {
+      "file": "reports/integration/minimal_valid.report.json",
+      "test": "minimal_valid.report",
+      "ok": false,
+      "version": null,
+      "root_ok": null,
+      "has_library": null,
+      "has_event": null,
+      "has_project": null,
+      "has_sequence": null,
+      "has_spine": null,
+      "counts": {}
+    },
+    {
+      "file": "reports/integration/test_fcpxml_shape_report.report.json",
+      "test": "test_fcpxml_shape_report",
+      "ok": true,
+      "version": "1.13",
+      "root_ok": true,
+      "has_library": true,
+      "has_event": true,
+      "has_project": true,
+      "has_sequence": true,
+      "has_spine": true,
+      "counts": {
+        "events": 1,
+        "projects": 1,
+        "spines": 1,
+        "items_in_spine": 1
+      }
+    }
+  ]
+}
