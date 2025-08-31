@@ -1,9 +1,14 @@
 from __future__ import annotations
+
 import glob
-import pytest
-import xml.etree.ElementTree as ET
 import json
+import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import pytest
+
+from src.write_fcpxml import write_fcpxml_from_canonical  # type: ignore
+
 
 def _fcpxml_shape_summary(fcpxml_path: Path) -> dict:
     """
@@ -65,7 +70,6 @@ ROOT = Path(__file__).resolve().parents[2]
 SAMPLES = ROOT / "tests" / "samples"
 REPORTS = ROOT / "reports" / "integration"
 
-from src.write_fcpxml import write_fcpxml_from_canonical  # type: ignore
 
 
 def sample_json_files():
@@ -106,7 +110,6 @@ def test_fcpxml_shape_report(tmp_path, request):
     Post-check: parse the FCPXML produced in earlier integration tests,
     validate its shape, and write a JSON report to reports/integration/.
     """
-    import glob
 
     # Find the most recent FCPXML file written during tests
     candidates = sorted(glob.glob("reports/integration/*.fcpxml"))
@@ -133,8 +136,6 @@ def test_fcpxml_shape_report_all(fcpxml_path):
     Generate a shape report for each FCPXML found in reports/integration/.
     Writes <stem>.report.json beside the FCPXML.
     """
-    from pathlib import Path
-    import json
 
     fcpxml_path = Path(fcpxml_path)
     summary = _fcpxml_shape_summary(fcpxml_path)

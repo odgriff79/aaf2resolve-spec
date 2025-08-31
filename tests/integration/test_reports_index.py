@@ -1,6 +1,7 @@
-from pathlib import Path
-import json
 import glob
+import json
+from pathlib import Path
+
 
 def test_build_reports_index():
     reports_dir = Path("reports/integration")

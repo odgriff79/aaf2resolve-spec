@@ -97,11 +97,9 @@ if __name__ == "__main__":
 
     def _create_integration_pr(self, args: Dict[str, Any]) -> Dict[str, Any]:
         """Create PR with integration test results"""
-        import subprocess
         import os
+        import subprocess
         
-        title = args.get("title", "Integration Test Results")
-        body = args.get("body", "Automated integration test results")
         branch = args.get("branch", "integration-tests")
         
         try:
@@ -111,8 +109,8 @@ if __name__ == "__main__":
             
             cmd = [
                 "gh", "pr", "create",
-                "--title", title,
-                "--body", body,
+                "--title", args.get("title", "Integration Test Results"),
+                "--body", args.get("body", "Automated integration test results"),
                 "--head", branch,
                 "--base", "main"
             ]
@@ -145,11 +143,7 @@ if __name__ == "__main__":
     # GitHub MCP Integration endpoints
     def _create_integration_pr(self, args: Dict[str, Any]) -> Dict[str, Any]:
         """Create PR with integration test results"""
-        import subprocess
-        import os
         
-        title = args.get("title", "Integration Test Results")
-        body = args.get("body", "Automated integration test results")
         
         try:
             # Simple success response for now
