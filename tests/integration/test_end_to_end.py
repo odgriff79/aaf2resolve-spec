@@ -23,20 +23,18 @@ def test_canonical_to_fcpxml_parses_and_writes_artifact(sample_path: Path):
     data = json.loads(sample_path.read_text(encoding="utf-8"))
     out_xml = REPORTS / f"{sample_path.stem}.fcpxml"
 
-    # call writer with required out_path
+    # writer requires out_path; some impls also return text
     maybe_text = write_fcpxml_from_canonical(data, out_xml)
 
-    # normalize to text for parsing
     fcpxml_text = (
         maybe_text if isinstance(maybe_text, str) and maybe_text.strip()
         else out_xml.read_text(encoding="utf-8")
     )
     assert isinstance(fcpxml_text, str) and len(fcpxml_text) > 0
 
-    # XML must be well-formed
+    # well-formed XML check
     ET.fromstring(fcpxml_text)
 
-    # write a small JSON report next to the artifact
     report = {
         "sample": str(sample_path.relative_to(ROOT)),
         "fcpxml": str(out_xml.relative_to(ROOT)),
