@@ -1,0 +1,6 @@
+{
+  "sample": "tests/samples/minimal_valid.json",
+  "fcpxml": "reports/integration/minimal_valid.fcpxml",
+  "bytes": 506,
+  "status": "ok"
+}

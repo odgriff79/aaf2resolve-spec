@@ -1,0 +1,6 @@
+{
+  "sample": "tests/samples/invalid_missing_keys.json",
+  "fcpxml": "reports/integration/invalid_missing_keys.fcpxml",
+  "bytes": 526,
+  "status": "ok"
+}

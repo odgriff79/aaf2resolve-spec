@@ -1,0 +1,6 @@
+{
+  "sample": "tests/samples/invalid_event_id_short.json",
+  "fcpxml": "reports/integration/invalid_event_id_short.fcpxml",
+  "bytes": 506,
+  "status": "ok"
+}

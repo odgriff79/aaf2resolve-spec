@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fcpxml version="1.13">
+  <resources>
+    <format id="r1" name="FFVideoFormat23" frameDuration="1001/24000s" width="1920" height="1080" />
+  </resources>
+  <library>
+    <event name="AAF Import">
+      <project name="BadTimeline">
+        <sequence format="r1" duration="50050/24000s" tcStart="0/24000s">
+          <spine>
+            <gap name="Gap" duration="50050/24000s" offset="0/24000s" />
+          </spine>
+        </sequence>
+      </project>
+    </event>
+  </library>
+</fcpxml>
