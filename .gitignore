@@ -10,3 +10,4 @@ adk/monitoring/pipeline_metrics.json
 adk/monitoring/gui_status.json
 adk/monitoring/memory.sqlite
 adk/monitoring/*.tmp
+adk/monitoring/memory.sqlite
