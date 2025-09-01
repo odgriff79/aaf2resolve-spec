@@ -257,10 +257,13 @@ def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -
         logger.warning("No picture slot found")
         return clips
 
+    # Track processed OperationGroups to prevent duplication
+    processed_operation_groups = set()
+
     # Recursively extract SourceClips from segment tree
     segment_type = type(picture_slot.segment).__name__
     logger.debug(f"Starting recursive extraction from segment: {segment_type}")
-    _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps)
+    _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps, processed_operation_groups)
     return clips
 
 
@@ -370,56 +373,10 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return timeline_offset + filler_length
 
     elif "ScopeReference" in segment_type:
-        # ScopeReference may be an effect definition or parameter reference
+        # ScopeReference segments don't reference mobs - they reference other inputs 
+        # within the same effect scope. Just account for their length.
         scope_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Processing ScopeReference of length {scope_length}")
-        
-        # Debug: show all attributes to understand what this segment contains
-        attrs = [attr for attr in dir(segment) if not attr.startswith('_')]
-        logger.debug(f"ScopeReference attributes: {attrs[:10]}")  # Show first 10 to avoid spam
-        
-        # Try to resolve as a mob reference first
-        reference_id = None
-        for attr in ["source_id", "ref_mob_id", "mob_id", "umid", "source_mob_id", "referenced_mob_id"]:
-            if hasattr(segment, attr):
-                ref_value = getattr(segment, attr)
-                if ref_value:
-                    reference_id = str(ref_value)
-                    break
-        
-        if reference_id:
-            resolved_mob = mob_map.get(reference_id)
-            if resolved_mob:
-                logger.debug(f"Resolved ScopeReference to mob: {getattr(resolved_mob, 'name', 'unnamed')}")
-                # Process the resolved mob (existing logic)
-                if hasattr(resolved_mob, "slots"):
-                    for slot in _iter_safe(resolved_mob.slots):
-                        if hasattr(slot, "segment") and slot.segment:
-                            return _extract_clips_recursive(slot.segment, clips, mob_map, timeline_offset, fps)
-                return timeline_offset + scope_length
-        
-        # If it can't be resolved as a mob reference, treat it as an effect/parameter reference
-        # Create a synthetic clip to represent this effect
-        effect_name = "Effect"
-        if hasattr(segment, "operation_def") and segment.operation_def:
-            effect_name = str(getattr(segment.operation_def, "name", "Effect"))
-        elif hasattr(segment, "parameter_def") and segment.parameter_def:
-            effect_name = f"Parameter: {getattr(segment.parameter_def, 'name', 'Unknown')}"
-        
-        clip = {
-            "name": f"ScopeRef: {effect_name}",
-            "in": timeline_offset,
-            "out": timeline_offset + scope_length,
-            "source_umid": "",
-            "source_path": None,
-            "effect_params": {
-                "type": "ScopeReference",
-                "is_synthetic": True,
-                "length": scope_length
-            }
-        }
-        clips.append(clip)
-        logger.debug(f"Added synthetic ScopeReference clip: {effect_name} ({timeline_offset}-{timeline_offset + scope_length})")
+        logger.debug(f"Processing ScopeReference of length {scope_length} (scope reference, not mob reference)")
         return timeline_offset + scope_length
 
     elif "Transition" in segment_type:
