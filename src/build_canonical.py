@@ -10,6 +10,7 @@ Key principles:
 - Path fidelity preservation (no normalization)
 - Complete OperationGroup capture (no filtering)
 - Required keys always present (null for unknown values)
+- One OperationGroup = one effect event (no duplication from nested structures)
 """
 
 from __future__ import annotations
@@ -19,7 +20,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Set
 
 # External dependency (pyaaf2)
 try:
@@ -260,15 +261,15 @@ def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -
     # Track processed OperationGroups to prevent duplication
     processed_operation_groups = set()
 
-    # Recursively extract SourceClips from segment tree
+    # Recursively extract clips from segment tree
     segment_type = type(picture_slot.segment).__name__
     logger.debug(f"Starting recursive extraction from segment: {segment_type}")
     _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps, processed_operation_groups)
     return clips
 
 
-def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float) -> int:
-    """Recursively traverse segment tree to find SourceClip objects."""
+def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, processed_operation_groups: Set[int]) -> int:
+    """Recursively traverse segment tree to find SourceClip objects and OperationGroups."""
     if not segment:
         return timeline_offset
 
@@ -281,11 +282,19 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         components = _iter_safe(segment.components)
         logger.debug(f"Sequence has {len(components)} components")
         for component in components:
-            current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps)
+            current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps, processed_operation_groups)
         return current_offset
 
     elif "OperationGroup" in segment_type:
-        # OperationGroups represent effects - treat them as synthetic clips
+        # Each OperationGroup = exactly one effect event
+        # Use object id to prevent duplication from nested recursion
+        op_id = id(segment)
+        if op_id in processed_operation_groups:
+            logger.debug(f"Skipping already processed OperationGroup at {timeline_offset}")
+            return timeline_offset + int(getattr(segment, "length", 0))
+        
+        processed_operation_groups.add(op_id)
+        
         current_offset = timeline_offset
         op_length = int(getattr(segment, "length", 0))
         
@@ -295,7 +304,8 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         if operation_def and hasattr(operation_def, "name"):
             operation_name = str(operation_def.name)
         
-        # Get input segment information for debugging
+        # Process input segments to extract any nested SourceClips (for media)
+        # but DON'T create separate clips for them - they're inputs to this effect
         input_segments = None
         if hasattr(segment, "input_segments"):
             input_segments = _iter_safe(segment.input_segments)
@@ -307,49 +317,33 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         input_count = len(input_segments) if input_segments else 0
         logger.debug(f"OperationGroup '{operation_name}' has {input_count} input segments")
         
-        # Check if any input is a SourceClip (has actual media)
-        has_source_clip = False
-        source_clip_count = 0
-        
+        # Recursively process inputs to find any nested SourceClips or effects
         if input_segments:
             for input_seg in input_segments:
-                if "SourceClip" in str(type(input_seg).__name__):
-                    has_source_clip = True
-                    source_clip_count += 1
-                    # Process the SourceClip normally
-                    current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
-                elif "Sequence" in str(type(input_seg).__name__):
-                    # Recursively process sequences that might contain SourceClips
-                    current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+                # Recursively process inputs, but don't advance timeline offset
+                # The OperationGroup itself defines the timeline span
+                _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps, processed_operation_groups)
         
-        # If the OperationGroup has no SourceClips or only ScopeReferences,
-        # create a synthetic effect clip
-        if not has_source_clip or (input_count > source_clip_count):
-            effect_clip = {
-                "name": f"Effect: {operation_name}",
-                "in": timeline_offset,
-                "out": timeline_offset + op_length,
-                "source_umid": "",
-                "source_path": None,
-                "effect_params": {
-                    "operation": operation_name,
-                    "is_synthetic": True,
-                    "input_count": input_count,
-                    "source_clip_count": source_clip_count,
-                    "length": op_length
-                }
+        # Create exactly ONE clip for this OperationGroup
+        effect_clip = {
+            "name": operation_name,
+            "in": timeline_offset,
+            "out": timeline_offset + op_length,
+            "source_umid": "",
+            "source_path": None,
+            "effect_params": {
+                "operation": operation_name,
+                "input_count": input_count,
+                "length": op_length
             }
-            clips.append(effect_clip)
-            logger.debug(f"Added effect clip: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
+        }
+        clips.append(effect_clip)
+        logger.debug(f"Added single effect clip: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
         
-        # If we processed SourceClips, use the advanced offset; otherwise use the operation length
-        if has_source_clip and current_offset > timeline_offset:
-            return current_offset
-        else:
-            return timeline_offset + op_length
+        return timeline_offset + op_length
 
     elif "SourceClip" in segment_type:
-        # This is an actual clip - extract it
+        # This is actual media - always emit it
         clip_length = int(getattr(segment, "length", 0))
         clip_name = str(getattr(segment, "name", "Clip"))
         source_id = getattr(segment, "source_id", None)
@@ -363,7 +357,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
             "effect_params": {}
         }
         clips.append(clip)
-        logger.debug(f"Added SourceClip: {clip_name} ({timeline_offset}-{timeline_offset + clip_length})")
+        logger.debug(f"Added SourceClip: SourceClip ({timeline_offset}-{timeline_offset + clip_length})")
         return timeline_offset + clip_length
 
     elif "Filler" in segment_type:
@@ -373,8 +367,8 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return timeline_offset + filler_length
 
     elif "ScopeReference" in segment_type:
-        # ScopeReference segments don't reference mobs - they reference other inputs 
-        # within the same effect scope. Just account for their length.
+        # ScopeReference segments are inputs within OperationGroups - don't emit as clips
+        # Just account for their length in timeline progression
         scope_length = int(getattr(segment, "length", 0))
         logger.debug(f"Processing ScopeReference of length {scope_length} (scope reference, not mob reference)")
         return timeline_offset + scope_length
@@ -404,7 +398,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
                     logger.debug(f"Unknown segment has {len(nested_segments)} nested segments via {attr_name}")
                     current_offset = timeline_offset
                     for nested_seg in nested_segments:
-                        current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps)
+                        current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps, processed_operation_groups)
                     return current_offset
                 break
         
