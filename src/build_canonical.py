@@ -143,25 +143,36 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
 
     timeline_name = getattr(selected_mob, "name", "Unknown Timeline") or "Unknown Timeline"
 
-    # Find picture slot - use property, not method
+    # Find picture slot - look for Sequence, not Timecode
     picture_slot = None
+    timecode_slot = None
+    
     for slot in _iter_safe(selected_mob.slots):
         if hasattr(slot, "segment") and slot.segment:
-            picture_slot = slot
-            break
+            segment_type = str(type(slot.segment).__name__)
+            if "Sequence" in segment_type:
+                picture_slot = slot
+            elif "Timecode" in segment_type:
+                timecode_slot = slot
 
+    # Use picture slot for frame rate, timecode slot for start time
     if not picture_slot:
         raise ValueError(f"No picture slot found in {timeline_name}")
 
     # Extract timeline properties
     fps = float(picture_slot.edit_rate) if hasattr(picture_slot, "edit_rate") else 25.0
 
-    # Extract timeline start from timecode segment
+    # Extract timeline start from timecode slot or search in picture slot
     is_drop = False
     start_tc_string = "10:00:00:00"  # Default
 
-    # Look for timecode information in the segment tree
-    start_frames = _find_start_timecode(picture_slot.segment)
+    # First try the dedicated timecode slot
+    if timecode_slot and hasattr(timecode_slot, "segment"):
+        start_frames = _find_start_timecode(timecode_slot.segment)
+    else:
+        # Fall back to searching in picture slot
+        start_frames = _find_start_timecode(picture_slot.segment)
+        
     if start_frames is not None:
         start_tc_string = frames_to_timecode(start_frames, fps, is_drop)
 
@@ -210,19 +221,35 @@ def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -
     """Extract clips by recursively traversing CompositionMob segment tree."""
     clips = []
 
-    # Find picture slot
+    # Find picture slot - look for video/picture track specifically
     picture_slot = None
-    for slot in _iter_safe(comp_mob.slots):
+    slots = _iter_safe(comp_mob.slots)
+    
+    logger.debug(f"Found {len(slots)} slots in CompositionMob")
+    
+    for i, slot in enumerate(slots):
         if hasattr(slot, "segment") and slot.segment:
-            picture_slot = slot
-            break
+            segment_type = str(type(slot.segment).__name__)
+            slot_name = getattr(slot, "name", f"Slot{i}")
+            logger.debug(f"Slot {i} '{slot_name}': {segment_type}")
+            
+            # Skip timecode slots - look for Sequence slots
+            if "Sequence" in segment_type:
+                picture_slot = slot
+                logger.debug(f"Selected slot {i} as picture slot: {segment_type}")
+                break
+            elif "Timecode" not in segment_type and picture_slot is None:
+                # Fallback: take first non-timecode slot
+                picture_slot = slot
+                logger.debug(f"Using slot {i} as fallback picture slot: {segment_type}")
 
     if not picture_slot or not hasattr(picture_slot, "segment"):
         logger.warning("No picture slot found")
         return clips
 
     # Recursively extract SourceClips from segment tree
-    logger.debug(f"Starting recursive extraction from segment: {type(picture_slot.segment).__name__}")
+    segment_type = type(picture_slot.segment).__name__
+    logger.debug(f"Starting recursive extraction from segment: {segment_type}")
     _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps)
     return clips
 
