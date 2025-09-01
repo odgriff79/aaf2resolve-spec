@@ -82,6 +82,10 @@ def extract_effect_name_from_operation_group(op_group):
             if not effect_id:
                 effect_id = 'Submaster'
         
+        # Special case for Pan & Zoom
+        if effect_id == 'EFF2_PAN_SCAN':
+            effect_id = 'Avid Pan & Zoom'
+        
         # Build effect name
         if effect_id:
             if effect_class and effect_class != 'Effect':
@@ -401,7 +405,7 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
         # No SourceClip found - this is an effect on filler
         op_length = int(getattr(operation_group, "length", 0))
         filler_event = {
-            "name": f"FX_ON_FILLER: {effect_name}",
+            "name": "Pan & Zoom on Filler" if "Avid Pan & Zoom" in effect_name else f"FX_ON_FILLER: {effect_name}",
             "in": timeline_offset,
             "out": timeline_offset + op_length,
             "source_umid": "FX_ON_FILLER",
