@@ -286,8 +286,12 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         
         if input_segments:
             logger.debug(f"OperationGroup has {len(input_segments)} input segments")
+            # Process all input segments in parallel (they represent the same timeline duration)
+            max_offset = current_offset
             for input_seg in input_segments:
-                current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+                seg_end = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+                max_offset = max(max_offset, seg_end)
+            return max_offset
         else:
             # If no input segments, treat as having its own length
             op_length = int(getattr(segment, "length", 0))
@@ -313,6 +317,32 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         logger.debug(f"Added SourceClip: {clip_name} ({timeline_offset}-{timeline_offset + clip_length})")
         return timeline_offset + clip_length
 
+    elif "ScopeReference" in segment_type:
+        # ScopeReference may contain nested clips - try to traverse it
+        scope_length = int(getattr(segment, "length", 0))
+        logger.debug(f"Exploring ScopeReference of length {scope_length}")
+        
+        # Try to find nested segments in ScopeReference
+        nested_segments = None
+        if hasattr(segment, "segments"):
+            nested_segments = _iter_safe(segment.segments)
+        elif hasattr(segment, "components"):
+            nested_segments = _iter_safe(segment.components)
+        elif hasattr(segment, "inputs"):
+            nested_segments = _iter_safe(segment.inputs)
+        elif hasattr(segment, "reference") and hasattr(segment.reference, "segments"):
+            nested_segments = _iter_safe(segment.reference.segments)
+        
+        if nested_segments:
+            logger.debug(f"ScopeReference contains {len(nested_segments)} nested segments")
+            current_offset = timeline_offset
+            for nested_seg in nested_segments:
+                current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps)
+            return current_offset
+        else:
+            # No nested segments, just account for length
+            return timeline_offset + scope_length
+
     elif "Transition" in segment_type:
         # Skip transitions but account for their length
         transition_length = int(getattr(segment, "length", 0))
@@ -331,9 +361,24 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return timeline_offset
 
     else:
-        # Unknown component type - skip but account for length if present
+        # Unknown component type - try to explore it for nested segments
         component_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Skipping unknown segment type {segment_type}, length={component_length}")
+        logger.debug(f"Exploring unknown segment type {segment_type}, length={component_length}")
+        
+        # Try to find nested segments in unknown types
+        nested_segments = None
+        for attr_name in ["segments", "components", "inputs", "input_segments"]:
+            if hasattr(segment, attr_name):
+                nested_segments = _iter_safe(getattr(segment, attr_name))
+                if nested_segments:
+                    logger.debug(f"Unknown segment has {len(nested_segments)} nested segments via {attr_name}")
+                    current_offset = timeline_offset
+                    for nested_seg in nested_segments:
+                        current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps)
+                    return current_offset
+                break
+        
+        # No nested segments found, just account for length
         return timeline_offset + component_length
 
 
