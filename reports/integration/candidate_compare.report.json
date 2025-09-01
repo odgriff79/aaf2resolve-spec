@@ -14,18 +14,18 @@
       "csv": "BLINK_WORLD_WW2D EP1 SEQ TEST.Exported.01"
     },
     "rate": {
-      "ok": false,
-      "canonical": null,
+      "ok": true,
+      "canonical": 25,
       "csv": 25
     },
     "start": {
-      "ok": false,
-      "canonical": null,
+      "ok": true,
+      "canonical": "10:04:17:09",
       "csv": "10:04:17:09"
     },
     "event_count": {
       "ok": false,
-      "canonical": 0,
+      "canonical": 36,
       "csv": 72
     }
   },

@@ -1,12 +1,445 @@
 {
-  "project": {
-    "name": "BLINK_WORLD_WW2D EP1 SEQ TEST",
-    "edit_rate_fps": 25.0,
-    "tc_format": "NDF"
-  },
   "timeline": {
     "name": "BLINK_WORLD_WW2D EP1 SEQ TEST.Exported.01",
-    "start_tc_frames": 3600,
-    "events": []
+    "rate": 25,
+    "start": "10:04:17:09",
+    "tracks": [
+      {
+        "clips": [
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 6333,
+            "out": 6392,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "is_filler_effect": true,
+              "length": 59
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_STABILIZE",
+            "in": 6417,
+            "out": 6447,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_STABILIZE",
+              "is_filler_effect": true,
+              "length": 30
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : EFF_SUBMASTER",
+            "in": 6472,
+            "out": 6510,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF_SUBMASTER",
+              "is_filler_effect": true,
+              "length": 38
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 6535,
+            "out": 6902,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "is_filler_effect": true,
+              "length": 367
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_SBLEND",
+            "in": 6927,
+            "out": 7140,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_SBLEND",
+              "is_filler_effect": true,
+              "length": 213
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+            "in": 7165,
+            "out": 7243,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+              "is_filler_effect": true,
+              "length": 78
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+            "in": 7268,
+            "out": 7335,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+              "is_filler_effect": true,
+              "length": 67
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 7360,
+            "out": 7476,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "is_filler_effect": true,
+              "length": 116
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 7558,
+            "out": 7617,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "is_filler_effect": true,
+              "length": 59
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_STABILIZE",
+            "in": 7642,
+            "out": 7672,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_STABILIZE",
+              "is_filler_effect": true,
+              "length": 30
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : EFF_SUBMASTER",
+            "in": 7697,
+            "out": 7735,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF_SUBMASTER",
+              "is_filler_effect": true,
+              "length": 38
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 9A3F479D-2D48-4244-822E-0A0CA12EA9DD",
+            "in": 7760,
+            "out": 8127,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "9A3F479D-2D48-4244-822E-0A0CA12EA9DD",
+              "is_filler_effect": true,
+              "length": 367
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_SBLEND",
+            "in": 8152,
+            "out": 8365,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_SBLEND",
+              "is_filler_effect": true,
+              "length": 213
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+            "in": 8390,
+            "out": 8468,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+              "is_filler_effect": true,
+              "length": 78
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+            "in": 8493,
+            "out": 8560,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+              "is_filler_effect": true,
+              "length": 67
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_FLIP_BOTH",
+            "in": 8585,
+            "out": 8701,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_BOTH",
+              "is_filler_effect": true,
+              "length": 116
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 8783,
+            "out": 8842,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "is_filler_effect": true,
+              "length": 59
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 8867,
+            "out": 8897,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "is_filler_effect": true,
+              "length": 30
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 177D88F3-B608-3B56-B4EF-4F213B23242C",
+            "in": 8922,
+            "out": 8960,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "177D88F3-B608-3B56-B4EF-4F213B23242C",
+              "is_filler_effect": true,
+              "length": 38
+            }
+          },
+          {
+            "name": "Pan & Zoom on Filler",
+            "in": 8985,
+            "out": 9352,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : Avid Pan & Zoom",
+              "is_filler_effect": true,
+              "length": 367
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_PIP",
+            "in": 9377,
+            "out": 9590,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_PIP",
+              "is_filler_effect": true,
+              "length": 213
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_SUPER",
+            "in": 9615,
+            "out": 9693,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_SUPER",
+              "is_filler_effect": true,
+              "length": 78
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 2A25DBDD-7326-311D-8316-C84BE0686389",
+            "in": 9718,
+            "out": 9785,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "2A25DBDD-7326-311D-8316-C84BE0686389",
+              "is_filler_effect": true,
+              "length": 67
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 9810,
+            "out": 9926,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "is_filler_effect": true,
+              "length": 116
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+            "in": 9965,
+            "out": 9994,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+              "is_filler_effect": true,
+              "length": 29
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : EFF2_3DMATTE",
+            "in": 10024,
+            "out": 10064,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF2_3DMATTE",
+              "is_filler_effect": true,
+              "length": 40
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_LUMAKEY",
+            "in": 10089,
+            "out": 10302,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_LUMAKEY",
+              "is_filler_effect": true,
+              "length": 213
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: B654B779-8100-3B98-BFBD-864F89C96166",
+            "in": 10327,
+            "out": 10394,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "B654B779-8100-3B98-BFBD-864F89C96166",
+              "is_filler_effect": true,
+              "length": 67
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+            "in": 10476,
+            "out": 10535,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+              "is_filler_effect": true,
+              "length": 59
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: A1030EAA-7868-3296-B8E8-9306C77736EA",
+            "in": 10560,
+            "out": 10676,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "A1030EAA-7868-3296-B8E8-9306C77736EA",
+              "is_filler_effect": true,
+              "length": 116
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_14x9_LETTERBOX",
+            "in": 10763,
+            "out": 10822,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_14x9_LETTERBOX",
+              "is_filler_effect": true,
+              "length": 59
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_16x9_LETTERBOX",
+            "in": 10847,
+            "out": 10877,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_16x9_LETTERBOX",
+              "is_filler_effect": true,
+              "length": 30
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_4x3_SIDEBAR",
+            "in": 10902,
+            "out": 10940,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_4x3_SIDEBAR",
+              "is_filler_effect": true,
+              "length": 38
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: E4FE520A-B815-447F-A969-2D5E1C5F6C14",
+            "in": 11015,
+            "out": 11074,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "E4FE520A-B815-447F-A969-2D5E1C5F6C14",
+              "is_filler_effect": true,
+              "length": 59
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 169317AB-ACAA-416F-84CE-249BFE0B09ED",
+            "in": 11099,
+            "out": 11166,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "169317AB-ACAA-416F-84CE-249BFE0B09ED",
+              "is_filler_effect": true,
+              "length": 67
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 8BA34E51-D647-443E-BFB5-30DFCECE5415",
+            "in": 11198,
+            "out": 11223,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "8BA34E51-D647-443E-BFB5-30DFCECE5415",
+              "is_filler_effect": true,
+              "length": 25
+            }
+          }
+        ]
+      }
+    ]
   }
 }
