@@ -1,10 +1,23 @@
 {
   "totals": {
-    "tests": 7,
+    "tests": 8,
     "ok": 7,
-    "fail": 0
+    "fail": 1
   },
   "reports": [
+    {
+      "file": "reports/integration/candidate_compare.report.json",
+      "test": "candidate_compare",
+      "ok": false,
+      "version": null,
+      "root_ok": null,
+      "has_library": null,
+      "has_event": null,
+      "has_project": null,
+      "has_sequence": null,
+      "has_spine": null,
+      "counts": {}
+    },
     {
       "file": "reports/integration/candidate_from_aaf.report.json",
       "test": "fcpxml_shape_report",
