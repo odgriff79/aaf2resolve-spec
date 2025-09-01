@@ -17,11 +17,21 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-
-def LOG_STAGE(tag: str):
-    logging.debug(f"STAGE: {tag}")
-
 import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+# External dependency (pyaaf2)
+try:
+    import aaf2
+    HAS_AAF2 = True
+except ImportError:
+    aaf2 = None
+    HAS_AAF2 = False
+
+# Setup logging for debugging AAF traversal
+logger = logging.getLogger(__name__)
+
 
 def _iter(aaf_obj):
     """Return a list for iterables/collections; gracefully handle None."""
@@ -32,34 +42,16 @@ def _iter(aaf_obj):
     except TypeError:
         # Not iterable; wrap as single-item list so callers can iterate safely
         return [aaf_obj]
-from collections.abc import Iterable
-from pathlib import Path
-from typing import Any, List, Optional, Tuple
-
-# External dependency (pyaaf2)
-try:
-    import aaf2
-
-    HAS_AAF2 = True
-except ImportError:
-    aaf2 = None
-    HAS_AAF2 = False
-
-# Setup logging for debugging AAF traversal
-logger = logging.getLogger(__name__)
 
 
-# --------------------------- Core Implementation ---------------------------
-
-
-def build_canonical_from_aaf(aaf_path: str) -> dict[str, Any]:
+def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
     """
     Open an AAF and return the canonical JSON dict per docs/data_model_json.md.
 
     Follows docs/inspector_rule_pack.md for:
     - Timeline selection (prefer *.Exported.01)
     - UMID chain resolution (authoritative-first)
-    - Effect extraction (all OperationGroups, no filtering)
+    - Event extraction (all OperationGroups, no filtering)
     - Path preservation (exact byte-for-byte fidelity)
 
     Args:
@@ -74,7 +66,7 @@ def build_canonical_from_aaf(aaf_path: str) -> dict[str, Any]:
         ValueError: If AAF cannot be parsed or has no usable timeline
     """
     if not HAS_AAF2:
-        raise ImportError("pyaaf2 is required. Install with: pip install pyaaf2")
+        raise ImportError("aaf2 is required. Install with: pip install pyaaf2")
 
     if not Path(aaf_path).exists():
         raise FileNotFoundError(f"AAF file not found: {aaf_path}")
@@ -84,57 +76,44 @@ def build_canonical_from_aaf(aaf_path: str) -> dict[str, Any]:
     try:
         with aaf2.open(aaf_path, "r") as f:
             # Step 1: Select top-level composition and extract timeline metadata
-            comp, fps, is_drop, start_tc_frames, timeline_name = select_top_sequence(f)
-            logger.info(
-                f"Selected timeline: {timeline_name} @ {fps}fps {'DF' if is_drop else 'NDF'}"
-            )
+            comp, fps, is_drop, start_tc_string, timeline_name = select_top_sequence(f)
+            logger.info(f"Selected timeline: {timeline_name} @ {fps}fps {'DF' if is_drop else 'NDF'}")
 
             # Step 2: Build mob lookup map for UMID resolution
             mob_map = build_mob_map(f)
             logger.info(f"Built mob map with {len(mob_map)} entries")
 
-            # Step 3: Walk sequence components and extract events
-            events = []
-            for ev in walk_sequence_components(comp, fps):
-                logger.debug(f"Processing event {ev.index}: {ev.kind} @ {ev.timeline_start_frames}")
+            # Step 3: Extract events from CompositionMob segment tree
+            clips = extract_clips_from_comp_mob(comp, mob_map, fps)
+            logger.info(f"Extracted {len(clips)} clips")
 
-                if ev.kind == "sourceclip":
-                    source = resolve_sourceclip(ev.node, mob_map)
-                    effect = make_none_effect()
-                    events.append(pack_event(ev, source, effect))
-
-                elif ev.kind == "operationgroup_on_filler":
-                    effect = extract_operationgroup(ev.node)
-                    effect["on_filler"] = True
-                    events.append(pack_event(ev, None, effect))
-
-                else:
-                    logger.warning(f"Unknown event kind: {ev.kind}")
-                    continue
-
-            logger.info(f"Extracted {len(events)} events")
-
-            # Step 4: Pack final canonical structure
-            return pack_canonical_project(timeline_name, fps, is_drop, start_tc_frames, events)
+            # Step 4: Pack canonical structure  
+            return {
+                "timeline": {
+                    "name": timeline_name,
+                    "rate": int(fps),
+                    "start": start_tc_string,
+                    "tracks": [
+                        {
+                            "clips": clips
+                        }
+                    ]
+                }
+            }
 
     except Exception as e:
         logger.error(f"Failed to parse AAF {aaf_path}: {e}")
         raise ValueError(f"AAF parsing failed: {e}") from e
 
 
-def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
+def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
     """
     Select top-level CompositionMob and extract timeline metadata.
 
     Returns:
-        (sequence_node, fps, is_drop, start_tc_frames, timeline_name)
-
-    Per docs/inspector_rule_pack.md §1:
-    - Prefer CompositionMob with name ending .Exported.01
-    - Use picture track only (skip audio/data)
-    - Extract edit rate, drop-frame flag, starting timecode
+        (composition_mob, fps, is_drop, start_tc_string, timeline_name)
     """
-    # Find all CompositionMobs
+    # Find CompositionMobs only
     comp_mobs = [mob for mob in aaf.content.compositionmobs() if hasattr(mob, "slots")]
 
     if not comp_mobs:
@@ -156,7 +135,6 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     # Find picture slot
     picture_slot = None
     for slot in _iter(selected_mob.slots):
-        # Look for video/picture track (not audio or data)
         if hasattr(slot, "segment") and slot.segment:
             picture_slot = slot
             break
@@ -167,378 +145,151 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     # Extract timeline properties
     fps = float(picture_slot.edit_rate) if hasattr(picture_slot, "edit_rate") else 25.0
 
-    # Look for drop-frame flag in timecode
+    # Extract timeline start from first component if it's Timecode
     is_drop = False
-    start_tc_frames = 3600  # Default 01:00:00:00 at 25fps
+    start_tc_string = "10:00:00:00"  # Default
 
-    # Try to find timeline timecode
-    if hasattr(selected_mob, "slots"):
-        for slot in _iter(selected_mob.slots):
-            if hasattr(slot, "segment") and slot.segment:
-                # Look for Timecode component
-                if hasattr(slot.segment, "components"):
-                    for comp in slot.segment.components:
-                        if hasattr(comp, "start") and hasattr(comp, "drop"):
-                            start_tc_frames = int(comp.start)
-                            is_drop = bool(comp.drop)
-                            break
+    if hasattr(picture_slot, "segment") and hasattr(picture_slot.segment, "components"):
+        components = _iter(picture_slot.segment.components)
+        if components:
+            first_comp = components[0]
+            if hasattr(first_comp, "start") and hasattr(first_comp, "drop"):
+                start_frames = int(first_comp.start)
+                is_drop = bool(first_comp.drop)
+                # Convert frames to timecode string at given fps
+                start_tc_string = frames_to_timecode(start_frames, fps, is_drop)
 
-    return picture_slot.segment, fps, is_drop, start_tc_frames, timeline_name
+    return selected_mob, fps, is_drop, start_tc_string, timeline_name
 
 
-def walk_sequence_components(seq, fps: float) -> Iterable[EvWrap]:
-    """
-    Walk Sequence components in playback order, yielding EvWrap objects.
-
-    Per docs/inspector_rule_pack.md §1-2:
-    - Maintain running timeline offset
-    - Recurse nested Sequences
-    - Classify as sourceclip vs operationgroup_on_filler
-    """
-    if not hasattr(seq, "components"):
-        return
-
-    timeline_offset = 0
-    event_index = 1
-
-    for component in _iter(seq.components):
-        length_frames = int(getattr(component, "length", 0))
-
-        # Classify component type
-        kind = "unknown"
-        if hasattr(component, "__class__"):
-            class_name = component.__class__.__name__
-
-            if "SourceClip" in class_name:
-                kind = "sourceclip"
-            elif "OperationGroup" in class_name:
-                # Check if it's on filler (no SourceClip inputs)
-                has_source_input = False
-                if hasattr(component, "input_segments"):
-                    for input_seg in component.input_segments:
-                        if input_seg and "SourceClip" in str(type(input_seg)):
-                            has_source_input = True
-                            break
-
-                kind = (
-                    "operationgroup_on_filler" if not has_source_input else "operationgroup_on_clip"
-                )
-            elif "Sequence" in class_name:
-                # Recurse nested sequence
-                for nested_ev in walk_sequence_components(component, fps):
-                    nested_ev.timeline_start_frames += timeline_offset
-                    nested_ev.index = event_index
-                    event_index += 1
-                    yield nested_ev
-                timeline_offset += length_frames
-                continue
-
-        yield EvWrap(kind, component, timeline_offset, length_frames, event_index)
-        timeline_offset += length_frames
-        event_index += 1
-
-
-def build_mob_map(aaf) -> dict[str, Any]:
-    """
-    Build lookup map: mob_id/UMID → mob object for UMID chain resolution.
-    """
+def build_mob_map(aaf) -> Dict[str, Any]:
+    """Build lookup map: mob_id/UMID → mob object for UMID resolution."""
     mob_map = {}
-
-    for mob in aaf.content.compositionmobs():
+    for mob in aaf.content.mobs():
         if hasattr(mob, "mob_id"):
             mob_map[str(mob.mob_id)] = mob
         if hasattr(mob, "umid"):
             mob_map[str(mob.umid)] = mob
-
     return mob_map
 
 
-def resolve_sourceclip(sc, mob_map: dict[str, Any]) -> dict[str, Any]:
-    """
-    Resolve SourceClip via UMID chain to build source object.
+def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -> List[Dict[str, Any]]:
+    """Extract clips by recursively traversing CompositionMob segment tree."""
+    clips = []
 
-    Per docs/inspector_rule_pack.md §3 (authoritative-first):
-    - Follow SourceClip → MasterMob → SourceMob → ImportDescriptor → Locator
-    - Chain-end values are authoritative
-    - Comp-level mirrors are fallback only
-    """
-    source = {
-        "path": None,
-        "umid_chain": [],
-        "tape_id": None,
-        "disk_label": None,
-        "src_tc_start_frames": None,
-        "src_rate_fps": 25.0,
-        "src_drop": False,
-        "orig_length_frames": None,
-    }
+    # Find picture slot
+    picture_slot = None
+    for slot in _iter(comp_mob.slots):
+        if hasattr(slot, "segment") and slot.segment:
+            picture_slot = slot
+            break
 
+    if not picture_slot or not hasattr(picture_slot, "segment"):
+        return clips
+
+    # Recursively extract SourceClips from segment tree
+    clips = []
+    _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps)
+    return clips
+
+
+def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float):
+    """Recursively traverse segment tree to find SourceClip objects."""
+    if not segment:
+        return timeline_offset
+
+    segment_type = str(type(segment).__name__)
+
+    if "Sequence" in segment_type:
+        # Traverse sequence components
+        current_offset = timeline_offset
+        for component in _iter(segment.components):
+            current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps)
+        return current_offset
+
+    elif "OperationGroup" in segment_type:
+        # Traverse operation group input segments
+        current_offset = timeline_offset
+        if hasattr(segment, "input_segments"):
+            for input_seg in _iter(segment.input_segments):
+                current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+        elif hasattr(segment, "segments"):
+            for input_seg in _iter(segment.segments):
+                current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+        return current_offset
+
+    elif "SourceClip" in segment_type:
+        # This is an actual clip - extract it
+        clip_length = int(getattr(segment, "length", 0))
+        
+        clip = {
+            "name": str(getattr(segment, "name", "Clip")),
+            "in": timeline_offset,
+            "out": timeline_offset + clip_length,
+            "source_umid": str(getattr(segment, "source_id", "")),
+            "source_path": resolve_source_path(segment, mob_map),
+            "effect_params": {}
+        }
+        clips.append(clip)
+        return timeline_offset + clip_length
+
+    elif "Transition" in segment_type:
+        # Skip transitions but account for their length
+        transition_length = int(getattr(segment, "length", 0))
+        return timeline_offset + transition_length
+
+    elif "Filler" in segment_type:
+        # Skip filler but account for length
+        filler_length = int(getattr(segment, "length", 0))
+        return timeline_offset + filler_length
+
+    elif "Timecode" in segment_type:
+        # Skip timecode components
+        return timeline_offset
+
+    else:
+        # Unknown component type - skip
+        component_length = int(getattr(segment, "length", 0))
+        return timeline_offset + component_length
+
+
+def resolve_source_path(source_clip, mob_map: Dict[str, Any]) -> Optional[str]:
+    """Resolve source clip to file path via UMID chain."""
     try:
-        # Start UMID chain traversal
-        current_mob = sc
-        umid_chain = []
+        source_id = getattr(source_clip, "source_id", None)
+        if not source_id:
+            return None
 
-        # Follow the chain: SourceClip → MasterMob → SourceMob
-        while current_mob and len(umid_chain) < 10:  # Prevent infinite loops
-            if hasattr(current_mob, "source_id"):
-                umid_str = str(current_mob.source_id)
-                umid_chain.append(umid_str)
-                current_mob = mob_map.get(umid_str)
-            elif hasattr(current_mob, "umid"):
-                umid_str = str(current_mob.umid)
-                umid_chain.append(umid_str)
-                break
-            else:
-                break
+        # Follow UMID chain
+        current_mob = mob_map.get(str(source_id))
+        if not current_mob:
+            return None
 
-        source["umid_chain"] = umid_chain
+        # Look for file descriptor with locator
+        if hasattr(current_mob, "descriptor"):
+            desc = current_mob.descriptor
+            if hasattr(desc, "locator"):
+                locator = desc.locator
+                if hasattr(locator, "url_string"):
+                    return locator.url_string
 
-        # At chain end, extract authoritative metadata
-        if current_mob:
-            # Try to find ImportDescriptor → Locator path
-            if hasattr(current_mob, "descriptor"):
-                desc = current_mob.descriptor
-                if hasattr(desc, "locator") and desc.locator:
-                    if hasattr(desc.locator, "url_string"):
-                        source["path"] = desc.locator.url_string
-
-                # Original length from descriptor
-                if hasattr(desc, "length"):
-                    source["orig_length_frames"] = int(desc.length)
-
-            # Source timecode and rate from SourceMob
-            if hasattr(current_mob, "slots"):
-                for slot in _iter(current_mob.slots):
-                    if hasattr(slot, "edit_rate"):
-                        source["src_rate_fps"] = float(slot.edit_rate)
-
-                    if hasattr(slot, "segment") and hasattr(slot.segment, "components"):
-                        for comp in slot.segment.components:
-                            if hasattr(comp, "start"):
-                                source["src_tc_start_frames"] = int(comp.start)
-                            if hasattr(comp, "drop"):
-                                source["src_drop"] = bool(comp.drop)
-
-            # Metadata from UserComments or MobAttributeList
-            source["tape_id"] = extract_metadata_value(current_mob, "TapeID")
-            source["disk_label"] = extract_metadata_value(current_mob, "_IMPORTDISKLABEL")
-
-    except Exception as e:
-        logger.warning(f"UMID chain resolution failed: {e}")
-
-    return source
-
-
-def extract_metadata_value(mob, key: str) -> Optional[str]:
-    """Extract metadata value from UserComments or MobAttributeList."""
-    try:
-        # Check UserComments first (higher priority)
-        if hasattr(mob, "user_comments"):
-            for comment in mob.user_comments:
-                if hasattr(comment, "name") and comment.name == key:
-                    return str(comment.value) if hasattr(comment, "value") else None
-
-        # Fallback to MobAttributeList
-        if hasattr(mob, "attributes"):
-            for attr in mob.attributes:
-                if hasattr(attr, "name") and attr.name == key:
-                    return str(attr.value) if hasattr(attr, "value") else None
-
-    except Exception:
-        pass
-
-    return None
-
-
-def extract_operationgroup(op) -> dict[str, Any]:
-    """
-    Extract effect object from OperationGroup (AVX/AFX/DVE).
-
-    Per docs/inspector_rule_pack.md §4-5:
-    - NO FILTERING: capture all OperationGroups
-    - Extract name, parameters, keyframes, external refs
-    - Attempt UTF-16LE decode for Pan & Zoom stills
-    """
-    effect = {
-        "name": "(none)",
-        "on_filler": False,  # Caller will set appropriately
-        "parameters": {},
-        "keyframes": {},
-        "external_refs": [],
-    }
-
-    try:
-        # Extract effect name
-        if hasattr(op, "operation_def"):
-            op_def = op.operation_def
-            if hasattr(op_def, "name"):
-                effect["name"] = str(op_def.name)
-
-        # Extract parameters
-        if hasattr(op, "parameters"):
-            for param in _iter(op.parameters):
-                if hasattr(param, "name") and hasattr(param, "value"):
-                    param_name = str(param.name)
-                    param_value = param.value
-
-                    # Handle different parameter types
-                    if hasattr(param_value, "__iter__") and not isinstance(
-                        param_value, str | bytes
-                    ):
-                        # Keyframe data (PointList)
-                        keyframes = []
-                        try:
-                            for point in param_value:
-                                if hasattr(point, "time") and hasattr(point, "value"):
-                                    # Convert time to seconds, value to number/string
-                                    time_sec = float(point.time)
-                                    value = (
-                                        float(point.value)
-                                        if isinstance(point.value, int | float)
-                                        else str(point.value)
-                                    )
-                                    keyframes.append({"t": time_sec, "v": value})
-
-                            if keyframes:
-                                effect["keyframes"][param_name] = keyframes
-                        except Exception:
-                            # Fallback: treat as static parameter
-                            effect["parameters"][param_name] = str(param_value)
-
-                    elif isinstance(param_value, bytes):
-                        # Attempt UTF-16LE decode for Pan & Zoom stills
-                        decoded_path = decode_possible_path(param_value)
-                        if decoded_path and is_image_path(decoded_path):
-                            effect["external_refs"].append({"kind": "image", "path": decoded_path})
-                        effect["parameters"][param_name] = decoded_path or param_value.hex()
-
-                    else:
-                        # Static parameter
-                        if isinstance(param_value, int | float):
-                            effect["parameters"][param_name] = param_value
-                        else:
-                            param_str = str(param_value)
-                            effect["parameters"][param_name] = param_str
-
-                            # Check if parameter looks like a path
-                            if is_possible_path(param_str):
-                                effect["external_refs"].append(
-                                    {"kind": "unknown", "path": param_str}
-                                )
-
-    except Exception as e:
-        logger.warning(f"Effect extraction failed: {e}")
-
-    return effect
-
-
-def decode_possible_path(data: bytes) -> Optional[str]:
-    """
-    Attempt UTF-16LE decode on byte array, strip nulls.
-    Per docs/inspector_rule_pack.md §5.
-    """
-    try:
-        # Try UTF-16LE decode
-        decoded = data.decode("utf-16le", errors="ignore")
-        # Strip null bytes
-        cleaned = decoded.replace("\x00", "")
-        return cleaned if cleaned else None
+        return None
     except Exception:
         return None
 
 
-def is_image_path(path: str) -> bool:
-    """Check if path looks like an image file."""
-    if not path:
-        return False
-
-    path_lower = path.lower()
-    return any(
-        path_lower.endswith(ext)
-        for ext in [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp", ".gif"]
-    )
-
-
-def is_possible_path(value: str) -> bool:
-    """Check if string looks like a file path."""
-    if not value or len(value) < 3:
-        return False
-
-    return any(
-        [
-            value.startswith("file://"),
-            "/" in value,
-            "\\" in value,
-            ":" in value and len(value) > 2,  # Drive letter
-        ]
-    )
-
-
-def make_none_effect() -> dict[str, Any]:
-    """Create empty effect object for plain clips."""
-    return {
-        "name": "(none)",
-        "on_filler": False,
-        "parameters": {},
-        "keyframes": {},
-        "external_refs": [],
-    }
-
-
-def pack_event(
-    ev: EvWrap, source: Optional[dict[str, Any]], effect: Optional[dict[str, Any]]
-) -> dict[str, Any]:
-    """Pack Event object per docs/data_model_json.md."""
-    return {
-        "id": f"ev_{ev.index:04d}",
-        "timeline_start_frames": ev.timeline_start_frames,
-        "length_frames": ev.length_frames,
-        "source": source,
-        "effect": effect or make_none_effect(),
-    }
-
-
-def pack_canonical_project(
-    timeline_name: str,
-    fps: float,
-    is_drop: bool,
-    start_tc_frames: int,
-    events: List[dict[str, Any]],
-) -> dict[str, Any]:
-    """Pack top-level canonical JSON structure."""
-    project_name = (
-        timeline_name.replace(".Exported.01", "")
-        if timeline_name.endswith(".Exported.01")
-        else timeline_name
-    )
-
-    return {
-        "project": {
-            "name": project_name,
-            "edit_rate_fps": fps,
-            "tc_format": "DF" if is_drop else "NDF",
-        },
-        "timeline": {"name": timeline_name, "start_tc_frames": start_tc_frames, "events": events},
-    }
-
-
-# --------------------------- Types ---------------------------
-
-
-class EvWrap:
-    """Lightweight carrier for traversal results."""
-
-    __slots__ = ("kind", "node", "timeline_start_frames", "length_frames", "index")
-
-    def __init__(self, kind: str, node: Any, start: int, length: int, index: int) -> None:
-        self.kind = kind
-        self.node = node
-        self.timeline_start_frames = int(start)
-        self.length_frames = int(length)
-        self.index = int(index)
-
-
-# --------------------------- CLI ---------------------------
+def frames_to_timecode(frames: int, fps: float, is_drop: bool) -> str:
+    """Convert frame count to timecode string."""
+    try:
+        fps_int = int(fps)
+        hours = frames // (fps_int * 60 * 60)
+        minutes = (frames % (fps_int * 60 * 60)) // (fps_int * 60)
+        seconds = (frames % (fps_int * 60)) // fps_int
+        frame_num = frames % fps_int
+        
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}:{frame_num:02d}"
+    except Exception:
+        return "10:00:00:00"
 
 
 def _cli() -> None:
