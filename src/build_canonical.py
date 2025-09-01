@@ -210,10 +210,20 @@ def build_mob_map(aaf) -> Dict[str, Any]:
     """Build lookup map: mob_id/UMID → mob object for UMID resolution."""
     mob_map = {}
     for mob in _iter_safe(aaf.content.mobs):
+        # Add all possible ID attributes to the map
         if hasattr(mob, "mob_id"):
             mob_map[str(mob.mob_id)] = mob
         if hasattr(mob, "umid"):
             mob_map[str(mob.umid)] = mob
+        if hasattr(mob, "source_id"):
+            mob_map[str(mob.source_id)] = mob
+        if hasattr(mob, "package_id"):
+            mob_map[str(mob.package_id)] = mob
+            
+        # Debug: show what IDs this mob has
+        mob_name = getattr(mob, "name", "unnamed")
+        logger.debug(f"Mob '{mob_name}': mob_id={getattr(mob, 'mob_id', None)}, umid={getattr(mob, 'umid', None)}")
+    
     return mob_map
 
 
@@ -272,11 +282,18 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return current_offset
 
     elif "OperationGroup" in segment_type:
-        # OperationGroups represent effects applied to input segments
+        # OperationGroups represent effects - treat them as synthetic clips
         current_offset = timeline_offset
-        input_segments = None
+        op_length = int(getattr(segment, "length", 0))
         
-        # Try different attribute names for input segments
+        # Extract effect information
+        operation_def = getattr(segment, "operation_def", None)
+        operation_name = "Unknown Effect"
+        if operation_def and hasattr(operation_def, "name"):
+            operation_name = str(operation_def.name)
+        
+        # Get input segment information for debugging
+        input_segments = None
         if hasattr(segment, "input_segments"):
             input_segments = _iter_safe(segment.input_segments)
         elif hasattr(segment, "segments"):
@@ -284,56 +301,48 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         elif hasattr(segment, "inputs"):
             input_segments = _iter_safe(segment.inputs)
         
+        input_count = len(input_segments) if input_segments else 0
+        logger.debug(f"OperationGroup '{operation_name}' has {input_count} input segments")
+        
+        # Check if any input is a SourceClip (has actual media)
+        has_source_clip = False
+        source_clip_count = 0
+        
         if input_segments:
-            logger.debug(f"OperationGroup has {len(input_segments)} input segments")
-            
-            # Extract operation/effect information
-            operation_def = getattr(segment, "operation_def", None)
-            operation_name = str(operation_def.name) if operation_def and hasattr(operation_def, "name") else "Unknown Effect"
-            
-            # Check if any input is a Filler (effect on filler = synthetic clip)
-            has_filler = any("Filler" in str(type(inp).__name__) for inp in input_segments)
-            has_source_clip = any("SourceClip" in str(type(inp).__name__) for inp in input_segments)
-            
-            if has_filler and not has_source_clip:
-                # This is an effect applied to filler - create a synthetic clip
-                op_length = int(getattr(segment, "length", 0))
-                
-                clip = {
-                    "name": f"Effect: {operation_name}",
-                    "in": timeline_offset,
-                    "out": timeline_offset + op_length,
-                    "source_umid": "",
-                    "source_path": None,  # Placeholder for effect on filler
-                    "effect_params": {
-                        "operation": operation_name,
-                        "is_synthetic": True,
-                        "length": op_length
-                    }
+            for input_seg in input_segments:
+                if "SourceClip" in str(type(input_seg).__name__):
+                    has_source_clip = True
+                    source_clip_count += 1
+                    # Process the SourceClip normally
+                    current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+                elif "Sequence" in str(type(input_seg).__name__):
+                    # Recursively process sequences that might contain SourceClips
+                    current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+        
+        # If the OperationGroup has no SourceClips or only ScopeReferences,
+        # create a synthetic effect clip
+        if not has_source_clip or (input_count > source_clip_count):
+            effect_clip = {
+                "name": f"Effect: {operation_name}",
+                "in": timeline_offset,
+                "out": timeline_offset + op_length,
+                "source_umid": "",
+                "source_path": None,
+                "effect_params": {
+                    "operation": operation_name,
+                    "is_synthetic": True,
+                    "input_count": input_count,
+                    "source_clip_count": source_clip_count,
+                    "length": op_length
                 }
-                clips.append(clip)
-                logger.debug(f"Added synthetic clip for effect on filler: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
-                return timeline_offset + op_length
-                
-            else:
-                # Normal operation group - process input segments
-                # For multiple inputs (compositing), they represent the same timeline span
-                max_offset = current_offset
-                for input_seg in input_segments:
-                    seg_end = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
-                    max_offset = max(max_offset, seg_end)
-                
-                # If we found clips, add effect information to the most recent clip
-                if clips and operation_name != "Unknown Effect":
-                    clips[-1]["effect_params"] = {
-                        "operation": operation_name,
-                        "is_synthetic": False
-                    }
-                
-                return max_offset
+            }
+            clips.append(effect_clip)
+            logger.debug(f"Added effect clip: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
+        
+        # If we processed SourceClips, use the advanced offset; otherwise use the operation length
+        if has_source_clip and current_offset > timeline_offset:
+            return current_offset
         else:
-            # If no input segments, treat as having its own length
-            op_length = int(getattr(segment, "length", 0))
             return timeline_offset + op_length
 
     elif "SourceClip" in segment_type:
@@ -361,78 +370,56 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return timeline_offset + filler_length
 
     elif "ScopeReference" in segment_type:
-        # ScopeReference points to another mob - resolve it through mob map
+        # ScopeReference may be an effect definition or parameter reference
         scope_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Resolving ScopeReference of length {scope_length}")
+        logger.debug(f"Processing ScopeReference of length {scope_length}")
         
-        # Try multiple attribute patterns to find the referenced ID
+        # Debug: show all attributes to understand what this segment contains
+        attrs = [attr for attr in dir(segment) if not attr.startswith('_')]
+        logger.debug(f"ScopeReference attributes: {attrs[:10]}")  # Show first 10 to avoid spam
+        
+        # Try to resolve as a mob reference first
         reference_id = None
-        id_source = None
-        
-        # Check common AAF reference attributes
         for attr in ["source_id", "ref_mob_id", "mob_id", "umid", "source_mob_id", "referenced_mob_id"]:
             if hasattr(segment, attr):
                 ref_value = getattr(segment, attr)
                 if ref_value:
                     reference_id = str(ref_value)
-                    id_source = attr
-                    logger.debug(f"Found reference ID via {attr}: {reference_id}")
                     break
         
-        # Also try accessing nested reference objects
-        if not reference_id and hasattr(segment, "source_package"):
-            source_pkg = segment.source_package
-            if source_pkg and hasattr(source_pkg, "mob_id"):
-                reference_id = str(source_pkg.mob_id)
-                id_source = "source_package.mob_id"
-                logger.debug(f"Found reference ID via source_package: {reference_id}")
-        
-        resolved_mob = None
         if reference_id:
             resolved_mob = mob_map.get(reference_id)
-            logger.debug(f"Mob lookup for {reference_id}: {'found' if resolved_mob else 'not found'}")
-            
-        if resolved_mob:
-            logger.debug(f"Resolved ScopeReference to mob: {getattr(resolved_mob, 'name', 'unnamed')}")
-            
-            # Look for segments in the resolved mob
-            if hasattr(resolved_mob, "slots"):
-                for slot in _iter_safe(resolved_mob.slots):
-                    if hasattr(slot, "segment") and slot.segment:
-                        logger.debug(f"Processing resolved mob slot segment: {type(slot.segment).__name__}")
-                        return _extract_clips_recursive(slot.segment, clips, mob_map, timeline_offset, fps)
-            
-            # Also check if it's a SourceMob with a descriptor that has locators
-            if hasattr(resolved_mob, "descriptor"):
-                desc = resolved_mob.descriptor
-                if desc:
-                    # Create a synthetic clip for the referenced source
-                    mob_name = getattr(resolved_mob, "name", "Referenced Source")
-                    source_path = resolve_source_path_from_descriptor(desc)
-                    
-                    clip = {
-                        "name": str(mob_name),
-                        "in": timeline_offset,
-                        "out": timeline_offset + scope_length,
-                        "source_umid": reference_id,
-                        "source_path": source_path,
-                        "effect_params": {}
-                    }
-                    clips.append(clip)
-                    logger.debug(f"Added referenced source clip: {mob_name} ({timeline_offset}-{timeline_offset + scope_length})")
-                    return timeline_offset + scope_length
-        else:
-            # Debug mob map contents for troubleshooting
-            logger.debug(f"Could not resolve ScopeReference. Reference ID: {reference_id} (via {id_source})")
-            if reference_id:
-                # Show similar IDs in mob map for debugging
-                similar_ids = [k for k in mob_map.keys() if reference_id[:8] in k or k[:8] in reference_id]
-                if similar_ids:
-                    logger.debug(f"Similar IDs in mob_map: {similar_ids[:3]}")
-                else:
-                    logger.debug(f"No similar IDs found. Mob map has {len(mob_map)} entries")
-            
-        # If we can't resolve the reference, just account for length
+            if resolved_mob:
+                logger.debug(f"Resolved ScopeReference to mob: {getattr(resolved_mob, 'name', 'unnamed')}")
+                # Process the resolved mob (existing logic)
+                if hasattr(resolved_mob, "slots"):
+                    for slot in _iter_safe(resolved_mob.slots):
+                        if hasattr(slot, "segment") and slot.segment:
+                            return _extract_clips_recursive(slot.segment, clips, mob_map, timeline_offset, fps)
+                return timeline_offset + scope_length
+        
+        # If it can't be resolved as a mob reference, treat it as an effect/parameter reference
+        # Create a synthetic clip to represent this effect
+        effect_name = "Effect"
+        if hasattr(segment, "operation_def") and segment.operation_def:
+            effect_name = str(getattr(segment.operation_def, "name", "Effect"))
+        elif hasattr(segment, "parameter_def") and segment.parameter_def:
+            effect_name = f"Parameter: {getattr(segment.parameter_def, 'name', 'Unknown')}"
+        
+        clip = {
+            "name": f"ScopeRef: {effect_name}",
+            "in": timeline_offset,
+            "out": timeline_offset + scope_length,
+            "source_umid": "",
+            "source_path": None,
+            "effect_params": {
+                "type": "ScopeReference",
+                "is_synthetic": True,
+                "length": scope_length
+            }
+        }
+        clips.append(clip)
+        logger.debug(f"Added synthetic ScopeReference clip: {effect_name} ({timeline_offset}-{timeline_offset + scope_length})")
         return timeline_offset + scope_length
 
     elif "Transition" in segment_type:
