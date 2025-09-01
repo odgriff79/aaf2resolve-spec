@@ -17,6 +17,21 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+
+def LOG_STAGE(tag: str):
+    logging.debug(f"STAGE: {tag}")
+
+import os
+
+def _iter(aaf_obj):
+    """Return a list for iterables/collections; gracefully handle None."""
+    if aaf_obj is None:
+        return []
+    try:
+        return list(aaf_obj)
+    except TypeError:
+        # Not iterable; wrap as single-item list so callers can iterate safely
+        return [aaf_obj]
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
@@ -120,7 +135,7 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     - Extract edit rate, drop-frame flag, starting timecode
     """
     # Find all CompositionMobs
-    comp_mobs = [mob for mob in aaf.content.mobs() if hasattr(mob, "slots")]
+    comp_mobs = [mob for mob in LOG_STAGE("before-compositionmobs()"); aaf.content.compositionmobs() if hasattr(mob, "slots")]
 
     if not comp_mobs:
         raise ValueError("No CompositionMobs found in AAF")
@@ -140,7 +155,7 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
 
     # Find picture slot
     picture_slot = None
-    for slot in selected_mob.slots:
+    for slot in _iter(selected_mob.slots):
         # Look for video/picture track (not audio or data)
         if hasattr(slot, "segment") and slot.segment:
             picture_slot = slot
@@ -158,7 +173,7 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
 
     # Try to find timeline timecode
     if hasattr(selected_mob, "slots"):
-        for slot in selected_mob.slots:
+        for slot in _iter(selected_mob.slots):
             if hasattr(slot, "segment") and slot.segment:
                 # Look for Timecode component
                 if hasattr(slot.segment, "components"):
@@ -186,7 +201,7 @@ def walk_sequence_components(seq, fps: float) -> Iterable[EvWrap]:
     timeline_offset = 0
     event_index = 1
 
-    for component in seq.components:
+    for component in _iter(seq.components):
         length_frames = int(getattr(component, "length", 0))
 
         # Classify component type
@@ -229,7 +244,7 @@ def build_mob_map(aaf) -> dict[str, Any]:
     """
     mob_map = {}
 
-    for mob in aaf.content.mobs():
+    for mob in LOG_STAGE("before-compositionmobs()"); aaf.content.compositionmobs():
         if hasattr(mob, "mob_id"):
             mob_map[str(mob.mob_id)] = mob
         if hasattr(mob, "umid"):
@@ -293,7 +308,7 @@ def resolve_sourceclip(sc, mob_map: dict[str, Any]) -> dict[str, Any]:
 
             # Source timecode and rate from SourceMob
             if hasattr(current_mob, "slots"):
-                for slot in current_mob.slots:
+                for slot in _iter(current_mob.slots):
                     if hasattr(slot, "edit_rate"):
                         source["src_rate_fps"] = float(slot.edit_rate)
 
@@ -361,7 +376,7 @@ def extract_operationgroup(op) -> dict[str, Any]:
 
         # Extract parameters
         if hasattr(op, "parameters"):
-            for param in op.parameters:
+            for param in _iter(op.parameters):
                 if hasattr(param, "name") and hasattr(param, "value"):
                     param_name = str(param.name)
                     param_value = param.value
