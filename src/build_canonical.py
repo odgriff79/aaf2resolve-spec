@@ -38,6 +38,64 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+def decode_avid_effect_id(byte_array):
+    """Convert AvidEffectID byte array to string"""
+    try:
+        text = bytes(b for b in byte_array if isinstance(b, int) and b != 0).decode('ascii', errors='ignore')
+        return text
+    except:
+        return None
+
+def extract_effect_name_from_operation_group(op_group):
+    """Extract effect name from OperationGroup parameters - WORKING VERSION"""
+    if not hasattr(op_group, 'parameters'):
+        return 'Unknown Effect'
+    
+    try:
+        params = list(op_group.parameters)
+        effect_id = None
+        param_prefixes = set()
+        param_names = []
+        
+        for param in params:
+            if hasattr(param, 'name') and hasattr(param, 'value'):
+                name = str(param.name)
+                param_names.append(name)
+                
+                # Get AvidEffectID
+                if name == 'AvidEffectID' and isinstance(param.value, (list, tuple)):
+                    effect_id = decode_avid_effect_id(param.value)
+                
+                # Collect parameter prefixes for effect type detection
+                if '_' in name:
+                    prefix = name.split('_')[0]
+                    param_prefixes.add(prefix)
+        
+        # Map parameter patterns to effect types
+        effect_class = 'Effect'
+        if 'AFX' in param_prefixes:
+            effect_class = 'AVX2 Effect'
+        elif 'DVE' in param_prefixes:
+            effect_class = 'Image'
+        elif any(p in param_names for p in ['Level', 'AvidBorderWidth', 'AvidXPos']):
+            effect_class = 'Image'
+            if not effect_id:
+                effect_id = 'Submaster'
+        
+        # Build effect name
+        if effect_id:
+            if effect_class and effect_class != 'Effect':
+                return f'{effect_class} : {effect_id}'
+            else:
+                return effect_id
+        else:
+            return 'Unknown Effect'
+    
+    except Exception as e:
+        logger.debug(f'Error extracting effect name: {e}')
+        return 'Unknown Effect'
+
+
 def _iter_safe(aaf_obj):
     """Safely iterate over AAF objects that may be properties or None."""
     if aaf_obj is None:
@@ -316,7 +374,7 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
     
     # STAGE 1: Extract real effect information (not "Unknown Effect")
     operation_def = getattr(operation_group, "operation_def", None)
-    effect_name = "Unknown Effect"
+    effect_name = extract_effect_name_from_operation_group(operation_group)
     if operation_def:
         if hasattr(operation_def, "name") and operation_def.name:
             # Extract clean effect name
