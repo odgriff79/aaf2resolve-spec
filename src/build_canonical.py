@@ -365,21 +365,32 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         scope_length = int(getattr(segment, "length", 0))
         logger.debug(f"Resolving ScopeReference of length {scope_length}")
         
-        # Try to get the source_id or referenced mob
-        source_id = getattr(segment, "source_id", None)
-        ref_mob_id = getattr(segment, "ref_mob_id", None) 
+        # Try multiple attribute patterns to find the referenced ID
+        reference_id = None
+        id_source = None
+        
+        # Check common AAF reference attributes
+        for attr in ["source_id", "ref_mob_id", "mob_id", "umid", "source_mob_id", "referenced_mob_id"]:
+            if hasattr(segment, attr):
+                ref_value = getattr(segment, attr)
+                if ref_value:
+                    reference_id = str(ref_value)
+                    id_source = attr
+                    logger.debug(f"Found reference ID via {attr}: {reference_id}")
+                    break
+        
+        # Also try accessing nested reference objects
+        if not reference_id and hasattr(segment, "source_package"):
+            source_pkg = segment.source_package
+            if source_pkg and hasattr(source_pkg, "mob_id"):
+                reference_id = str(source_pkg.mob_id)
+                id_source = "source_package.mob_id"
+                logger.debug(f"Found reference ID via source_package: {reference_id}")
         
         resolved_mob = None
-        if source_id:
-            resolved_mob = mob_map.get(str(source_id))
-            logger.debug(f"Resolving ScopeReference via source_id: {source_id}")
-        elif ref_mob_id:
-            resolved_mob = mob_map.get(str(ref_mob_id))
-            logger.debug(f"Resolving ScopeReference via ref_mob_id: {ref_mob_id}")
-        elif hasattr(segment, "source_mob"):
-            # Direct mob reference
-            resolved_mob = segment.source_mob
-            logger.debug(f"Using direct source_mob reference")
+        if reference_id:
+            resolved_mob = mob_map.get(reference_id)
+            logger.debug(f"Mob lookup for {reference_id}: {'found' if resolved_mob else 'not found'}")
             
         if resolved_mob:
             logger.debug(f"Resolved ScopeReference to mob: {getattr(resolved_mob, 'name', 'unnamed')}")
@@ -403,7 +414,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
                         "name": str(mob_name),
                         "in": timeline_offset,
                         "out": timeline_offset + scope_length,
-                        "source_umid": str(source_id) if source_id else "",
+                        "source_umid": reference_id,
                         "source_path": source_path,
                         "effect_params": {}
                     }
@@ -411,7 +422,15 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
                     logger.debug(f"Added referenced source clip: {mob_name} ({timeline_offset}-{timeline_offset + scope_length})")
                     return timeline_offset + scope_length
         else:
-            logger.debug(f"Could not resolve ScopeReference - no matching mob found")
+            # Debug mob map contents for troubleshooting
+            logger.debug(f"Could not resolve ScopeReference. Reference ID: {reference_id} (via {id_source})")
+            if reference_id:
+                # Show similar IDs in mob map for debugging
+                similar_ids = [k for k in mob_map.keys() if reference_id[:8] in k or k[:8] in reference_id]
+                if similar_ids:
+                    logger.debug(f"Similar IDs in mob_map: {similar_ids[:3]}")
+                else:
+                    logger.debug(f"No similar IDs found. Mob map has {len(mob_map)} entries")
             
         # If we can't resolve the reference, just account for length
         return timeline_offset + scope_length
