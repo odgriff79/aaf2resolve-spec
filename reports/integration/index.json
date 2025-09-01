@@ -1,15 +1,15 @@
 {
-  "generated_utc": "2025-09-01T07:59:22Z",
+  "generated_utc": "2025-09-01T13:49:46Z",
   "totals": {
     "tests": 8,
-    "ok": 1,
-    "fail": 7
+    "ok": 7,
+    "fail": 1
   },
   "reports": [
     {
       "file": "reports/integration/candidate_compare.report.json",
       "test": "candidate_compare",
-      "ok": true,
+      "ok": false,
       "version": null,
       "root_ok": null,
       "has_library": null,
@@ -22,7 +22,7 @@
     {
       "file": "reports/integration/candidate_from_aaf.report.json",
       "test": "fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
@@ -40,7 +40,7 @@
     {
       "file": "reports/integration/invalid_event_id_alpha.report.json",
       "test": "fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
@@ -58,7 +58,7 @@
     {
       "file": "reports/integration/invalid_event_id_short.report.json",
       "test": "fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
@@ -76,7 +76,7 @@
     {
       "file": "reports/integration/invalid_missing_keys.report.json",
       "test": "fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
@@ -94,7 +94,7 @@
     {
       "file": "reports/integration/minimal_pipeline.report.json",
       "test": "fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
@@ -112,7 +112,7 @@
     {
       "file": "reports/integration/minimal_valid.report.json",
       "test": "fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
@@ -130,7 +130,7 @@
     {
       "file": "reports/integration/test_fcpxml_shape_report.report.json",
       "test": "test_fcpxml_shape_report",
-      "ok": false,
+      "ok": true,
       "version": "1.13",
       "root_ok": true,
       "has_library": true,
