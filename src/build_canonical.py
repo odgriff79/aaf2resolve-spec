@@ -33,14 +33,15 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def _iter(aaf_obj):
-    """Return a list for iterables/collections; gracefully handle None."""
+def _iter_safe(aaf_obj):
+    """Safely iterate over AAF objects that may be properties or None."""
     if aaf_obj is None:
         return []
     try:
+        # Try to iterate directly (for properties)
         return list(aaf_obj)
     except TypeError:
-        # Not iterable; wrap as single-item list so callers can iterate safely
+        # Not iterable; wrap as single-item list
         return [aaf_obj]
 
 
@@ -113,8 +114,17 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
     Returns:
         (composition_mob, fps, is_drop, start_tc_string, timeline_name)
     """
-    # Find CompositionMobs only
-    comp_mobs = [mob for mob in aaf.content.compositionmobs() if hasattr(mob, "slots")]
+    # Find CompositionMobs - use property, not method
+    comp_mobs = []
+    try:
+        for mob in aaf.content.mobs:
+            if hasattr(mob, 'slots') and str(type(mob).__name__) == "CompositionMob":
+                comp_mobs.append(mob)
+    except Exception as e:
+        logger.debug(f"Error iterating mobs: {e}")
+        # Fallback: try compositionmobs method if it exists
+        if hasattr(aaf.content, 'compositionmobs'):
+            comp_mobs = list(aaf.content.compositionmobs())
 
     if not comp_mobs:
         raise ValueError("No CompositionMobs found in AAF")
@@ -122,7 +132,8 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
     # Prefer *.Exported.01, else take first
     selected_mob = None
     for mob in comp_mobs:
-        if hasattr(mob, "name") and mob.name and mob.name.endswith(".Exported.01"):
+        mob_name = getattr(mob, "name", None)
+        if mob_name and str(mob_name).endswith(".Exported.01"):
             selected_mob = mob
             break
 
@@ -132,9 +143,9 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
 
     timeline_name = getattr(selected_mob, "name", "Unknown Timeline") or "Unknown Timeline"
 
-    # Find picture slot
+    # Find picture slot - use property, not method
     picture_slot = None
-    for slot in _iter(selected_mob.slots):
+    for slot in _iter_safe(selected_mob.slots):
         if hasattr(slot, "segment") and slot.segment:
             picture_slot = slot
             break
@@ -145,27 +156,49 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
     # Extract timeline properties
     fps = float(picture_slot.edit_rate) if hasattr(picture_slot, "edit_rate") else 25.0
 
-    # Extract timeline start from first component if it's Timecode
+    # Extract timeline start from timecode segment
     is_drop = False
     start_tc_string = "10:00:00:00"  # Default
 
-    if hasattr(picture_slot, "segment") and hasattr(picture_slot.segment, "components"):
-        components = _iter(picture_slot.segment.components)
-        if components:
-            first_comp = components[0]
-            if hasattr(first_comp, "start") and hasattr(first_comp, "drop"):
-                start_frames = int(first_comp.start)
-                is_drop = bool(first_comp.drop)
-                # Convert frames to timecode string at given fps
-                start_tc_string = frames_to_timecode(start_frames, fps, is_drop)
+    # Look for timecode information in the segment tree
+    start_frames = _find_start_timecode(picture_slot.segment)
+    if start_frames is not None:
+        start_tc_string = frames_to_timecode(start_frames, fps, is_drop)
 
     return selected_mob, fps, is_drop, start_tc_string, timeline_name
+
+
+def _find_start_timecode(segment) -> Optional[int]:
+    """Recursively search for timecode component to get start time."""
+    if not segment:
+        return None
+    
+    segment_type = str(type(segment).__name__)
+    
+    if "Timecode" in segment_type:
+        return int(getattr(segment, "start", 0))
+    
+    # Search in components if it's a sequence
+    if hasattr(segment, "components"):
+        for comp in _iter_safe(segment.components):
+            result = _find_start_timecode(comp)
+            if result is not None:
+                return result
+    
+    # Search in input_segments if it's an operation group
+    if hasattr(segment, "input_segments"):
+        for input_seg in _iter_safe(segment.input_segments):
+            result = _find_start_timecode(input_seg)
+            if result is not None:
+                return result
+    
+    return None
 
 
 def build_mob_map(aaf) -> Dict[str, Any]:
     """Build lookup map: mob_id/UMID → mob object for UMID resolution."""
     mob_map = {}
-    for mob in aaf.content.mobs():
+    for mob in _iter_safe(aaf.content.mobs):
         if hasattr(mob, "mob_id"):
             mob_map[str(mob.mob_id)] = mob
         if hasattr(mob, "umid"):
@@ -179,77 +212,101 @@ def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -
 
     # Find picture slot
     picture_slot = None
-    for slot in _iter(comp_mob.slots):
+    for slot in _iter_safe(comp_mob.slots):
         if hasattr(slot, "segment") and slot.segment:
             picture_slot = slot
             break
 
     if not picture_slot or not hasattr(picture_slot, "segment"):
+        logger.warning("No picture slot found")
         return clips
 
     # Recursively extract SourceClips from segment tree
-    clips = []
+    logger.debug(f"Starting recursive extraction from segment: {type(picture_slot.segment).__name__}")
     _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps)
     return clips
 
 
-def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float):
+def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float) -> int:
     """Recursively traverse segment tree to find SourceClip objects."""
     if not segment:
         return timeline_offset
 
     segment_type = str(type(segment).__name__)
+    logger.debug(f"Processing segment type: {segment_type} at offset {timeline_offset}")
 
     if "Sequence" in segment_type:
         # Traverse sequence components
         current_offset = timeline_offset
-        for component in _iter(segment.components):
+        components = _iter_safe(segment.components)
+        logger.debug(f"Sequence has {len(components)} components")
+        for component in components:
             current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps)
         return current_offset
 
     elif "OperationGroup" in segment_type:
         # Traverse operation group input segments
         current_offset = timeline_offset
+        input_segments = None
+        
+        # Try different attribute names for input segments
         if hasattr(segment, "input_segments"):
-            for input_seg in _iter(segment.input_segments):
-                current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+            input_segments = _iter_safe(segment.input_segments)
         elif hasattr(segment, "segments"):
-            for input_seg in _iter(segment.segments):
+            input_segments = _iter_safe(segment.segments)
+        elif hasattr(segment, "inputs"):
+            input_segments = _iter_safe(segment.inputs)
+        
+        if input_segments:
+            logger.debug(f"OperationGroup has {len(input_segments)} input segments")
+            for input_seg in input_segments:
                 current_offset = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+        else:
+            # If no input segments, treat as having its own length
+            op_length = int(getattr(segment, "length", 0))
+            current_offset += op_length
+            
         return current_offset
 
     elif "SourceClip" in segment_type:
         # This is an actual clip - extract it
         clip_length = int(getattr(segment, "length", 0))
+        clip_name = str(getattr(segment, "name", "Clip"))
+        source_id = getattr(segment, "source_id", None)
         
         clip = {
-            "name": str(getattr(segment, "name", "Clip")),
+            "name": clip_name,
             "in": timeline_offset,
             "out": timeline_offset + clip_length,
-            "source_umid": str(getattr(segment, "source_id", "")),
+            "source_umid": str(source_id) if source_id else "",
             "source_path": resolve_source_path(segment, mob_map),
             "effect_params": {}
         }
         clips.append(clip)
+        logger.debug(f"Added SourceClip: {clip_name} ({timeline_offset}-{timeline_offset + clip_length})")
         return timeline_offset + clip_length
 
     elif "Transition" in segment_type:
         # Skip transitions but account for their length
         transition_length = int(getattr(segment, "length", 0))
+        logger.debug(f"Skipping Transition of length {transition_length}")
         return timeline_offset + transition_length
 
     elif "Filler" in segment_type:
         # Skip filler but account for length
         filler_length = int(getattr(segment, "length", 0))
+        logger.debug(f"Skipping Filler of length {filler_length}")
         return timeline_offset + filler_length
 
     elif "Timecode" in segment_type:
-        # Skip timecode components
+        # Skip timecode components but don't advance offset
+        logger.debug("Skipping Timecode component")
         return timeline_offset
 
     else:
-        # Unknown component type - skip
+        # Unknown component type - skip but account for length if present
         component_length = int(getattr(segment, "length", 0))
+        logger.debug(f"Skipping unknown segment type {segment_type}, length={component_length}")
         return timeline_offset + component_length
 
 
@@ -271,10 +328,11 @@ def resolve_source_path(source_clip, mob_map: Dict[str, Any]) -> Optional[str]:
             if hasattr(desc, "locator"):
                 locator = desc.locator
                 if hasattr(locator, "url_string"):
-                    return locator.url_string
+                    return str(locator.url_string)
 
         return None
-    except Exception:
+    except Exception as e:
+        logger.debug(f"Error resolving source path: {e}")
         return None
 
 
