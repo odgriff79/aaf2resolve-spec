@@ -272,7 +272,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return current_offset
 
     elif "OperationGroup" in segment_type:
-        # Traverse operation group input segments
+        # OperationGroups represent effects applied to input segments
         current_offset = timeline_offset
         input_segments = None
         
@@ -286,18 +286,55 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         
         if input_segments:
             logger.debug(f"OperationGroup has {len(input_segments)} input segments")
-            # Process all input segments in parallel (they represent the same timeline duration)
-            max_offset = current_offset
-            for input_seg in input_segments:
-                seg_end = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
-                max_offset = max(max_offset, seg_end)
-            return max_offset
+            
+            # Extract operation/effect information
+            operation_def = getattr(segment, "operation_def", None)
+            operation_name = str(operation_def.name) if operation_def and hasattr(operation_def, "name") else "Unknown Effect"
+            
+            # Check if any input is a Filler (effect on filler = synthetic clip)
+            has_filler = any("Filler" in str(type(inp).__name__) for inp in input_segments)
+            has_source_clip = any("SourceClip" in str(type(inp).__name__) for inp in input_segments)
+            
+            if has_filler and not has_source_clip:
+                # This is an effect applied to filler - create a synthetic clip
+                op_length = int(getattr(segment, "length", 0))
+                
+                clip = {
+                    "name": f"Effect: {operation_name}",
+                    "in": timeline_offset,
+                    "out": timeline_offset + op_length,
+                    "source_umid": "",
+                    "source_path": None,  # Placeholder for effect on filler
+                    "effect_params": {
+                        "operation": operation_name,
+                        "is_synthetic": True,
+                        "length": op_length
+                    }
+                }
+                clips.append(clip)
+                logger.debug(f"Added synthetic clip for effect on filler: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
+                return timeline_offset + op_length
+                
+            else:
+                # Normal operation group - process input segments
+                # For multiple inputs (compositing), they represent the same timeline span
+                max_offset = current_offset
+                for input_seg in input_segments:
+                    seg_end = _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps)
+                    max_offset = max(max_offset, seg_end)
+                
+                # If we found clips, add effect information to the most recent clip
+                if clips and operation_name != "Unknown Effect":
+                    clips[-1]["effect_params"] = {
+                        "operation": operation_name,
+                        "is_synthetic": False
+                    }
+                
+                return max_offset
         else:
             # If no input segments, treat as having its own length
             op_length = int(getattr(segment, "length", 0))
-            current_offset += op_length
-            
-        return current_offset
+            return timeline_offset + op_length
 
     elif "SourceClip" in segment_type:
         # This is an actual clip - extract it
@@ -317,8 +354,14 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         logger.debug(f"Added SourceClip: {clip_name} ({timeline_offset}-{timeline_offset + clip_length})")
         return timeline_offset + clip_length
 
+    elif "Filler" in segment_type:
+        # Pure filler (not in OperationGroup) - skip but account for length
+        filler_length = int(getattr(segment, "length", 0))
+        logger.debug(f"Skipping pure Filler of length {filler_length}")
+        return timeline_offset + filler_length
+
     elif "ScopeReference" in segment_type:
-        # ScopeReference may contain nested clips - try to traverse it
+        # ScopeReference may contain nested clips or represent effects
         scope_length = int(getattr(segment, "length", 0))
         logger.debug(f"Exploring ScopeReference of length {scope_length}")
         
@@ -340,7 +383,9 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
                 current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps)
             return current_offset
         else:
-            # No nested segments, just account for length
+            # No nested segments - this might be an effect definition
+            # For now, just account for length
+            logger.debug(f"ScopeReference has no nested segments, length={scope_length}")
             return timeline_offset + scope_length
 
     elif "Transition" in segment_type:
@@ -348,12 +393,6 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         transition_length = int(getattr(segment, "length", 0))
         logger.debug(f"Skipping Transition of length {transition_length}")
         return timeline_offset + transition_length
-
-    elif "Filler" in segment_type:
-        # Skip filler but account for length
-        filler_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Skipping Filler of length {filler_length}")
-        return timeline_offset + filler_length
 
     elif "Timecode" in segment_type:
         # Skip timecode components but don't advance offset
