@@ -292,8 +292,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return current_offset
 
     elif "OperationGroup" in segment_type:
-        # Each OperationGroup = exactly one event, regardless of inputs
-        # The event represents either "effect on media" or "effect on filler"
+        # Follow legacy pattern: check if has nested SourceClips
         op_length = int(getattr(segment, "length", 0))
         op_range = (timeline_offset, timeline_offset + op_length)
         
@@ -303,18 +302,63 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         
         processed_ranges.add(op_range)
         
-        # Extract effect information
-        operation_def = getattr(segment, "operation_def", None)
-        operation_name = "Unknown Effect"
-        if operation_def:
-            if hasattr(operation_def, "name"):
-                op_name_val = getattr(operation_def, "name")
-                if op_name_val:
-                    operation_name = str(op_name_val)
-            elif hasattr(operation_def, "auid"):
-                operation_name = f"Effect_{str(operation_def.auid)[-8:]}"
+        # Check if this OperationGroup has nested SourceClips
+        def has_nested_source_clip(node):
+            """Check if node contains SourceClips anywhere in its tree."""
+            if not node:
+                return False
+            
+            node_type = str(type(node).__name__)
+            if "SourceClip" in node_type:
+                return True
+                
+            # Check all possible child attributes
+            for attr_name in ["input_segments", "segments", "inputs", "components"]:
+                if hasattr(node, attr_name):
+                    children = _iter_safe(getattr(node, attr_name))
+                    for child in children:
+                        if has_nested_source_clip(child):
+                            return True
+            
+            # Check single nested segment
+            if hasattr(node, "segment") and getattr(node, "segment"):
+                if has_nested_source_clip(node.segment):
+                    return True
+                    
+            return False
         
-        # Analyze input segments to determine event type
+        has_nested_clips = has_nested_source_clip(segment)
+        
+        # If no nested SourceClips, emit as FX_ON_FILLER event
+        if not has_nested_clips:
+            operation_def = getattr(segment, "operation_def", None)
+            operation_name = "Unknown Effect"
+            if operation_def:
+                if hasattr(operation_def, "name"):
+                    op_name_val = getattr(operation_def, "name")
+                    if op_name_val:
+                        operation_name = str(op_name_val)
+                elif hasattr(operation_def, "auid"):
+                    operation_name = f"Effect_{str(operation_def.auid)[-8:]}"
+            
+            fx_clip = {
+                "name": operation_name,
+                "in": timeline_offset,
+                "out": timeline_offset + op_length,
+                "source_umid": "FX_ON_FILLER",
+                "source_path": None,
+                "effect_params": {
+                    "operation": operation_name,
+                    "is_filler_effect": True,
+                    "length": op_length
+                }
+            }
+            clips.append(fx_clip)
+            logger.debug(f"Added FX_ON_FILLER clip: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
+        else:
+            logger.debug(f"OperationGroup has nested SourceClips - recursing into children")
+        
+        # CRITICAL: Always recurse into children regardless (legacy pattern)
         input_segments = None
         if hasattr(segment, "input_segments"):
             input_segments = _iter_safe(segment.input_segments)
@@ -323,116 +367,10 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         elif hasattr(segment, "inputs"):
             input_segments = _iter_safe(segment.inputs)
         
-        input_count = len(input_segments) if input_segments else 0
-        
-        # Check if this OperationGroup has SourceClip inputs (media) or just filler
-        has_source_clips = False
-        source_clip_info = None
-        
-        def find_source_clip_recursive(segment):
-            """Recursively search for SourceClips within a segment tree."""
-            if not segment:
-                return None
-                
-            seg_type = str(type(segment).__name__)
-            
-            if "SourceClip" in seg_type:
-                # Found a SourceClip - extract its info
-                clip_name = str(getattr(segment, "name", "Media"))
-                source_id = getattr(segment, "source_id", None)
-                return {
-                    "name": clip_name,
-                    "source_umid": str(source_id) if source_id else "",
-                    "source_path": resolve_source_path(segment, mob_map)
-                }
-            elif "Sequence" in seg_type:
-                # Search within sequence components
-                if hasattr(segment, "components"):
-                    for comp in _iter_safe(segment.components):
-                        result = find_source_clip_recursive(comp)
-                        if result:
-                            return result
-            elif "OperationGroup" in seg_type:
-                # Search within nested OperationGroup inputs but don't recurse infinitely
-                if hasattr(segment, "input_segments"):
-                    for input_seg in _iter_safe(segment.input_segments):
-                        result = find_source_clip_recursive(input_seg)
-                        if result:
-                            return result
-                elif hasattr(segment, "segments"):
-                    for input_seg in _iter_safe(segment.segments):
-                        result = find_source_clip_recursive(input_seg)
-                        if result:
-                            return result
-                elif hasattr(segment, "inputs"):
-                    for input_seg in _iter_safe(segment.inputs):
-                        result = find_source_clip_recursive(input_seg)
-                        if result:
-                            return result
-            # Add more segment types that might contain SourceClips
-            elif hasattr(segment, "components"):
-                # Any segment with components - search them
-                for comp in _iter_safe(segment.components):
-                    result = find_source_clip_recursive(comp)
-                    if result:
-                        return result
-            elif hasattr(segment, "segment") and getattr(segment, "segment"):
-                # Single nested segment
-                result = find_source_clip_recursive(segment.segment)
-                if result:
-                    return result
-                
-            return None
-        
         if input_segments:
-            for i, input_seg in enumerate(input_segments):
-                source_info = find_source_clip_recursive(input_seg)
-                if source_info:
-                    has_source_clips = True
-                    source_clip_info = source_info
-                    logger.debug(f"Found SourceClip in input {i}: {source_info['name']}")
-                    break  # Use first SourceClip found
-                else:
-                    # Debug what type of input this is
-                    input_type = str(type(input_seg).__name__)
-                    logger.debug(f"Input {i} type: {input_type} - no SourceClip found")
+            for input_seg in input_segments:
+                _extract_clips_recursive(input_seg, clips, mob_map, timeline_offset, fps, processed_ranges)
         
-        # Create exactly ONE event for this OperationGroup
-        if has_source_clips and source_clip_info:
-            # Case: SourceClip + Effect = "Media with Effect" event
-            event_name = f"{source_clip_info['name']} + {operation_name}"
-            event = {
-                "name": event_name,
-                "in": timeline_offset,
-                "out": timeline_offset + op_length,
-                "source_umid": source_clip_info["source_umid"],
-                "source_path": source_clip_info["source_path"],
-                "effect_params": {
-                    "operation": operation_name,
-                    "has_media": True,
-                    "input_count": input_count,
-                    "length": op_length
-                }
-            }
-            logger.debug(f"Added media+effect clip: {event_name} ({timeline_offset}-{timeline_offset + op_length})")
-        else:
-            # Case: Effect on Filler = "Effect Only" event  
-            event = {
-                "name": operation_name,
-                "in": timeline_offset,
-                "out": timeline_offset + op_length,
-                "source_umid": "",
-                "source_path": None,
-                "effect_params": {
-                    "operation": operation_name,
-                    "has_media": False,
-                    "input_count": input_count,
-                    "length": op_length
-                }
-            }
-            logger.debug(f"Added effect-only clip: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
-        
-        clips.append(event)
         return timeline_offset + op_length
 
     elif "SourceClip" in segment_type:
