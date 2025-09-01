@@ -361,32 +361,60 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         return timeline_offset + filler_length
 
     elif "ScopeReference" in segment_type:
-        # ScopeReference may contain nested clips or represent effects
+        # ScopeReference points to another mob - resolve it through mob map
         scope_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Exploring ScopeReference of length {scope_length}")
+        logger.debug(f"Resolving ScopeReference of length {scope_length}")
         
-        # Try to find nested segments in ScopeReference
-        nested_segments = None
-        if hasattr(segment, "segments"):
-            nested_segments = _iter_safe(segment.segments)
-        elif hasattr(segment, "components"):
-            nested_segments = _iter_safe(segment.components)
-        elif hasattr(segment, "inputs"):
-            nested_segments = _iter_safe(segment.inputs)
-        elif hasattr(segment, "reference") and hasattr(segment.reference, "segments"):
-            nested_segments = _iter_safe(segment.reference.segments)
+        # Try to get the source_id or referenced mob
+        source_id = getattr(segment, "source_id", None)
+        ref_mob_id = getattr(segment, "ref_mob_id", None) 
         
-        if nested_segments:
-            logger.debug(f"ScopeReference contains {len(nested_segments)} nested segments")
-            current_offset = timeline_offset
-            for nested_seg in nested_segments:
-                current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps)
-            return current_offset
+        resolved_mob = None
+        if source_id:
+            resolved_mob = mob_map.get(str(source_id))
+            logger.debug(f"Resolving ScopeReference via source_id: {source_id}")
+        elif ref_mob_id:
+            resolved_mob = mob_map.get(str(ref_mob_id))
+            logger.debug(f"Resolving ScopeReference via ref_mob_id: {ref_mob_id}")
+        elif hasattr(segment, "source_mob"):
+            # Direct mob reference
+            resolved_mob = segment.source_mob
+            logger.debug(f"Using direct source_mob reference")
+            
+        if resolved_mob:
+            logger.debug(f"Resolved ScopeReference to mob: {getattr(resolved_mob, 'name', 'unnamed')}")
+            
+            # Look for segments in the resolved mob
+            if hasattr(resolved_mob, "slots"):
+                for slot in _iter_safe(resolved_mob.slots):
+                    if hasattr(slot, "segment") and slot.segment:
+                        logger.debug(f"Processing resolved mob slot segment: {type(slot.segment).__name__}")
+                        return _extract_clips_recursive(slot.segment, clips, mob_map, timeline_offset, fps)
+            
+            # Also check if it's a SourceMob with a descriptor that has locators
+            if hasattr(resolved_mob, "descriptor"):
+                desc = resolved_mob.descriptor
+                if desc:
+                    # Create a synthetic clip for the referenced source
+                    mob_name = getattr(resolved_mob, "name", "Referenced Source")
+                    source_path = resolve_source_path_from_descriptor(desc)
+                    
+                    clip = {
+                        "name": str(mob_name),
+                        "in": timeline_offset,
+                        "out": timeline_offset + scope_length,
+                        "source_umid": str(source_id) if source_id else "",
+                        "source_path": source_path,
+                        "effect_params": {}
+                    }
+                    clips.append(clip)
+                    logger.debug(f"Added referenced source clip: {mob_name} ({timeline_offset}-{timeline_offset + scope_length})")
+                    return timeline_offset + scope_length
         else:
-            # No nested segments - this might be an effect definition
-            # For now, just account for length
-            logger.debug(f"ScopeReference has no nested segments, length={scope_length}")
-            return timeline_offset + scope_length
+            logger.debug(f"Could not resolve ScopeReference - no matching mob found")
+            
+        # If we can't resolve the reference, just account for length
+        return timeline_offset + scope_length
 
     elif "Transition" in segment_type:
         # Skip transitions but account for their length
@@ -419,6 +447,26 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         
         # No nested segments found, just account for length
         return timeline_offset + component_length
+
+
+def resolve_source_path_from_descriptor(desc) -> Optional[str]:
+    """Extract file path from a descriptor object."""
+    try:
+        if hasattr(desc, "locator"):
+            locator = desc.locator
+            if hasattr(locator, "url_string"):
+                return str(locator.url_string)
+        elif hasattr(desc, "locators"):
+            # Multiple locators - try the first one
+            locators = _iter_safe(desc.locators)
+            if locators:
+                first_locator = locators[0]
+                if hasattr(first_locator, "url_string"):
+                    return str(first_locator.url_string)
+        return None
+    except Exception as e:
+        logger.debug(f"Error resolving descriptor path: {e}")
+        return None
 
 
 def resolve_source_path(source_clip, mob_map: Dict[str, Any]) -> Optional[str]:
