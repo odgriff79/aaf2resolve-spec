@@ -1,10 +1,28 @@
 {
   "totals": {
-    "tests": 6,
-    "ok": 6,
+    "tests": 7,
+    "ok": 7,
     "fail": 0
   },
   "reports": [
+    {
+      "file": "reports/integration/candidate_from_aaf.report.json",
+      "test": "fcpxml_shape_report",
+      "ok": true,
+      "version": "1.13",
+      "root_ok": true,
+      "has_library": true,
+      "has_event": true,
+      "has_project": true,
+      "has_sequence": true,
+      "has_spine": true,
+      "counts": {
+        "events": 1,
+        "projects": 1,
+        "spines": 1,
+        "items_in_spine": 0
+      }
+    },
     {
       "file": "reports/integration/invalid_event_id_alpha.report.json",
       "test": "fcpxml_shape_report",

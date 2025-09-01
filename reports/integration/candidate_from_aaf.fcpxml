@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fcpxml version="1.13">
+  <resources>
+    <format id="r1" name="FFVideoFormat25" frameDuration="1/25s" width="1920" height="1080" />
+  </resources>
+  <library>
+    <event name="AAF Import">
+      <project name="Untitled Project">
+        <sequence format="r1" duration="0/25s" tcStart="0/25s">
+          <spine />
+        </sequence>
+      </project>
+    </event>
+  </library>
+</fcpxml>
