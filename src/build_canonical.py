@@ -295,17 +295,22 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         
         processed_operation_groups.add(op_id)
         
-        current_offset = timeline_offset
         op_length = int(getattr(segment, "length", 0))
         
         # Extract effect information
         operation_def = getattr(segment, "operation_def", None)
         operation_name = "Unknown Effect"
-        if operation_def and hasattr(operation_def, "name"):
-            operation_name = str(operation_def.name)
+        if operation_def:
+            # Try different ways to get the operation name
+            if hasattr(operation_def, "name"):
+                op_name_val = getattr(operation_def, "name")
+                if op_name_val:
+                    operation_name = str(op_name_val)
+            elif hasattr(operation_def, "auid"):
+                # Fallback to AUID if name isn't available
+                operation_name = f"Effect_{str(operation_def.auid)[-8:]}"
         
-        # Process input segments to extract any nested SourceClips (for media)
-        # but DON'T create separate clips for them - they're inputs to this effect
+        # Count input segments for debugging but DON'T process them recursively
         input_segments = None
         if hasattr(segment, "input_segments"):
             input_segments = _iter_safe(segment.input_segments)
@@ -317,12 +322,8 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         input_count = len(input_segments) if input_segments else 0
         logger.debug(f"OperationGroup '{operation_name}' has {input_count} input segments")
         
-        # Recursively process inputs to find any nested SourceClips or effects
-        if input_segments:
-            for input_seg in input_segments:
-                # Recursively process inputs, but don't advance timeline offset
-                # The OperationGroup itself defines the timeline span
-                _extract_clips_recursive(input_seg, clips, mob_map, current_offset, fps, processed_operation_groups)
+        # CRITICAL: Do NOT recursively process input segments
+        # This was causing the duplication - OperationGroups should be treated as atomic units
         
         # Create exactly ONE clip for this OperationGroup
         effect_clip = {
