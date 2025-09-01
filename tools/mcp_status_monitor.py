@@ -42,7 +42,14 @@ def display_mcp_dashboard():
     if "error" in internal_status:
         print(f"   ❌ {internal_status['error']}")
     else:
-        handoff = internal_status.get("value", {})
+        # Handle both dict and string responses
+        if isinstance(internal_status.get("value"), dict):
+            handoff = internal_status.get("value", {})
+        elif isinstance(internal_status.get("value"), str):
+            handoff = {"status": internal_status.get("value"), "owner": "Unknown"}
+        else:
+            handoff = {"status": "Unknown", "owner": "Unknown"}
+            
         owner = handoff.get("owner", "Unknown")
         status = handoff.get("status", "Unknown") 
         phase = handoff.get("phase", "Unknown")
