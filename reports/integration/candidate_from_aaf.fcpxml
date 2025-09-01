@@ -5,8 +5,8 @@
   </resources>
   <library>
     <event name="AAF Import">
-      <project name="Untitled Project">
-        <sequence format="r1" duration="0/25s" tcStart="0/25s">
+      <project name="BLINK_WORLD_WW2D EP1 SEQ TEST">
+        <sequence format="r1" duration="0/25s" tcStart="3600/25s">
           <spine />
         </sequence>
       </project>

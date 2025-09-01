@@ -135,7 +135,7 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, int, str]:
     - Extract edit rate, drop-frame flag, starting timecode
     """
     # Find all CompositionMobs
-    comp_mobs = [mob for mob in LOG_STAGE("before-compositionmobs()"); aaf.content.compositionmobs() if hasattr(mob, "slots")]
+    comp_mobs = [mob for mob in aaf.content.compositionmobs() if hasattr(mob, "slots")]
 
     if not comp_mobs:
         raise ValueError("No CompositionMobs found in AAF")
@@ -244,7 +244,7 @@ def build_mob_map(aaf) -> dict[str, Any]:
     """
     mob_map = {}
 
-    for mob in LOG_STAGE("before-compositionmobs()"); aaf.content.compositionmobs():
+    for mob in aaf.content.compositionmobs():
         if hasattr(mob, "mob_id"):
             mob_map[str(mob.mob_id)] = mob
         if hasattr(mob, "umid"):
