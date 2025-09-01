@@ -269,7 +269,13 @@ def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -
 
 
 def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, processed_ranges: Set[Tuple[int, int]]) -> int:
-    """Recursively traverse segment tree to find SourceClip objects and OperationGroups."""
+    """Recursively traverse segment tree to extract events.
+    
+    Event types:
+    1. Standalone SourceClip = Media Only
+    2. OperationGroup with SourceClip inputs = Media + Effect  
+    3. OperationGroup without SourceClip inputs = Effect Only
+    """
     if not segment:
         return timeline_offset
 
@@ -282,7 +288,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         components = _iter_safe(segment.components)
         logger.debug(f"Sequence has {len(components)} components")
         for component in components:
-            current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps, processed_operation_groups)
+            current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps, processed_ranges)
         return current_offset
 
     elif "OperationGroup" in segment_type:
@@ -441,7 +447,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
                     logger.debug(f"Unknown segment has {len(nested_segments)} nested segments via {attr_name}")
                     current_offset = timeline_offset
                     for nested_seg in nested_segments:
-                        current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps, processed_operation_groups)
+                        current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps, processed_ranges)
                     return current_offset
                 break
         
