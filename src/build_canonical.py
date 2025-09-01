@@ -304,7 +304,7 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         
         # Check if this OperationGroup has nested SourceClips
         def has_nested_source_clip(node):
-            """Check if node contains SourceClips anywhere in its tree."""
+            """Check if node contains SourceClips in its immediate children only."""
             if not node:
                 return False
             
@@ -312,18 +312,19 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
             if "SourceClip" in node_type:
                 return True
                 
-            # Check all possible child attributes
-            for attr_name in ["input_segments", "segments", "inputs", "components"]:
+            # Only check immediate input segments, not deep recursion
+            for attr_name in ["input_segments", "segments", "inputs"]:
                 if hasattr(node, attr_name):
                     children = _iter_safe(getattr(node, attr_name))
                     for child in children:
-                        if has_nested_source_clip(child):
+                        child_type = str(type(child).__name__)
+                        if "SourceClip" in child_type:
                             return True
-            
-            # Check single nested segment
-            if hasattr(node, "segment") and getattr(node, "segment"):
-                if has_nested_source_clip(node.segment):
-                    return True
+                        # Only check one level of Sequences
+                        elif "Sequence" in child_type and hasattr(child, "components"):
+                            for comp in _iter_safe(child.components):
+                                if "SourceClip" in str(type(comp).__name__):
+                                    return True
                     
             return False
         
