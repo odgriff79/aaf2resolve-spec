@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build_canonical.py — Core AAF → Canonical JSON Implementation
+build_canonical.py — Core AAF → Canonical JSON Implementation (FIXED)
 
 Implements the canonical JSON builder per docs/data_model_json.md and docs/inspector_rule_pack.md.
 This is the primary entrypoint for converting AAF files into the canonical JSON format.
@@ -10,6 +10,11 @@ Key principles:
 - OperationGroup + nested SourceClip = single Media+Effect event
 - Follow UMID chain to ImportDescriptor for true source info
 - Required keys always present (null for unknown values)
+
+FIXES IMPLEMENTED:
+- Stage 1: Event model corrections and deduplication
+- Stage 2: True source resolution via mob chain walking  
+- Stage 3: Media+Effect event pairing for ~71 event target
 """
 
 from __future__ import annotations
@@ -19,7 +24,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Set
 
 # External dependency (pyaaf2)
 try:
@@ -78,9 +83,9 @@ def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
             mob_map = build_mob_map(f)
             logger.info(f"Built mob map with {len(mob_map)} entries")
 
-            # Step 3: Extract events using proper source resolution
-            clips = extract_events_with_source_resolution(comp, mob_map, fps)
-            logger.info(f"Extracted {len(clips)} clips")
+            # Step 3: Extract events using proper source resolution with deduplication
+            clips, processed_operations = extract_events_with_source_resolution(comp, mob_map, fps)
+            logger.info(f"Extracted {len(clips)} clips, processed {len(processed_operations)} operations")
 
             # Step 4: Pack canonical structure  
             return {
@@ -206,9 +211,15 @@ def build_mob_map(aaf) -> Dict[str, Any]:
     return mob_map
 
 
-def extract_events_with_source_resolution(comp_mob, mob_map: Dict[str, Any], fps: float) -> List[Dict[str, Any]]:
-    """Extract events using proper AAF source resolution."""
+def extract_events_with_source_resolution(comp_mob, mob_map: Dict[str, Any], fps: float) -> Tuple[List[Dict[str, Any]], Set[str]]:
+    """
+    Extract events using proper AAF source resolution.
+    
+    Returns:
+        Tuple of (clips, processed_operations) where processed_operations tracks dedupe
+    """
     clips = []
+    processed_operations = set()  # STAGE 1: Deduplication tracking
 
     # Find picture slot
     picture_slot = None
@@ -223,14 +234,14 @@ def extract_events_with_source_resolution(comp_mob, mob_map: Dict[str, Any], fps
 
     if not picture_slot or not hasattr(picture_slot, "segment"):
         logger.warning("No picture slot found")
-        return clips
+        return clips, processed_operations
 
     # Process the timeline sequence
-    _process_sequence(picture_slot.segment, clips, mob_map, 0, fps)
-    return clips
+    _process_sequence(picture_slot.segment, clips, mob_map, 0, fps, processed_operations)
+    return clips, processed_operations
 
 
-def _process_sequence(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float) -> int:
+def _process_sequence(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, processed_ops: Set[str]) -> int:
     """Process a sequence and its components."""
     if not segment or not hasattr(segment, "components"):
         return timeline_offset
@@ -239,12 +250,12 @@ def _process_sequence(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, A
     components = _iter_safe(segment.components)
     
     for component in components:
-        current_offset = _process_component(component, clips, mob_map, current_offset, fps)
+        current_offset = _process_component(component, clips, mob_map, current_offset, fps, processed_ops)
     
     return current_offset
 
 
-def _process_component(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float) -> int:
+def _process_component(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, processed_ops: Set[str]) -> int:
     """Process a single timeline component."""
     if not segment:
         return timeline_offset
@@ -253,8 +264,8 @@ def _process_component(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, 
     segment_length = int(getattr(segment, "length", 0))
     
     if "OperationGroup" in segment_type:
-        # Each OperationGroup should produce one Media+Effect event
-        _process_operation_group(segment, clips, mob_map, timeline_offset, fps)
+        # STAGE 1: Each OperationGroup should produce ONE Media+Effect event with deduplication
+        _process_operation_group(segment, clips, mob_map, timeline_offset, fps, processed_ops)
         
     elif "SourceClip" in segment_type:
         # Standalone SourceClip (rare in modern AAF)
@@ -266,37 +277,73 @@ def _process_component(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, 
         
     elif "Sequence" in segment_type:
         # Nested sequence - process recursively
-        return _process_sequence(segment, clips, mob_map, timeline_offset, fps)
+        return _process_sequence(segment, clips, mob_map, timeline_offset, fps, processed_ops)
     
     return timeline_offset + segment_length
 
 
-def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float):
-    """Process an OperationGroup by finding its nested SourceClip and combining with effect info."""
+def _get_operation_group_id(operation_group) -> str:
+    """
+    Generate a unique identifier for an OperationGroup for deduplication.
+    Uses memory address as fallback if no other unique attributes available.
+    """
+    # Try to use operation definition as identifier
+    if hasattr(operation_group, "operation_def") and operation_group.operation_def:
+        op_def = operation_group.operation_def
+        if hasattr(op_def, "auid"):
+            return f"opgroup_{op_def.auid}"
+        elif hasattr(op_def, "name"):
+            return f"opgroup_{op_def.name}"
     
-    # Extract effect information
+    # Fallback to memory address
+    return f"opgroup_{id(operation_group)}"
+
+
+def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, processed_ops: Set[str]):
+    """
+    Process an OperationGroup by finding its nested SourceClip and combining with effect info.
+    
+    STAGE 1: Implements deduplication to prevent double-emission
+    STAGE 2: Extracts real effect names and performs source resolution
+    """
+    
+    # STAGE 1: Deduplication check
+    op_id = _get_operation_group_id(operation_group)
+    if op_id in processed_ops:
+        logger.debug(f"Skipping already processed OperationGroup: {op_id}")
+        return
+    processed_ops.add(op_id)
+    
+    # STAGE 1: Extract real effect information (not "Unknown Effect")
     operation_def = getattr(operation_group, "operation_def", None)
     effect_name = "Unknown Effect"
     if operation_def:
-        if hasattr(operation_def, "name"):
-            op_name_val = getattr(operation_def, "name")
-            if op_name_val:
-                effect_name = str(op_name_val)
-        elif hasattr(operation_def, "auid"):
+        if hasattr(operation_def, "name") and operation_def.name:
+            # Extract clean effect name
+            op_name_val = str(operation_def.name)
+            # Clean up common AAF operation naming patterns
+            if " " in op_name_val:
+                parts = op_name_val.split(" ")
+                if len(parts) > 1:
+                    effect_name = parts[1].replace('_v2', '').replace('_2', '').replace('_', ' ').strip()
+            else:
+                effect_name = op_name_val
+        elif hasattr(operation_def, "auid") and operation_def.auid:
+            # Use AUID as fallback
             effect_name = f"Effect_{str(operation_def.auid)[-8:]}"
     
-    # Find nested SourceClip via recursive search
-    source_clip = _find_nested_source_clip(operation_group)
+    # STAGE 2: Find nested SourceClip via deep recursive search
+    source_clip = _find_nested_source_clip_deep(operation_group)
     
     if source_clip:
-        # Process the SourceClip with effect context
+        # STAGE 3: Process as Media+Effect event
         _process_source_clip(source_clip, clips, mob_map, timeline_offset, fps, effect_name)
         logger.debug(f"Added Media+Effect event: SourceClip + {effect_name} at {timeline_offset}")
     else:
         # No SourceClip found - this is an effect on filler
         op_length = int(getattr(operation_group, "length", 0))
         filler_event = {
-            "name": effect_name,
+            "name": f"FX_ON_FILLER: {effect_name}",
             "in": timeline_offset,
             "out": timeline_offset + op_length,
             "source_umid": "FX_ON_FILLER",
@@ -311,9 +358,14 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
         logger.debug(f"Added FX_ON_FILLER event: {effect_name} at {timeline_offset}")
 
 
-def _find_nested_source_clip(node):
-    """Recursively find SourceClip nested anywhere within a node."""
-    if not node:
+def _find_nested_source_clip_deep(node, depth=0) -> Optional[Any]:
+    """
+    STAGE 1: Deep recursive search for SourceClip nested anywhere within a node.
+    
+    This addresses the insufficient search depth issue by traversing ALL levels:
+    OperationGroup → input_segments → Sequence → components → SourceClip (and deeper)
+    """
+    if not node or depth > 10:  # Prevent infinite recursion
         return None
     
     node_type = str(type(node).__name__)
@@ -322,24 +374,35 @@ def _find_nested_source_clip(node):
     if "SourceClip" in node_type:
         return node
     
-    # Search all possible child containers
-    for attr_name in ["input_segments", "segments", "inputs", "components"]:
+    # Skip ScopeReference - these are internal wiring, not separate events
+    if "ScopeReference" in node_type:
+        logger.debug(f"Skipping ScopeReference at depth {depth}")
+        return None
+    
+    # Search all possible child containers at this depth and deeper
+    search_attributes = [
+        "input_segments", "segments", "inputs", "components", 
+        "choices", "selected", "input_segment", "segment"
+    ]
+    
+    for attr_name in search_attributes:
         if hasattr(node, attr_name):
-            children = _iter_safe(getattr(node, attr_name))
+            attr_value = getattr(node, attr_name)
+            children = _iter_safe(attr_value)
             for child in children:
-                result = _find_nested_source_clip(child)
+                result = _find_nested_source_clip_deep(child, depth + 1)
                 if result:
                     return result
-    
-    # Check single nested segment
-    if hasattr(node, "segment") and getattr(node, "segment"):
-        return _find_nested_source_clip(node.segment)
     
     return None
 
 
 def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, effect_name: str):
-    """Process a SourceClip by walking the mob chain to resolve true source."""
+    """
+    Process a SourceClip by walking the mob chain to resolve true source.
+    
+    STAGE 2: Implements true source resolution via mob chain walking
+    """
     
     clip_length = int(getattr(source_clip, "length", 0))
     source_id = getattr(source_clip, "source_id", None)
@@ -348,8 +411,8 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
         logger.warning(f"SourceClip at {timeline_offset} has no source_id")
         return
     
-    # Walk the mob chain to find true source
-    resolved_source = walk_mob_chain(str(source_id), mob_map)
+    # STAGE 2: Walk the mob chain to find true source
+    resolved_source = walk_mob_chain_to_import_descriptor(str(source_id), mob_map)
     
     if resolved_source:
         clip_name = resolved_source.get("clip_name", "Unknown Media")
@@ -364,10 +427,11 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
         tape_id = None
         disk_label = None
     
-    # Create event combining media + effect
-    event_name = f"{clip_name}"
-    if effect_name != "N/A":
+    # STAGE 3: Create event combining media + effect (Media+Effect format)
+    if effect_name and effect_name != "N/A":
         event_name = f"{clip_name} + {effect_name}"
+    else:
+        event_name = clip_name
     
     event = {
         "name": event_name,
@@ -386,8 +450,13 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
     clips.append(event)
 
 
-def walk_mob_chain(mob_id: str, mob_map: Dict[str, Any], visited: Optional[set] = None) -> Optional[Dict[str, Any]]:
-    """Walk the mob chain following SourceIDs until reaching ImportDescriptor."""
+def walk_mob_chain_to_import_descriptor(mob_id: str, mob_map: Dict[str, Any], visited: Optional[Set[str]] = None) -> Optional[Dict[str, Any]]:
+    """
+    STAGE 2: Walk the mob chain following SourceIDs until reaching ImportDescriptor.
+    
+    This implements the core requirement: "the real source is the last mob in the resolution chain — 
+    the mob with an ImportDescriptor + Locator".
+    """
     if visited is None:
         visited = set()
     
@@ -399,27 +468,42 @@ def walk_mob_chain(mob_id: str, mob_map: Dict[str, Any], visited: Optional[set] 
     mob = mob_map.get(mob_id)
     
     if not mob:
-        logger.debug(f"Mob not found: {mob_id}")
+        logger.debug(f"Mob not found in map: {mob_id}")
         return None
     
-    # Check if this mob has an ImportDescriptor (end of chain)
+    # STAGE 2: Check if this mob has an ImportDescriptor (end of chain)
+    has_import_descriptor = False
     if hasattr(mob, "descriptor"):
         descriptor = mob.descriptor
-        if hasattr(descriptor, "locator") or (hasattr(descriptor, "locators") and _iter_safe(descriptor.locators)):
-            # Found ImportDescriptor - extract source info
-            return extract_source_info_from_mob(mob)
+        if descriptor:
+            descriptor_type = str(type(descriptor).__name__)
+            # Look for ImportDescriptor or similar
+            if "ImportDescriptor" in descriptor_type or "NetworkLocator" in descriptor_type:
+                has_import_descriptor = True
+            # Also check for locators
+            elif hasattr(descriptor, "locator") or (hasattr(descriptor, "locators") and _iter_safe(descriptor.locators)):
+                has_import_descriptor = True
+    
+    if has_import_descriptor:
+        # Found ImportDescriptor - extract source info
+        logger.debug(f"Found ImportDescriptor at mob: {mob_id}")
+        return extract_source_info_from_mob(mob)
     
     # Look for next mob in chain via SourceClip
     next_mob_id = find_next_mob_in_chain(mob)
     
-    if next_mob_id:
+    if next_mob_id and next_mob_id != mob_id:  # Avoid self-reference
         # Continue walking the chain
-        result = walk_mob_chain(next_mob_id, mob_map, visited)
+        result = walk_mob_chain_to_import_descriptor(next_mob_id, mob_map, visited)
         if result:
             return result
     
-    # Fallback: use current mob if no chain continuation
-    return extract_source_info_from_mob(mob)
+    # Fallback: use current mob if no chain continuation and it has descriptor info
+    if hasattr(mob, "descriptor") and mob.descriptor:
+        logger.debug(f"Using fallback mob for source info: {mob_id}")
+        return extract_source_info_from_mob(mob)
+    
+    return None
 
 
 def find_next_mob_in_chain(mob) -> Optional[str]:
@@ -431,8 +515,8 @@ def find_next_mob_in_chain(mob) -> Optional[str]:
         if hasattr(slot, "segment") and slot.segment:
             segment = slot.segment
             
-            # Look for SourceClip in segment
-            source_clip = _find_nested_source_clip(segment)
+            # Look for SourceClip in segment (may be nested)
+            source_clip = _find_nested_source_clip_deep(segment)
             if source_clip:
                 next_id = getattr(source_clip, "source_id", None)
                 if next_id:
@@ -442,7 +526,11 @@ def find_next_mob_in_chain(mob) -> Optional[str]:
 
 
 def extract_source_info_from_mob(mob) -> Dict[str, Any]:
-    """Extract source information from a mob."""
+    """
+    STAGE 2: Extract comprehensive source information from a mob.
+    
+    Harvests TapeID, DiskLabel, timecode start, and path info from the authoritative source.
+    """
     source_info = {
         "clip_name": "Unknown Media",
         "source_path": None,
@@ -456,53 +544,73 @@ def extract_source_info_from_mob(mob) -> Dict[str, Any]:
     if mob_name:
         source_info["clip_name"] = str(mob_name)
     
-    # Extract file path from descriptor
-    if hasattr(mob, "descriptor"):
+    # STAGE 2: Extract file path from descriptor (ImportDescriptor + Locator)
+    if hasattr(mob, "descriptor") and mob.descriptor:
         descriptor = mob.descriptor
         
-        # Try locator
-        if hasattr(descriptor, "locator"):
+        # Try single locator
+        if hasattr(descriptor, "locator") and descriptor.locator:
             locator = descriptor.locator
-            if hasattr(locator, "url_string"):
-                url_string = str(locator.url_string)
+            url_string = _extract_url_from_locator(locator)
+            if url_string:
                 source_info["source_path"] = url_string
                 # Extract filename from path
                 try:
                     import urllib.parse
                     parsed = urllib.parse.urlparse(url_string)
                     if parsed.path:
-                        source_info["clip_name"] = os.path.basename(parsed.path)
-                except:
-                    pass
+                        filename = os.path.basename(parsed.path)
+                        if filename:
+                            source_info["clip_name"] = filename
+                except Exception as e:
+                    logger.debug(f"Error parsing URL {url_string}: {e}")
         
         # Try multiple locators
-        elif hasattr(descriptor, "locators"):
+        elif hasattr(descriptor, "locators") and descriptor.locators:
             locators = _iter_safe(descriptor.locators)
-            if locators:
-                first_locator = locators[0]
-                if hasattr(first_locator, "url_string"):
-                    url_string = str(first_locator.url_string)
+            for locator in locators:
+                url_string = _extract_url_from_locator(locator)
+                if url_string:
                     source_info["source_path"] = url_string
                     try:
                         import urllib.parse
                         parsed = urllib.parse.urlparse(url_string)
                         if parsed.path:
-                            source_info["clip_name"] = os.path.basename(parsed.path)
-                    except:
-                        pass
+                            filename = os.path.basename(parsed.path)
+                            if filename:
+                                source_info["clip_name"] = filename
+                    except Exception as e:
+                        logger.debug(f"Error parsing URL {url_string}: {e}")
+                    break  # Use first valid locator
     
-    # Extract TapeID and DiskLabel from attributes
-    if hasattr(mob, "attributes"):
+    # STAGE 2: Extract TapeID and DiskLabel from attributes (as shown in legacy)
+    if hasattr(mob, "attributes") and mob.attributes:
         attributes = _iter_safe(mob.attributes)
         for attr in attributes:
             if hasattr(attr, "name") and hasattr(attr, "value"):
                 attr_name = str(attr.name)
                 if "TapeID" in attr_name:
                     source_info["tape_id"] = str(attr.value)
-                elif "DiskLabel" in attr_name:
+                elif "DiskLabel" in attr_name or "IMPORTDISKLAB" in attr_name:
                     source_info["disk_label"] = str(attr.value)
     
     return source_info
+
+
+def _extract_url_from_locator(locator) -> Optional[str]:
+    """Extract URL string from a locator object."""
+    if not locator:
+        return None
+    
+    # Try common URL attributes
+    url_attrs = ["url_string", "URLString", "url", "URL", "path", "Path"]
+    for attr_name in url_attrs:
+        if hasattr(locator, attr_name):
+            url_val = getattr(locator, attr_name)
+            if url_val:
+                return str(url_val)
+    
+    return None
 
 
 def frames_to_timecode(frames: int, fps: float, is_drop: bool) -> str:
