@@ -82,3 +82,6 @@ The database and legacy compressed JSON paths are optional helpers, not required
 ---
 
 ➡️ **For AI collaboration workflow, see [`docs/collaboration_protocol.md`](docs/collaboration_protocol.md).**
+
+## Agent Continuity
+For AI agent session management, see docs/agent_continuity/
