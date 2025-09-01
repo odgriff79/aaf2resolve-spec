@@ -353,18 +353,49 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
                         if result:
                             return result
             elif "OperationGroup" in seg_type:
-                # Don't recurse into nested OperationGroups to avoid infinite loops
-                pass
+                # Search within nested OperationGroup inputs but don't recurse infinitely
+                if hasattr(segment, "input_segments"):
+                    for input_seg in _iter_safe(segment.input_segments):
+                        result = find_source_clip_recursive(input_seg)
+                        if result:
+                            return result
+                elif hasattr(segment, "segments"):
+                    for input_seg in _iter_safe(segment.segments):
+                        result = find_source_clip_recursive(input_seg)
+                        if result:
+                            return result
+                elif hasattr(segment, "inputs"):
+                    for input_seg in _iter_safe(segment.inputs):
+                        result = find_source_clip_recursive(input_seg)
+                        if result:
+                            return result
+            # Add more segment types that might contain SourceClips
+            elif hasattr(segment, "components"):
+                # Any segment with components - search them
+                for comp in _iter_safe(segment.components):
+                    result = find_source_clip_recursive(comp)
+                    if result:
+                        return result
+            elif hasattr(segment, "segment") and getattr(segment, "segment"):
+                # Single nested segment
+                result = find_source_clip_recursive(segment.segment)
+                if result:
+                    return result
                 
             return None
         
         if input_segments:
-            for input_seg in input_segments:
+            for i, input_seg in enumerate(input_segments):
                 source_info = find_source_clip_recursive(input_seg)
                 if source_info:
                     has_source_clips = True
                     source_clip_info = source_info
+                    logger.debug(f"Found SourceClip in input {i}: {source_info['name']}")
                     break  # Use first SourceClip found
+                else:
+                    # Debug what type of input this is
+                    input_type = str(type(input_seg).__name__)
+                    logger.debug(f"Input {i} type: {input_type} - no SourceClip found")
         
         # Create exactly ONE event for this OperationGroup
         if has_source_clips and source_clip_info:
