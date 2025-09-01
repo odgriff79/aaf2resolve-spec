@@ -6,11 +6,10 @@ Implements the canonical JSON builder per docs/data_model_json.md and docs/inspe
 This is the primary entrypoint for converting AAF files into the canonical JSON format.
 
 Key principles:
-- Authoritative-first UMID resolution (end of chain wins)
-- Path fidelity preservation (no normalization)
-- Complete OperationGroup capture (no filtering)
+- Proper AAF source resolution via mob chain walking
+- OperationGroup + nested SourceClip = single Media+Effect event
+- Follow UMID chain to ImportDescriptor for true source info
 - Required keys always present (null for unknown values)
-- One OperationGroup = one effect event (no duplication from nested structures)
 """
 
 from __future__ import annotations
@@ -20,7 +19,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Set
+from typing import Any, Dict, List, Optional, Tuple
 
 # External dependency (pyaaf2)
 try:
@@ -50,22 +49,16 @@ def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
     """
     Open an AAF and return the canonical JSON dict per docs/data_model_json.md.
 
-    Follows docs/inspector_rule_pack.md for:
-    - Timeline selection (prefer *.Exported.01)
-    - UMID chain resolution (authoritative-first)
-    - Event extraction (all OperationGroups, no filtering)
-    - Path preservation (exact byte-for-byte fidelity)
+    Follows proper AAF source resolution principles:
+    - Walk mob chains to find true sources
+    - Combine OperationGroups with resolved source info
+    - Emit Media+Effect events
 
     Args:
         aaf_path: Path to AAF file
 
     Returns:
         Canonical JSON dict matching docs/data_model_json.md schema
-
-    Raises:
-        ImportError: If pyaaf2 not available
-        FileNotFoundError: If AAF file doesn't exist
-        ValueError: If AAF cannot be parsed or has no usable timeline
     """
     if not HAS_AAF2:
         raise ImportError("aaf2 is required. Install with: pip install pyaaf2")
@@ -85,8 +78,8 @@ def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
             mob_map = build_mob_map(f)
             logger.info(f"Built mob map with {len(mob_map)} entries")
 
-            # Step 3: Extract events from CompositionMob segment tree
-            clips = extract_clips_from_comp_mob(comp, mob_map, fps)
+            # Step 3: Extract events using proper source resolution
+            clips = extract_events_with_source_resolution(comp, mob_map, fps)
             logger.info(f"Extracted {len(clips)} clips")
 
             # Step 4: Pack canonical structure  
@@ -109,13 +102,8 @@ def build_canonical_from_aaf(aaf_path: str) -> Dict[str, Any]:
 
 
 def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
-    """
-    Select top-level CompositionMob and extract timeline metadata.
-
-    Returns:
-        (composition_mob, fps, is_drop, start_tc_string, timeline_name)
-    """
-    # Find CompositionMobs - use property, not method
+    """Select top-level CompositionMob and extract timeline metadata."""
+    # Find CompositionMobs
     comp_mobs = []
     try:
         for mob in aaf.content.mobs:
@@ -123,7 +111,6 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
                 comp_mobs.append(mob)
     except Exception as e:
         logger.debug(f"Error iterating mobs: {e}")
-        # Fallback: try compositionmobs method if it exists
         if hasattr(aaf.content, 'compositionmobs'):
             comp_mobs = list(aaf.content.compositionmobs())
 
@@ -156,22 +143,19 @@ def select_top_sequence(aaf) -> Tuple[Any, float, bool, str, str]:
             elif "Timecode" in segment_type:
                 timecode_slot = slot
 
-    # Use picture slot for frame rate, timecode slot for start time
     if not picture_slot:
         raise ValueError(f"No picture slot found in {timeline_name}")
 
     # Extract timeline properties
     fps = float(picture_slot.edit_rate) if hasattr(picture_slot, "edit_rate") else 25.0
 
-    # Extract timeline start from timecode slot or search in picture slot
+    # Extract timeline start from timecode slot
     is_drop = False
     start_tc_string = "10:00:00:00"  # Default
 
-    # First try the dedicated timecode slot
     if timecode_slot and hasattr(timecode_slot, "segment"):
         start_frames = _find_start_timecode(timecode_slot.segment)
     else:
-        # Fall back to searching in picture slot
         start_frames = _find_start_timecode(picture_slot.segment)
         
     if start_frames is not None:
@@ -190,14 +174,12 @@ def _find_start_timecode(segment) -> Optional[int]:
     if "Timecode" in segment_type:
         return int(getattr(segment, "start", 0))
     
-    # Search in components if it's a sequence
     if hasattr(segment, "components"):
         for comp in _iter_safe(segment.components):
             result = _find_start_timecode(comp)
             if result is not None:
                 return result
     
-    # Search in input_segments if it's an operation group
     if hasattr(segment, "input_segments"):
         for input_seg in _iter_safe(segment.input_segments):
             result = _find_start_timecode(input_seg)
@@ -220,277 +202,307 @@ def build_mob_map(aaf) -> Dict[str, Any]:
             mob_map[str(mob.source_id)] = mob
         if hasattr(mob, "package_id"):
             mob_map[str(mob.package_id)] = mob
-            
-        # Debug: show what IDs this mob has
-        mob_name = getattr(mob, "name", "unnamed")
-        logger.debug(f"Mob '{mob_name}': mob_id={getattr(mob, 'mob_id', None)}, umid={getattr(mob, 'umid', None)}")
     
     return mob_map
 
 
-def extract_clips_from_comp_mob(comp_mob, mob_map: Dict[str, Any], fps: float) -> List[Dict[str, Any]]:
-    """Extract clips by recursively traversing CompositionMob segment tree."""
+def extract_events_with_source_resolution(comp_mob, mob_map: Dict[str, Any], fps: float) -> List[Dict[str, Any]]:
+    """Extract events using proper AAF source resolution."""
     clips = []
 
-    # Find picture slot - look for video/picture track specifically
+    # Find picture slot
     picture_slot = None
     slots = _iter_safe(comp_mob.slots)
-    
-    logger.debug(f"Found {len(slots)} slots in CompositionMob")
     
     for i, slot in enumerate(slots):
         if hasattr(slot, "segment") and slot.segment:
             segment_type = str(type(slot.segment).__name__)
-            slot_name = getattr(slot, "name", f"Slot{i}")
-            logger.debug(f"Slot {i} '{slot_name}': {segment_type}")
-            
-            # Skip timecode slots - look for Sequence slots
             if "Sequence" in segment_type:
                 picture_slot = slot
-                logger.debug(f"Selected slot {i} as picture slot: {segment_type}")
                 break
-            elif "Timecode" not in segment_type and picture_slot is None:
-                # Fallback: take first non-timecode slot
-                picture_slot = slot
-                logger.debug(f"Using slot {i} as fallback picture slot: {segment_type}")
 
     if not picture_slot or not hasattr(picture_slot, "segment"):
         logger.warning("No picture slot found")
         return clips
 
-    # Track processed timeline ranges to prevent duplication
-    processed_ranges = set()
-
-    # Recursively extract clips from segment tree
-    segment_type = type(picture_slot.segment).__name__
-    logger.debug(f"Starting recursive extraction from segment: {segment_type}")
-    _extract_clips_recursive(picture_slot.segment, clips, mob_map, 0, fps, processed_ranges)
+    # Process the timeline sequence
+    _process_sequence(picture_slot.segment, clips, mob_map, 0, fps)
     return clips
 
 
-def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, processed_ranges: Set[Tuple[int, int]]) -> int:
-    """Recursively traverse segment tree to extract events.
+def _process_sequence(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float) -> int:
+    """Process a sequence and its components."""
+    if not segment or not hasattr(segment, "components"):
+        return timeline_offset
     
-    Event types:
-    1. Standalone SourceClip = Media Only
-    2. OperationGroup with SourceClip inputs = Media + Effect  
-    3. OperationGroup without SourceClip inputs = Effect Only
-    """
+    current_offset = timeline_offset
+    components = _iter_safe(segment.components)
+    
+    for component in components:
+        current_offset = _process_component(component, clips, mob_map, current_offset, fps)
+    
+    return current_offset
+
+
+def _process_component(segment, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float) -> int:
+    """Process a single timeline component."""
     if not segment:
         return timeline_offset
 
     segment_type = str(type(segment).__name__)
-    logger.debug(f"Processing segment type: {segment_type} at offset {timeline_offset}")
-
-    if "Sequence" in segment_type:
-        # Traverse sequence components
-        current_offset = timeline_offset
-        components = _iter_safe(segment.components)
-        logger.debug(f"Sequence has {len(components)} components")
-        for component in components:
-            current_offset = _extract_clips_recursive(component, clips, mob_map, current_offset, fps, processed_ranges)
-        return current_offset
-
-    elif "OperationGroup" in segment_type:
-        # Follow legacy pattern: check if has nested SourceClips
-        op_length = int(getattr(segment, "length", 0))
-        op_range = (timeline_offset, timeline_offset + op_length)
+    segment_length = int(getattr(segment, "length", 0))
+    
+    if "OperationGroup" in segment_type:
+        # Each OperationGroup should produce one Media+Effect event
+        _process_operation_group(segment, clips, mob_map, timeline_offset, fps)
         
-        if op_range in processed_ranges:
-            logger.debug(f"Skipping already processed OperationGroup at range {op_range}")
-            return timeline_offset + op_length
-        
-        processed_ranges.add(op_range)
-        
-        # Check if this OperationGroup has nested SourceClips
-        def has_nested_source_clip(node):
-            """Check if node contains SourceClips in its immediate children only."""
-            if not node:
-                return False
-            
-            node_type = str(type(node).__name__)
-            if "SourceClip" in node_type:
-                return True
-                
-            # Only check immediate input segments, not deep recursion
-            for attr_name in ["input_segments", "segments", "inputs"]:
-                if hasattr(node, attr_name):
-                    children = _iter_safe(getattr(node, attr_name))
-                    for child in children:
-                        child_type = str(type(child).__name__)
-                        if "SourceClip" in child_type:
-                            return True
-                        # Only check one level of Sequences
-                        elif "Sequence" in child_type and hasattr(child, "components"):
-                            for comp in _iter_safe(child.components):
-                                if "SourceClip" in str(type(comp).__name__):
-                                    return True
-                    
-            return False
-        
-        has_nested_clips = has_nested_source_clip(segment)
-        
-        # If no nested SourceClips, emit as FX_ON_FILLER event
-        if not has_nested_clips:
-            operation_def = getattr(segment, "operation_def", None)
-            operation_name = "Unknown Effect"
-            if operation_def:
-                if hasattr(operation_def, "name"):
-                    op_name_val = getattr(operation_def, "name")
-                    if op_name_val:
-                        operation_name = str(op_name_val)
-                elif hasattr(operation_def, "auid"):
-                    operation_name = f"Effect_{str(operation_def.auid)[-8:]}"
-            
-            fx_clip = {
-                "name": operation_name,
-                "in": timeline_offset,
-                "out": timeline_offset + op_length,
-                "source_umid": "FX_ON_FILLER",
-                "source_path": None,
-                "effect_params": {
-                    "operation": operation_name,
-                    "is_filler_effect": True,
-                    "length": op_length
-                }
-            }
-            clips.append(fx_clip)
-            logger.debug(f"Added FX_ON_FILLER clip: {operation_name} ({timeline_offset}-{timeline_offset + op_length})")
-        else:
-            logger.debug(f"OperationGroup has nested SourceClips - recursing into children")
-        
-        # CRITICAL: Always recurse into children regardless (legacy pattern)
-        input_segments = None
-        if hasattr(segment, "input_segments"):
-            input_segments = _iter_safe(segment.input_segments)
-        elif hasattr(segment, "segments"):
-            input_segments = _iter_safe(segment.segments)
-        elif hasattr(segment, "inputs"):
-            input_segments = _iter_safe(segment.inputs)
-        
-        if input_segments:
-            for input_seg in input_segments:
-                _extract_clips_recursive(input_seg, clips, mob_map, timeline_offset, fps, processed_ranges)
-        
-        return timeline_offset + op_length
-
     elif "SourceClip" in segment_type:
-        # Standalone SourceClip (not inside OperationGroup) = "Media Only" event
-        clip_length = int(getattr(segment, "length", 0))
-        clip_range = (timeline_offset, timeline_offset + clip_length)
+        # Standalone SourceClip (rare in modern AAF)
+        _process_source_clip(segment, clips, mob_map, timeline_offset, fps, effect_name="N/A")
         
-        # Don't double-process SourceClips that are already covered by OperationGroups
-        if clip_range in processed_ranges:
-            logger.debug(f"Skipping SourceClip already covered by OperationGroup at range {clip_range}")
-            return timeline_offset + clip_length
-        
-        processed_ranges.add(clip_range)
-        
-        clip_name = str(getattr(segment, "name", "Media"))
-        source_id = getattr(segment, "source_id", None)
-        
-        clip = {
-            "name": clip_name,
-            "in": timeline_offset,
-            "out": timeline_offset + clip_length,
-            "source_umid": str(source_id) if source_id else "",
-            "source_path": resolve_source_path(segment, mob_map),
-            "effect_params": {}
-        }
-        clips.append(clip)
-        logger.debug(f"Added standalone SourceClip: {clip_name} ({timeline_offset}-{timeline_offset + clip_length})")
-        return timeline_offset + clip_length
-
     elif "Filler" in segment_type:
-        # Pure filler (not in OperationGroup) - skip but account for length
-        filler_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Skipping pure Filler of length {filler_length}")
-        return timeline_offset + filler_length
+        # Pure filler - skip
+        logger.debug(f"Skipping Filler at {timeline_offset}, length {segment_length}")
+        
+    elif "Sequence" in segment_type:
+        # Nested sequence - process recursively
+        return _process_sequence(segment, clips, mob_map, timeline_offset, fps)
+    
+    return timeline_offset + segment_length
 
-    elif "ScopeReference" in segment_type:
-        # ScopeReference segments are inputs within OperationGroups - don't emit as clips
-        # Just account for their length in timeline progression
-        scope_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Processing ScopeReference of length {scope_length} (scope reference, not mob reference)")
-        return timeline_offset + scope_length
 
-    elif "Transition" in segment_type:
-        # Skip transitions but account for their length
-        transition_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Skipping Transition of length {transition_length}")
-        return timeline_offset + transition_length
-
-    elif "Timecode" in segment_type:
-        # Skip timecode components but don't advance offset
-        logger.debug("Skipping Timecode component")
-        return timeline_offset
-
+def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float):
+    """Process an OperationGroup by finding its nested SourceClip and combining with effect info."""
+    
+    # Extract effect information
+    operation_def = getattr(operation_group, "operation_def", None)
+    effect_name = "Unknown Effect"
+    if operation_def:
+        if hasattr(operation_def, "name"):
+            op_name_val = getattr(operation_def, "name")
+            if op_name_val:
+                effect_name = str(op_name_val)
+        elif hasattr(operation_def, "auid"):
+            effect_name = f"Effect_{str(operation_def.auid)[-8:]}"
+    
+    # Find nested SourceClip via recursive search
+    source_clip = _find_nested_source_clip(operation_group)
+    
+    if source_clip:
+        # Process the SourceClip with effect context
+        _process_source_clip(source_clip, clips, mob_map, timeline_offset, fps, effect_name)
+        logger.debug(f"Added Media+Effect event: SourceClip + {effect_name} at {timeline_offset}")
     else:
-        # Unknown component type - try to explore it for nested segments
-        component_length = int(getattr(segment, "length", 0))
-        logger.debug(f"Exploring unknown segment type {segment_type}, length={component_length}")
-        
-        # Try to find nested segments in unknown types
-        nested_segments = None
-        for attr_name in ["segments", "components", "inputs", "input_segments"]:
-            if hasattr(segment, attr_name):
-                nested_segments = _iter_safe(getattr(segment, attr_name))
-                if nested_segments:
-                    logger.debug(f"Unknown segment has {len(nested_segments)} nested segments via {attr_name}")
-                    current_offset = timeline_offset
-                    for nested_seg in nested_segments:
-                        current_offset = _extract_clips_recursive(nested_seg, clips, mob_map, current_offset, fps, processed_ranges)
-                    return current_offset
-                break
-        
-        # No nested segments found, just account for length
-        return timeline_offset + component_length
+        # No SourceClip found - this is an effect on filler
+        op_length = int(getattr(operation_group, "length", 0))
+        filler_event = {
+            "name": effect_name,
+            "in": timeline_offset,
+            "out": timeline_offset + op_length,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": None,
+            "effect_params": {
+                "operation": effect_name,
+                "is_filler_effect": True,
+                "length": op_length
+            }
+        }
+        clips.append(filler_event)
+        logger.debug(f"Added FX_ON_FILLER event: {effect_name} at {timeline_offset}")
 
 
-def resolve_source_path_from_descriptor(desc) -> Optional[str]:
-    """Extract file path from a descriptor object."""
-    try:
-        if hasattr(desc, "locator"):
-            locator = desc.locator
+def _find_nested_source_clip(node):
+    """Recursively find SourceClip nested anywhere within a node."""
+    if not node:
+        return None
+    
+    node_type = str(type(node).__name__)
+    
+    # Found it!
+    if "SourceClip" in node_type:
+        return node
+    
+    # Search all possible child containers
+    for attr_name in ["input_segments", "segments", "inputs", "components"]:
+        if hasattr(node, attr_name):
+            children = _iter_safe(getattr(node, attr_name))
+            for child in children:
+                result = _find_nested_source_clip(child)
+                if result:
+                    return result
+    
+    # Check single nested segment
+    if hasattr(node, "segment") and getattr(node, "segment"):
+        return _find_nested_source_clip(node.segment)
+    
+    return None
+
+
+def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, effect_name: str):
+    """Process a SourceClip by walking the mob chain to resolve true source."""
+    
+    clip_length = int(getattr(source_clip, "length", 0))
+    source_id = getattr(source_clip, "source_id", None)
+    
+    if not source_id:
+        logger.warning(f"SourceClip at {timeline_offset} has no source_id")
+        return
+    
+    # Walk the mob chain to find true source
+    resolved_source = walk_mob_chain(str(source_id), mob_map)
+    
+    if resolved_source:
+        clip_name = resolved_source.get("clip_name", "Unknown Media")
+        source_path = resolved_source.get("source_path")
+        source_umid = resolved_source.get("source_umid", str(source_id))
+        tape_id = resolved_source.get("tape_id")
+        disk_label = resolved_source.get("disk_label")
+    else:
+        clip_name = "Unresolved Media"
+        source_path = None
+        source_umid = str(source_id)
+        tape_id = None
+        disk_label = None
+    
+    # Create event combining media + effect
+    event_name = f"{clip_name}"
+    if effect_name != "N/A":
+        event_name = f"{clip_name} + {effect_name}"
+    
+    event = {
+        "name": event_name,
+        "in": timeline_offset,
+        "out": timeline_offset + clip_length,
+        "source_umid": source_umid,
+        "source_path": source_path,
+        "effect_params": {
+            "operation": effect_name if effect_name != "N/A" else "",
+            "tape_id": tape_id,
+            "disk_label": disk_label,
+            "length": clip_length
+        }
+    }
+    
+    clips.append(event)
+
+
+def walk_mob_chain(mob_id: str, mob_map: Dict[str, Any], visited: Optional[set] = None) -> Optional[Dict[str, Any]]:
+    """Walk the mob chain following SourceIDs until reaching ImportDescriptor."""
+    if visited is None:
+        visited = set()
+    
+    if mob_id in visited:
+        logger.warning(f"Circular reference detected in mob chain: {mob_id}")
+        return None
+    
+    visited.add(mob_id)
+    mob = mob_map.get(mob_id)
+    
+    if not mob:
+        logger.debug(f"Mob not found: {mob_id}")
+        return None
+    
+    # Check if this mob has an ImportDescriptor (end of chain)
+    if hasattr(mob, "descriptor"):
+        descriptor = mob.descriptor
+        if hasattr(descriptor, "locator") or (hasattr(descriptor, "locators") and _iter_safe(descriptor.locators)):
+            # Found ImportDescriptor - extract source info
+            return extract_source_info_from_mob(mob)
+    
+    # Look for next mob in chain via SourceClip
+    next_mob_id = find_next_mob_in_chain(mob)
+    
+    if next_mob_id:
+        # Continue walking the chain
+        result = walk_mob_chain(next_mob_id, mob_map, visited)
+        if result:
+            return result
+    
+    # Fallback: use current mob if no chain continuation
+    return extract_source_info_from_mob(mob)
+
+
+def find_next_mob_in_chain(mob) -> Optional[str]:
+    """Find the next MobID in the chain by looking for SourceClips in slots."""
+    if not hasattr(mob, "slots"):
+        return None
+    
+    for slot in _iter_safe(mob.slots):
+        if hasattr(slot, "segment") and slot.segment:
+            segment = slot.segment
+            
+            # Look for SourceClip in segment
+            source_clip = _find_nested_source_clip(segment)
+            if source_clip:
+                next_id = getattr(source_clip, "source_id", None)
+                if next_id:
+                    return str(next_id)
+    
+    return None
+
+
+def extract_source_info_from_mob(mob) -> Dict[str, Any]:
+    """Extract source information from a mob."""
+    source_info = {
+        "clip_name": "Unknown Media",
+        "source_path": None,
+        "source_umid": str(getattr(mob, "mob_id", "")),
+        "tape_id": None,
+        "disk_label": None
+    }
+    
+    # Get mob name
+    mob_name = getattr(mob, "name", None)
+    if mob_name:
+        source_info["clip_name"] = str(mob_name)
+    
+    # Extract file path from descriptor
+    if hasattr(mob, "descriptor"):
+        descriptor = mob.descriptor
+        
+        # Try locator
+        if hasattr(descriptor, "locator"):
+            locator = descriptor.locator
             if hasattr(locator, "url_string"):
-                return str(locator.url_string)
-        elif hasattr(desc, "locators"):
-            # Multiple locators - try the first one
-            locators = _iter_safe(desc.locators)
+                url_string = str(locator.url_string)
+                source_info["source_path"] = url_string
+                # Extract filename from path
+                try:
+                    import urllib.parse
+                    parsed = urllib.parse.urlparse(url_string)
+                    if parsed.path:
+                        source_info["clip_name"] = os.path.basename(parsed.path)
+                except:
+                    pass
+        
+        # Try multiple locators
+        elif hasattr(descriptor, "locators"):
+            locators = _iter_safe(descriptor.locators)
             if locators:
                 first_locator = locators[0]
                 if hasattr(first_locator, "url_string"):
-                    return str(first_locator.url_string)
-        return None
-    except Exception as e:
-        logger.debug(f"Error resolving descriptor path: {e}")
-        return None
-
-
-def resolve_source_path(source_clip, mob_map: Dict[str, Any]) -> Optional[str]:
-    """Resolve source clip to file path via UMID chain."""
-    try:
-        source_id = getattr(source_clip, "source_id", None)
-        if not source_id:
-            return None
-
-        # Follow UMID chain
-        current_mob = mob_map.get(str(source_id))
-        if not current_mob:
-            return None
-
-        # Look for file descriptor with locator
-        if hasattr(current_mob, "descriptor"):
-            desc = current_mob.descriptor
-            if hasattr(desc, "locator"):
-                locator = desc.locator
-                if hasattr(locator, "url_string"):
-                    return str(locator.url_string)
-
-        return None
-    except Exception as e:
-        logger.debug(f"Error resolving source path: {e}")
-        return None
+                    url_string = str(first_locator.url_string)
+                    source_info["source_path"] = url_string
+                    try:
+                        import urllib.parse
+                        parsed = urllib.parse.urlparse(url_string)
+                        if parsed.path:
+                            source_info["clip_name"] = os.path.basename(parsed.path)
+                    except:
+                        pass
+    
+    # Extract TapeID and DiskLabel from attributes
+    if hasattr(mob, "attributes"):
+        attributes = _iter_safe(mob.attributes)
+        for attr in attributes:
+            if hasattr(attr, "name") and hasattr(attr, "value"):
+                attr_name = str(attr.name)
+                if "TapeID" in attr_name:
+                    source_info["tape_id"] = str(attr.value)
+                elif "DiskLabel" in attr_name:
+                    source_info["disk_label"] = str(attr.value)
+    
+    return source_info
 
 
 def frames_to_timecode(frames: int, fps: float, is_drop: bool) -> str:
