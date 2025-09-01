@@ -22,7 +22,19 @@ def test_build_reports_index() -> None:
 
         summary = (data.get("summary") or {}) if isinstance(data, dict) else {}
         # Generic rule: if a report declares "ok", trust it; otherwise default False.
-        item_ok = bool(data["ok"]) if isinstance(data, dict) and "ok" in data else False
+        if isinstance(data, dict) and "ok" in data:
+        item_ok = bool(data["ok"])  # trust report-provided ok
+    else:
+        # derive from FCPXML summary when available
+        item_ok = bool(
+            summary.get("version") == "1.13"
+            and summary.get("root_ok") is True
+            and summary.get("has_library") is True
+            and summary.get("has_event") is True
+            and summary.get("has_project") is True
+            and summary.get("has_sequence") is True
+            and summary.get("has_spine") is True
+        )
 
         item = {
             "file": str(p),
