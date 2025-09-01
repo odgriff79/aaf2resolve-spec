@@ -329,19 +329,41 @@ def _extract_clips_recursive(segment, clips: List[Dict[str, Any]], mob_map: Dict
         has_source_clips = False
         source_clip_info = None
         
+        def find_source_clip_recursive(segment):
+            """Recursively search for SourceClips within a segment tree."""
+            if not segment:
+                return None
+                
+            seg_type = str(type(segment).__name__)
+            
+            if "SourceClip" in seg_type:
+                # Found a SourceClip - extract its info
+                clip_name = str(getattr(segment, "name", "Media"))
+                source_id = getattr(segment, "source_id", None)
+                return {
+                    "name": clip_name,
+                    "source_umid": str(source_id) if source_id else "",
+                    "source_path": resolve_source_path(segment, mob_map)
+                }
+            elif "Sequence" in seg_type:
+                # Search within sequence components
+                if hasattr(segment, "components"):
+                    for comp in _iter_safe(segment.components):
+                        result = find_source_clip_recursive(comp)
+                        if result:
+                            return result
+            elif "OperationGroup" in seg_type:
+                # Don't recurse into nested OperationGroups to avoid infinite loops
+                pass
+                
+            return None
+        
         if input_segments:
             for input_seg in input_segments:
-                input_type = str(type(input_seg).__name__)
-                if "SourceClip" in input_type:
+                source_info = find_source_clip_recursive(input_seg)
+                if source_info:
                     has_source_clips = True
-                    # Extract SourceClip information for the combined event
-                    clip_name = str(getattr(input_seg, "name", "Media"))
-                    source_id = getattr(input_seg, "source_id", None)
-                    source_clip_info = {
-                        "name": clip_name,
-                        "source_umid": str(source_id) if source_id else "",
-                        "source_path": resolve_source_path(input_seg, mob_map)
-                    }
+                    source_clip_info = source_info
                     break  # Use first SourceClip found
         
         # Create exactly ONE event for this OperationGroup
