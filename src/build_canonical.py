@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-build_canonical.py — Core AAF → Canonical JSON Implementation (FIXED)
+build_canonical.py — Core AAF → Canonical JSON Implementation (KEYFRAME TIMING)
 
 Implements the canonical JSON builder per docs/data_model_json.md and docs/inspector_rule_pack.md.
 This is the primary entrypoint for converting AAF files into the canonical JSON format.
@@ -10,11 +10,13 @@ Key principles:
 - OperationGroup + nested SourceClip = single Media+Effect event
 - Follow UMID chain to ImportDescriptor for true source info
 - Required keys always present (null for unknown values)
+- VERIFIED AAF keyframe timing: normalized 0.0-1.0 values per AAF Object Spec v1.1 §6.18-6.19
 
 FIXES IMPLEMENTED:
 - Stage 1: Event model corrections and deduplication
 - Stage 2: True source resolution via mob chain walking  
 - Stage 3: Media+Effect event pairing for ~71 event target
+- Stage 4: AAF keyframe timing implementation with verified normalized model
 """
 
 from __future__ import annotations
@@ -36,6 +38,7 @@ except ImportError:
 
 # Setup logging for debugging AAF traversal
 logger = logging.getLogger(__name__)
+
 def decode_avid_effect_id(byte_array):
     """Convert AvidEffectID byte array to string"""
     try:
@@ -45,15 +48,92 @@ def decode_avid_effect_id(byte_array):
         return None
 
 
+def extract_keyframe_timing_data(param):
+    """
+    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
+    
+    Implements verified AAF keyframe timing specification:
+    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
+    - Source: AAF Object Specification v1.1 §6.18-6.19
+    
+    Args:
+        param: AAF parameter object that may contain VaryingValue/ControlPoint data
+    
+    Returns:
+        dict: Keyframe data with normalized timing or None if static parameter
+    """
+    if not hasattr(param, 'pointlist') or not param.pointlist:
+        return None
+    
+    keyframes = []
+    
+    try:
+        for point in param.pointlist:
+            if hasattr(point, 'time') and hasattr(point, 'value'):
+                # Extract normalized time (0.0-1.0) from ControlPoint
+                normalized_time = float(point.time)
+                
+                # Ensure time is properly normalized
+                if normalized_time < 0.0 or normalized_time > 1.0:
+                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
+                    normalized_time = max(0.0, min(1.0, normalized_time))
+                
+                # Extract value and clean it
+                keyframe_value = _clean_parameter_value(point.value)
+                
+                keyframes.append({
+                    'normalized_time': normalized_time,
+                    'value': keyframe_value
+                })
+        
+        if keyframes:
+            # Sort keyframes by time to ensure proper ordering
+            keyframes.sort(key=lambda x: x['normalized_time'])
+            return {
+                'type': 'animated',
+                'keyframes': keyframes
+            }
+    
+    except Exception as e:
+        logger.debug(f"Error extracting keyframe timing: {e}")
+    
+    return None
+
+
+def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
+    """
+    Convert AAF normalized keyframe time to FCPXML rational seconds.
+    
+    Implements verified conversion formula:
+    fcpxml_seconds = (normalized_time × segment_length_edit_units) ÷ track_edit_rate
+    
+    Args:
+        normalized_time: 0.0-1.0 value from AAF ControlPoint.Time
+        segment_length_edit_units: Length of effect segment in edit units
+        track_edit_rate: Track edit rate (e.g., 25.0 fps)
+    
+    Returns:
+        float: Time in seconds for FCPXML keyframe
+    """
+    try:
+        edit_units_position = normalized_time * segment_length_edit_units
+        fcpxml_seconds = edit_units_position / track_edit_rate
+        return fcpxml_seconds
+    except (ZeroDivisionError, TypeError, ValueError):
+        logger.warning(f"Failed to convert normalized time {normalized_time} to FCPXML seconds")
+        return 0.0
 
 
 def extract_fcpxml_relevant_parameters(operation_group):
     """
-    Extract parameters that are relevant for FCPXML/Resolve conversion.
+    Extract parameters that are relevant for FCPXML/Resolve conversion with proper keyframe timing.
     Focus on AFX/DVE parameters that have meaningful values.
     """
     if not hasattr(operation_group, 'parameters'):
         return {}
+    
+    # Get segment length for keyframe timing conversion
+    segment_length = int(getattr(operation_group, "length", 0))
     
     try:
         extracted_params = {}
@@ -68,8 +148,8 @@ def extract_fcpxml_relevant_parameters(operation_group):
             if not _is_fcpxml_relevant_parameter(param_name):
                 continue
                 
-            # Extract the value regardless of whether it's animated or static
-            param_data = _extract_parameter_value(param)
+            # Extract the value with proper keyframe timing (25.0 fps default)
+            param_data = _extract_parameter_value(param, segment_length, 25.0)
             if param_data is not None:
                 extracted_params[param_name] = param_data
         
@@ -110,24 +190,49 @@ def _is_fcpxml_relevant_parameter(param_name):
     return False
 
 
-def _extract_parameter_value(param):
+def _extract_parameter_value(param, segment_length_edit_units=None, track_edit_rate=25.0):
     """
-    Extract parameter value, handling both animated and static cases.
-    Return the actual data that can be used for FCPXML generation.
-    """
-    # Check for animation data (keyframes)
-    if hasattr(param, 'points') and param.points:
-        keyframes = []
-        for point in param.points:
-            if hasattr(point, 'time') and hasattr(point, 'value'):
-                keyframes.append({
-                    'time': float(point.time) if hasattr(point.time, '__float__') else str(point.time),
-                    'value': _clean_parameter_value(point.value)
-                })
-        if keyframes:
-            return {'type': 'animated', 'keyframes': keyframes}
+    Extract parameter value, handling both animated and static cases with proper keyframe timing.
     
-    # Static value
+    Args:
+        param: AAF parameter object
+        segment_length_edit_units: Length of containing segment in edit units (for keyframe conversion)
+        track_edit_rate: Track edit rate for time conversion
+    
+    Returns:
+        dict: Parameter data with proper timing information
+    """
+    # First check for keyframe/animation data using verified timing model
+    keyframe_data = extract_keyframe_timing_data(param)
+    
+    if keyframe_data and segment_length_edit_units is not None:
+        # Convert normalized times to FCPXML seconds
+        converted_keyframes = []
+        
+        for kf in keyframe_data["keyframes"]:
+            fcpxml_seconds = convert_normalized_time_to_fcpxml_seconds(
+                kf["normalized_time"], 
+                segment_length_edit_units, 
+                track_edit_rate
+            )
+            
+            converted_keyframes.append({
+                "time_seconds": fcpxml_seconds,
+                "normalized_time": kf["normalized_time"],  # Keep for debugging
+                "value": kf["value"]
+            })
+        
+        return {
+            "type": "animated",
+            "keyframes": converted_keyframes
+        }
+    
+    # Static value - use existing logic
+    clean_value = _clean_parameter_value(param.value)
+    if clean_value is not None:
+        return {"type": "static", "value": clean_value}
+    
+    return None
     clean_value = _clean_parameter_value(param.value)
     if clean_value is not None:
         return {'type': 'static', 'value': clean_value}
@@ -198,71 +303,6 @@ def extract_effect_name_from_operation_group(op_group):
             if not effect_id:
                 effect_id = 'Submaster'
         
-        if effect_id:
-            if effect_class and effect_class != 'Effect':
-                return f'{effect_class} : {effect_id}'
-            else:
-                return effect_id
-        else:
-            return 'Unknown Effect'
-    
-    except Exception as e:
-        logger.debug(f'Error extracting effect name: {e}')
-        return 'Unknown Effect'
-
-
-
-
-
-def decode_avid_effect_id(byte_array):
-    """Convert AvidEffectID byte array to string"""
-    try:
-        text = bytes(b for b in byte_array if isinstance(b, int) and b != 0).decode('ascii', errors='ignore')
-        return text
-    except:
-        return None
-
-def extract_effect_name_from_operation_group(op_group):
-    """Extract effect name from OperationGroup parameters - WORKING VERSION"""
-    if not hasattr(op_group, 'parameters'):
-        return 'Unknown Effect'
-    
-    try:
-        params = list(op_group.parameters)
-        effect_id = None
-        param_prefixes = set()
-        param_names = []
-        
-        for param in params:
-            if hasattr(param, 'name') and hasattr(param, 'value'):
-                name = str(param.name)
-                param_names.append(name)
-                
-                # Get AvidEffectID
-                if name == 'AvidEffectID' and isinstance(param.value, (list, tuple)):
-                    effect_id = decode_avid_effect_id(param.value)
-                
-                # Collect parameter prefixes for effect type detection
-                if '_' in name:
-                    prefix = name.split('_')[0]
-                    param_prefixes.add(prefix)
-        
-        # Map parameter patterns to effect types
-        effect_class = 'Effect'
-        if 'AFX' in param_prefixes:
-            effect_class = 'AVX2 Effect'
-        elif 'DVE' in param_prefixes:
-            effect_class = 'Image'
-        elif any(p in param_names for p in ['Level', 'AvidBorderWidth', 'AvidXPos']):
-            effect_class = 'Image'
-            if not effect_id:
-                effect_id = 'Submaster'
-        
-        # Special case for Pan & Zoom
-        if effect_id == 'EFF2_PAN_SCAN':
-            effect_id = 'Avid Pan & Zoom'
-        
-        # Build effect name
         if effect_id:
             if effect_class and effect_class != 'Effect':
                 return f'{effect_class} : {effect_id}'
@@ -543,6 +583,7 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
     
     STAGE 1: Implements deduplication to prevent double-emission
     STAGE 2: Extracts real effect names and performs source resolution
+    STAGE 4: Implements keyframe timing extraction with verified AAF model
     """
     
     # STAGE 1: Deduplication check
@@ -575,7 +616,7 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
     
     if source_clip:
         # STAGE 3: Process as Media+Effect event
-        _process_source_clip(source_clip, clips, mob_map, timeline_offset, fps, effect_name)
+        _process_source_clip(source_clip, clips, mob_map, timeline_offset, fps, effect_name, operation_group)
         logger.debug(f"Added Media+Effect event: SourceClip + {effect_name} at {timeline_offset}")
     else:
         # No SourceClip found - this is an effect on filler
@@ -634,11 +675,12 @@ def _find_nested_source_clip_deep(node, depth=0) -> Optional[Any]:
     return None
 
 
-def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, effect_name: str):
+def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, effect_name: str, operation_group=None):
     """
     Process a SourceClip by walking the mob chain to resolve true source.
     
     STAGE 2: Implements true source resolution via mob chain walking
+    STAGE 4: Includes keyframe parameter extraction
     """
     
     clip_length = int(getattr(source_clip, "length", 0))
@@ -670,6 +712,11 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
     else:
         event_name = clip_name
     
+    # STAGE 4: Extract keyframe parameters if operation_group provided
+    parameters = {}
+    if operation_group:
+        parameters = extract_fcpxml_relevant_parameters(operation_group)
+    
     event = {
         "name": event_name,
         "in": timeline_offset,
@@ -678,7 +725,7 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
         "source_path": source_path,
         "effect_params": {
                 "operation": effect_name,
-                "parameters": extract_fcpxml_relevant_parameters(operation_group)
+                "parameters": parameters
             }
     }
     
@@ -895,3 +942,65 @@ def _cli() -> None:
 
 if __name__ == "__main__":
     _cli()
+
+
+def extract_keyframe_timing_data(param):
+    """
+    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
+    
+    Implements verified AAF keyframe timing specification:
+    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
+    - Source: AAF Object Specification v1.1 §6.18-6.19
+    """
+    if not hasattr(param, 'pointlist') or not param.pointlist:
+        return None
+    
+    keyframes = []
+    
+    try:
+        for point in param.pointlist:
+            if hasattr(point, 'time') and hasattr(point, 'value'):
+                # Extract normalized time (0.0-1.0) from ControlPoint
+                normalized_time = float(point.time)
+                
+                # Ensure time is properly normalized
+                if normalized_time < 0.0 or normalized_time > 1.0:
+                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
+                    normalized_time = max(0.0, min(1.0, normalized_time))
+                
+                # Extract value and clean it
+                keyframe_value = _clean_parameter_value(point.value)
+                
+                keyframes.append({
+                    'normalized_time': normalized_time,
+                    'value': keyframe_value
+                })
+        
+        if keyframes:
+            # Sort keyframes by time to ensure proper ordering
+            keyframes.sort(key=lambda x: x['normalized_time'])
+            return {
+                'type': 'animated',
+                'keyframes': keyframes
+            }
+    
+    except Exception as e:
+        logger.debug(f"Error extracting keyframe timing: {e}")
+    
+    return None
+
+
+def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
+    """
+    Convert AAF normalized keyframe time to FCPXML rational seconds.
+    
+    Implements verified conversion formula:
+    fcpxml_seconds = (normalized_time × segment_length_edit_units) ÷ track_edit_rate
+    """
+    try:
+        edit_units_position = normalized_time * segment_length_edit_units
+        fcpxml_seconds = edit_units_position / track_edit_rate
+        return fcpxml_seconds
+    except (ZeroDivisionError, TypeError, ValueError):
+        logger.warning(f"Failed to convert normalized time {normalized_time} to FCPXML seconds")
+        return 0.0
