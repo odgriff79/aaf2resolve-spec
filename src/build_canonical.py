@@ -937,3 +937,65 @@ def _cli() -> None:
 
 if __name__ == "__main__":
     _cli()
+
+
+def extract_keyframe_timing_data(param):
+    """
+    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
+    
+    Implements verified AAF keyframe timing specification:
+    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
+    - Source: AAF Object Specification v1.1 §6.18-6.19
+    """
+    if not hasattr(param, 'points') or not param.points:
+        return None
+    
+    keyframes = []
+    
+    try:
+        for point in param.points:
+            if hasattr(point, 'time') and hasattr(point, 'value'):
+                # Extract normalized time (0.0-1.0) from ControlPoint
+                normalized_time = float(point.time)
+                
+                # Ensure time is properly normalized
+                if normalized_time < 0.0 or normalized_time > 1.0:
+                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
+                    normalized_time = max(0.0, min(1.0, normalized_time))
+                
+                # Extract value and clean it
+                keyframe_value = _clean_parameter_value(point.value)
+                
+                keyframes.append({
+                    'normalized_time': normalized_time,
+                    'value': keyframe_value
+                })
+        
+        if keyframes:
+            # Sort keyframes by time to ensure proper ordering
+            keyframes.sort(key=lambda x: x['normalized_time'])
+            return {
+                'type': 'animated',
+                'keyframes': keyframes
+            }
+    
+    except Exception as e:
+        logger.debug(f"Error extracting keyframe timing: {e}")
+    
+    return None
+
+
+def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
+    """
+    Convert AAF normalized keyframe time to FCPXML rational seconds.
+    
+    Implements verified conversion formula:
+    fcpxml_seconds = (normalized_time × segment_length_edit_units) ÷ track_edit_rate
+    """
+    try:
+        edit_units_position = normalized_time * segment_length_edit_units
+        fcpxml_seconds = edit_units_position / track_edit_rate
+        return fcpxml_seconds
+    except (ZeroDivisionError, TypeError, ValueError):
+        logger.warning(f"Failed to convert normalized time {normalized_time} to FCPXML seconds")
+        return 0.0
