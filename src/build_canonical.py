@@ -49,45 +49,142 @@ def decode_avid_effect_id(byte_array):
 
 
 def extract_keyframe_timing_data(param):
-    """
-    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
-    
-    Implements verified AAF keyframe timing specification:
-    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
-    - Source: AAF Object Specification v1.1 §6.18-6.19
-    
-    Args:
-        param: AAF parameter object that may contain VaryingValue/ControlPoint data
-    
-    Returns:
-        dict: Keyframe data with normalized timing or None if static parameter
-    """
-    if not hasattr(param, 'pointlist') or not param.pointlist:
-        return None
-    
-    keyframes = []
+   """
+   Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
+   FIXED: Properly handles VaryingValue objects as identified by ChatGPT
+   """
+   # ChatGPT's fix: Check parameter type directly
+   if type(param).__name__ != 'VaryingValue':
+       return None
+   
+   try:
+       # ChatGPT's fix: Access PointList from VaryingValue directly
+       pointlist = param.get('PointList')
+       if not pointlist:
+           return None
+       
+       # Check if we have multiple control points (animated)
+       try:
+           import aaf2
+           if isinstance(pointlist, aaf2.properties.StrongRefVectorProperty):
+               point_count = len(pointlist)
+           else:
+               point_count = 0
+       except Exception:
+           point_count = 0
+       
+       if point_count <= 1:
+           return None
+       
+       keyframes = []
+       
+       for i in range(point_count):
+           try:
+               control_point = pointlist.get(i)
+               time_value = None
+               point_value = None
+               
+               # Extract time and value from ControlPoint properties
+               for prop in control_point.properties():
+                   prop_value = getattr(prop, 'value', None)
+                   if prop_value is not None:
+                       # Convert rational to float
+                       try:
+                           if hasattr(prop_value, 'numerator') and hasattr(prop_value, 'denominator'):
+                               float_val = float(prop_value)
+                           else:
+                               float_val = float(str(prop_value))
+                       except:
+                           continue
+                       
+                       # Classify as time (0.0-1.0) or value
+                       if 0.0 <= float_val <= 1.0 and time_value is None:
+                           time_value = float_val
+                       else:
+                           point_value = float_val
+               
+               if time_value is not None:
+                   keyframes.append({
+                       'normalized_time': time_value,
+                       'value': point_value if point_value is not None else 0.0
+                   })
+           
+           except Exception as e:
+               logger.debug(f"Error processing ControlPoint {i}: {e}")
+               continue
+       
+       if keyframes:
+           keyframes.sort(key=lambda x: x['normalized_time'])
+           return {
+               'type': 'animated',
+               'keyframes': keyframes
+           }
+   
+   except Exception as e:
+       logger.debug(f"Error extracting VaryingValue keyframes: {e}")
+   
+   return None
     
     try:
-        for point in param.pointlist:
-            if hasattr(point, 'time') and hasattr(point, 'value'):
-                # Extract normalized time (0.0-1.0) from ControlPoint
-                normalized_time = float(point.time)
+        # ChatGPT's key fix: Access PointList from VaryingValue directly
+        pointlist = param.get('PointList')
+        if not pointlist:
+            return None
+        
+        # Check if we have multiple control points (animated)
+        try:
+            import aaf2
+            if isinstance(pointlist, aaf2.properties.StrongRefVectorProperty):
+                point_count = len(pointlist)
+            else:
+                point_count = 0
+        except Exception:
+            point_count = 0
+        
+        if point_count <= 1:
+            return None
+        
+        keyframes = []
+        
+        for i in range(point_count):
+            try:
+                control_point = pointlist.get(i)
                 
-                # Ensure time is properly normalized
-                if normalized_time < 0.0 or normalized_time > 1.0:
-                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
-                    normalized_time = max(0.0, min(1.0, normalized_time))
+                # Extract time and value from ControlPoint properties
+                time_value = None
+                point_value = None
                 
-                # Extract value and clean it
-                keyframe_value = _clean_parameter_value(point.value)
+                # Iterate through ControlPoint properties to find Time and Value
+                for prop in control_point.properties():
+                    prop_value = getattr(prop, 'value', None)
+                    if prop_value is not None:
+                        # Convert rational to float
+                        if hasattr(prop_value, 'numerator') and hasattr(prop_value, 'denominator'):
+                            float_val = float(prop_value)
+                        else:
+                            try:
+                                float_val = float(str(prop_value))
+                            except:
+                                continue
+                        
+                        # Classify as time (0.0-1.0) or value (anything else)
+                        if 0.0 <= float_val <= 1.0 and time_value is None:
+                            time_value = float_val
+                        else:
+                            point_value = float_val
                 
-                keyframes.append({
-                    'normalized_time': normalized_time,
-                    'value': keyframe_value
-                })
+                if time_value is not None:
+                    keyframes.append({
+                        'normalized_time': time_value,
+                        'value': point_value if point_value is not None else 0.0
+                    })
+            
+            except Exception as e:
+                logger.debug(f"Error processing ControlPoint {i}: {e}")
+                continue
         
         if keyframes:
-            # Sort keyframes by time to ensure proper ordering
+            # Sort by time and return
             keyframes.sort(key=lambda x: x['normalized_time'])
             return {
                 'type': 'animated',
@@ -95,11 +192,9 @@ def extract_keyframe_timing_data(param):
             }
     
     except Exception as e:
-        logger.debug(f"Error extracting keyframe timing: {e}")
+        logger.debug(f"Error extracting VaryingValue keyframes: {e}")
     
     return None
-
-
 def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
     """
     Convert AAF normalized keyframe time to FCPXML rational seconds.
@@ -942,52 +1037,6 @@ def _cli() -> None:
 
 if __name__ == "__main__":
     _cli()
-
-
-def extract_keyframe_timing_data(param):
-    """
-    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
-    
-    Implements verified AAF keyframe timing specification:
-    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
-    - Source: AAF Object Specification v1.1 §6.18-6.19
-    """
-    if not hasattr(param, 'pointlist') or not param.pointlist:
-        return None
-    
-    keyframes = []
-    
-    try:
-        for point in param.pointlist:
-            if hasattr(point, 'time') and hasattr(point, 'value'):
-                # Extract normalized time (0.0-1.0) from ControlPoint
-                normalized_time = float(point.time)
-                
-                # Ensure time is properly normalized
-                if normalized_time < 0.0 or normalized_time > 1.0:
-                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
-                    normalized_time = max(0.0, min(1.0, normalized_time))
-                
-                # Extract value and clean it
-                keyframe_value = _clean_parameter_value(point.value)
-                
-                keyframes.append({
-                    'normalized_time': normalized_time,
-                    'value': keyframe_value
-                })
-        
-        if keyframes:
-            # Sort keyframes by time to ensure proper ordering
-            keyframes.sort(key=lambda x: x['normalized_time'])
-            return {
-                'type': 'animated',
-                'keyframes': keyframes
-            }
-    
-    except Exception as e:
-        logger.debug(f"Error extracting keyframe timing: {e}")
-    
-    return None
 
 
 def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
