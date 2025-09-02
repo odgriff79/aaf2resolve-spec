@@ -39,6 +39,157 @@ except ImportError:
 # Setup logging for debugging AAF traversal
 logger = logging.getLogger(__name__)
 
+from fractions import Fraction
+
+def _to_float(x):
+   try:
+       if isinstance(x, (int, float)):
+           return float(x)
+       s = str(x)
+       if "/" in s:
+           n, d = s.split("/", 1)
+           return float(Fraction(int(n.strip()), int(d.strip())))
+       return float(s)
+   except Exception:
+       return None
+
+def _classify_time_value(rational_strings):
+   if not rational_strings:
+       return None, None
+   if len(rational_strings) == 1:
+       return rational_strings[0], None
+   # pick 0..1-ish as Time, other as Value
+   cand = []
+   for i, s in enumerate(rational_strings[:2]):
+       xf = _to_float(s)
+       if xf is None: 
+           continue
+       score = 10 if -1e-6 <= xf <= 1.05 else max(0, 1.0 - min(abs(xf), 10.0)/10.0)
+       cand.append((score, i))
+   cand.sort(reverse=True)
+   t_idx = cand[0][1] if cand else 0
+   v_idx = 1 - t_idx if len(rational_strings) > 1 else None
+   t = rational_strings[t_idx]
+   v = rational_strings[v_idx] if v_idx is not None else None
+   return t, v
+
+def _read_cp_props(control_point):
+   edit_hint = None
+   rationals = []
+   tangents = {}
+   try:
+       for pr in control_point.properties():
+           if hasattr(aaf2, 'properties') and isinstance(pr, aaf2.properties.StrongRefVectorProperty):
+               # ControlPointPointProperties
+               try:
+                   for i in range(len(pr)):
+                       item = pr.get(i)
+                       iname = getattr(item, "name", None) or getattr(getattr(item, "propertydef", None), "name", None)
+                       ival = None
+                       for sub in item.properties():
+                           sn = getattr(getattr(sub, "propertydef", None), "name", getattr(sub, "name", None))
+                           if sn == "Value":
+                               ival = getattr(sub, "value", None)
+                               break
+                       if iname:
+                           tangents[str(iname)] = str(ival) if ival is not None else None
+               except Exception:
+                   pass
+               continue
+           val = getattr(pr, "value", None)
+           if isinstance(val, str):
+               edit_hint = val
+           elif val is not None:
+               rationals.append(str(val))
+   except Exception:
+       pass
+   t_str, v_str = _classify_time_value(rationals)
+   return {
+       "time_str": t_str,
+       "time": _to_float(t_str),
+       "value_str": v_str,
+       "value": _to_float(v_str),
+       "edit_hint": edit_hint,
+       "tangents": tangents or None,
+   }
+
+def _listify_parameters(params):
+   try:
+       return list(params)
+   except Exception:
+       out = []
+       try:
+           for p in params: out.append(p)
+       except Exception: pass
+       return out
+
+def extract_keyframe_timing_data(operation_group):
+   """
+   Extract keyframes from OperationGroup using ChatGPT's proven working approach.
+   Returns keyframe data or None for static parameters.
+   """
+   if not hasattr(operation_group, 'parameters'):
+       return None
+       
+   # Check if any parameter is VaryingValue with multiple points
+   keyframes_found = []
+   
+   try:
+       for p in _listify_parameters(getattr(operation_group, "parameters", []) or []):
+           pname = (
+               getattr(getattr(p, "parameterdef", None), "name", None) or
+               getattr(getattr(p, "parameter_definition", None), "name", None) or
+               getattr(p, "name", "Unknown")
+           )
+           
+           if type(p).__name__ != "VaryingValue":
+               continue
+
+           # KEY: pull PointList from the VaryingValue itself
+           try:
+               plist = p.get("PointList")
+           except Exception:
+               continue
+
+           if not (hasattr(aaf2, 'properties') and isinstance(plist, aaf2.properties.StrongRefVectorProperty)):
+               continue
+
+           point_count = len(plist)
+           if point_count <= 1:
+               continue
+               
+           # Extract keyframes for this parameter
+           param_keyframes = []
+           for i in range(point_count):
+               try:
+                   cp = plist.get(i)
+                   cp_data = _read_cp_props(cp)
+                   if cp_data['time'] is not None:
+                       param_keyframes.append({
+                           'normalized_time': cp_data['time'],
+                           'value': cp_data['value'] if cp_data['value'] is not None else 0.0,
+                           'parameter_name': pname
+                       })
+               except Exception:
+                   continue
+           
+           if param_keyframes:
+               param_keyframes.sort(key=lambda x: x['normalized_time'])
+               keyframes_found.extend(param_keyframes)
+   
+   except Exception as e:
+       logger.debug(f"Error extracting keyframes from OperationGroup: {e}")
+       return None
+   
+   if keyframes_found:
+       return {
+           'type': 'animated',
+           'keyframes': keyframes_found
+       }
+   
+   return None
+
+
 def decode_avid_effect_id(byte_array):
     """Convert AvidEffectID byte array to string"""
     try:
@@ -48,153 +199,7 @@ def decode_avid_effect_id(byte_array):
         return None
 
 
-def extract_keyframe_timing_data(param):
-   """
-   Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
-   FIXED: Properly handles VaryingValue objects as identified by ChatGPT
-   """
-   # ChatGPT's fix: Check parameter type directly
-   if type(param).__name__ != 'VaryingValue':
-       return None
-   
-   try:
-       # ChatGPT's fix: Access PointList from VaryingValue directly
-       pointlist = param.get('PointList')
-       if not pointlist:
-           return None
-       
-       # Check if we have multiple control points (animated)
-       try:
-           import aaf2
-           if isinstance(pointlist, aaf2.properties.StrongRefVectorProperty):
-               point_count = len(pointlist)
-           else:
-               point_count = 0
-       except Exception:
-           point_count = 0
-       
-       if point_count <= 1:
-           return None
-       
-       keyframes = []
-       
-       for i in range(point_count):
-           try:
-               control_point = pointlist.get(i)
-               time_value = None
-               point_value = None
-               
-               # Extract time and value from ControlPoint properties
-               for prop in control_point.properties():
-                   prop_value = getattr(prop, 'value', None)
-                   if prop_value is not None:
-                       # Convert rational to float
-                       try:
-                           if hasattr(prop_value, 'numerator') and hasattr(prop_value, 'denominator'):
-                               float_val = float(prop_value)
-                           else:
-                               float_val = float(str(prop_value))
-                       except:
-                           continue
-                       
-                       # Classify as time (0.0-1.0) or value
-                       if 0.0 <= float_val <= 1.0 and time_value is None:
-                           time_value = float_val
-                       else:
-                           point_value = float_val
-               
-               if time_value is not None:
-                   keyframes.append({
-                       'normalized_time': time_value,
-                       'value': point_value if point_value is not None else 0.0
-                   })
-           
-           except Exception as e:
-               logger.debug(f"Error processing ControlPoint {i}: {e}")
-               continue
-       
-       if keyframes:
-           keyframes.sort(key=lambda x: x['normalized_time'])
-           return {
-               'type': 'animated',
-               'keyframes': keyframes
-           }
-   
-   except Exception as e:
-       logger.debug(f"Error extracting VaryingValue keyframes: {e}")
-   
-   return None
-    
-    try:
-        # ChatGPT's key fix: Access PointList from VaryingValue directly
-        pointlist = param.get('PointList')
-        if not pointlist:
-            return None
-        
-        # Check if we have multiple control points (animated)
-        try:
-            import aaf2
-            if isinstance(pointlist, aaf2.properties.StrongRefVectorProperty):
-                point_count = len(pointlist)
-            else:
-                point_count = 0
-        except Exception:
-            point_count = 0
-        
-        if point_count <= 1:
-            return None
-        
-        keyframes = []
-        
-        for i in range(point_count):
-            try:
-                control_point = pointlist.get(i)
-                
-                # Extract time and value from ControlPoint properties
-                time_value = None
-                point_value = None
-                
-                # Iterate through ControlPoint properties to find Time and Value
-                for prop in control_point.properties():
-                    prop_value = getattr(prop, 'value', None)
-                    if prop_value is not None:
-                        # Convert rational to float
-                        if hasattr(prop_value, 'numerator') and hasattr(prop_value, 'denominator'):
-                            float_val = float(prop_value)
-                        else:
-                            try:
-                                float_val = float(str(prop_value))
-                            except:
-                                continue
-                        
-                        # Classify as time (0.0-1.0) or value (anything else)
-                        if 0.0 <= float_val <= 1.0 and time_value is None:
-                            time_value = float_val
-                        else:
-                            point_value = float_val
-                
-                if time_value is not None:
-                    keyframes.append({
-                        'normalized_time': time_value,
-                        'value': point_value if point_value is not None else 0.0
-                    })
-            
-            except Exception as e:
-                logger.debug(f"Error processing ControlPoint {i}: {e}")
-                continue
-        
-        if keyframes:
-            # Sort by time and return
-            keyframes.sort(key=lambda x: x['normalized_time'])
-            return {
-                'type': 'animated',
-                'keyframes': keyframes
-            }
-    
-    except Exception as e:
-        logger.debug(f"Error extracting VaryingValue keyframes: {e}")
-    
-    return None
+
 def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
     """
     Convert AAF normalized keyframe time to FCPXML rational seconds.
