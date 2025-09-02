@@ -18,3 +18,14 @@
 - Expand tests to additional fixtures
 - Parameter inventory/values/compare tools for data-driven selection
 - Create REQUIRED_FIELDS.md for current minimal capture; keep editable
+
+## 2025-09-01 Additions
+- Consider compact “AAFx Brief Protocol” for compressed milestone sharing with Claude.
+- Decide if repo should hold brief protocol spec vs just keep in TBC notes (may be over-effort).
+- Idea: small dictionary (MS, DT, VER, E, FX, SR, etc.) to keep briefs concise.
+- Debate: better to maintain long-form briefs only in milestones, skip compressed form.
+- Potential alternative: use Claude/Gemini to generate short briefs from long messages.
+- Key requirement: avoid manual retyping of long intros for every new chat.
+- Reminder: include essential source clip metadata always; don’t let it be skipped.
+- Maintain option to expand effect/clip data later (FrameFlex, color, etc.) without bloating JSON now.
+- Create REQUIRED_FIELDS.md to track which fields are currently required; keep editable/expandable.
