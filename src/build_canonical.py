@@ -44,6 +44,122 @@ def decode_avid_effect_id(byte_array):
     except:
         return None
 
+
+
+
+def extract_fcpxml_relevant_parameters(operation_group):
+    """
+    Extract parameters that are relevant for FCPXML/Resolve conversion.
+    Focus on AFX/DVE parameters that have meaningful values.
+    """
+    if not hasattr(operation_group, 'parameters'):
+        return {}
+    
+    try:
+        extracted_params = {}
+        
+        for param in operation_group.parameters:
+            if not (hasattr(param, 'name') and hasattr(param, 'value')):
+                continue
+                
+            param_name = str(param.name)
+            
+            # Only extract parameters that matter for FCPXML conversion
+            if not _is_fcpxml_relevant_parameter(param_name):
+                continue
+                
+            # Extract the value regardless of whether it's animated or static
+            param_data = _extract_parameter_value(param)
+            if param_data is not None:
+                extracted_params[param_name] = param_data
+        
+        return extracted_params
+    
+    except Exception as e:
+        return {"extraction_error": str(e)}
+
+
+def _is_fcpxml_relevant_parameter(param_name):
+    """
+    Determine if a parameter is relevant for FCPXML conversion.
+    Focus on visual effects parameters that Resolve can use.
+    """
+    # AFX parameters (Avid effects that map to Resolve)
+    if param_name.startswith('AFX_'):
+        # Skip obvious metadata/system parameters
+        if param_name in ['AFX_PARAMETER_BYTE_ORDER', 'AvidParameterByteOrder']:
+            return False
+        return True
+    
+    # DVE parameters (Digital Video Effects)
+    if param_name.startswith('DVE_'):
+        return True
+    
+    # Avid visual parameters
+    visual_params = [
+        'Level', 'AvidXPos', 'AvidYPos', 'AvidScale', 'AvidCrop', 
+        'AvidBorderWidth', 'AvidBorderSoft', 'AvidColor'
+    ]
+    if param_name in visual_params:
+        return True
+    
+    # Effect identification
+    if param_name == 'AvidEffectID':
+        return True
+    
+    return False
+
+
+def _extract_parameter_value(param):
+    """
+    Extract parameter value, handling both animated and static cases.
+    Return the actual data that can be used for FCPXML generation.
+    """
+    # Check for animation data (keyframes)
+    if hasattr(param, 'points') and param.points:
+        keyframes = []
+        for point in param.points:
+            if hasattr(point, 'time') and hasattr(point, 'value'):
+                keyframes.append({
+                    'time': float(point.time) if hasattr(point.time, '__float__') else str(point.time),
+                    'value': _clean_parameter_value(point.value)
+                })
+        if keyframes:
+            return {'type': 'animated', 'keyframes': keyframes}
+    
+    # Static value
+    clean_value = _clean_parameter_value(param.value)
+    if clean_value is not None:
+        return {'type': 'static', 'value': clean_value}
+    
+    return None
+
+
+def _clean_parameter_value(raw_value):
+    """Clean and normalize parameter values for FCPXML use."""
+    if raw_value is None:
+        return None
+    
+    # Handle rational numbers
+    if hasattr(raw_value, 'numerator') and hasattr(raw_value, 'denominator'):
+        return float(raw_value)
+    
+    # Handle arrays/lists
+    if isinstance(raw_value, (list, tuple)):
+        return list(raw_value)
+    
+    # Handle numeric types
+    if isinstance(raw_value, (int, float)):
+        return float(raw_value)
+    
+    # Handle strings
+    if isinstance(raw_value, str):
+        return raw_value
+    
+    # Convert other types to string
+    return str(raw_value)
+
+
 def extract_effect_name_from_operation_group(op_group):
     """Extract effect name from OperationGroup parameters"""
     if not hasattr(op_group, 'parameters'):
@@ -94,42 +210,7 @@ def extract_effect_name_from_operation_group(op_group):
         logger.debug(f'Error extracting effect name: {e}')
         return 'Unknown Effect'
 
-def extract_legacy_style_parameters(op_group):
-    """Extract parameters matching legacy format"""
-    if not hasattr(op_group, 'parameters'):
-        return 'No effect data found.'
-    
-    static_params = {}
-    
-    try:
-        params = list(op_group.parameters)
-        for param in params:
-            if hasattr(param, 'name') and hasattr(param, 'value'):
-                param_name = str(param.name)
-                value = param.value
-                
-                # Convert AAF types
-                if hasattr(value, 'numerator'):
-                    clean_value = float(value)
-                elif isinstance(value, (list, tuple)):
-                    clean_value = list(value)
-                else:
-                    clean_value = value
-                
-                static_params[param_name] = clean_value
-        
-        # Build legacy format string
-        if static_params:
-            details = ['--- Static Parameters ---']
-            for pname, value in static_params.items():
-                details.append(f'- Parameter: {pname} -> Value: {value}')
-            return chr(10).join(details)
-        else:
-            return 'No effect data found.'
-            
-    except Exception as e:
-        logger.debug(f'Error extracting parameters: {e}')
-        return 'Error extracting parameters'
+
 
 
 
@@ -507,9 +588,7 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
             "source_path": None,
             "effect_params": {
                 "operation": effect_name,
-                "is_filler_effect": is_filler_effect,
-                "length": length,
-                "keyframe_details": extract_legacy_style_parameters(operation_group)
+                "parameters": extract_fcpxml_relevant_parameters(operation_group)
             }
         }
         clips.append(filler_event)
@@ -599,9 +678,7 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
         "source_path": source_path,
         "effect_params": {
                 "operation": effect_name,
-                "is_filler_effect": is_filler_effect,
-                "length": length,
-                "keyframe_details": extract_legacy_style_parameters(operation_group)
+                "parameters": extract_fcpxml_relevant_parameters(operation_group)
             }
     }
     
