@@ -209,25 +209,30 @@ def _extract_parameter_value(param, segment_length_edit_units=None, track_edit_r
         # Convert normalized times to FCPXML seconds
         converted_keyframes = []
         
-        for kf in keyframe_data['keyframes']:
+        for kf in keyframe_data["keyframes"]:
             fcpxml_seconds = convert_normalized_time_to_fcpxml_seconds(
-                kf['normalized_time'], 
+                kf["normalized_time"], 
                 segment_length_edit_units, 
                 track_edit_rate
             )
             
             converted_keyframes.append({
-                'time_seconds': fcpxml_seconds,
-                'normalized_time': kf['normalized_time'],  # Keep for debugging
-                'value': kf['value']
+                "time_seconds": fcpxml_seconds,
+                "normalized_time": kf["normalized_time"],  # Keep for debugging
+                "value": kf["value"]
             })
         
         return {
-            'type': 'animated',
-            'keyframes': converted_keyframes
+            "type": "animated",
+            "keyframes": converted_keyframes
         }
     
     # Static value - use existing logic
+    clean_value = _clean_parameter_value(param.value)
+    if clean_value is not None:
+        return {"type": "static", "value": clean_value}
+    
+    return None
     clean_value = _clean_parameter_value(param.value)
     if clean_value is not None:
         return {'type': 'static', 'value': clean_value}
