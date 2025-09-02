@@ -1,0 +1,863 @@
+=== EFFECT PARAMETER INVENTORY ===
+Total unique parameters: 172
+Effect type distribution: {'AVX2 Effect': 140, 'Image Effect': 266}
+
+:
+  Usage: 16 occurrences
+  Types: <class 'bool'>
+  Sample values: [False, False, True]...
+
+AFX_ASPECT_SOURCE_U:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+AFX_ASPECT_TARGET_U:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+AFX_BORDER_FIXED_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+AFX_FG_ALPHA_FULL_RANGE_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+AFX_FG_ALPHA_REPLICATED_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+AFX_FG_KEY2_ENABLED_U:
+  Usage: 32 occurrences
+  Types: <class 'bool'>
+  Sample values: [False, False, False]...
+
+AFX_FG_KEY_INVERT_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+AFX_FG_KEY_OPACITY_U:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(50, 1), AAFRational(50, 1)]
+
+AFX_FG_KEY_SS_ENABLED_U:
+  Usage: 32 occurrences
+  Types: <class 'bool'>
+  Sample values: [False, False, False]...
+
+AFX_FIXED_ASPECT_U:
+  Usage: 34 occurrences
+  Types: <class 'bool'>
+  Sample values: [True, True, True]...
+
+AFX_GRID_ENABLED:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_FIELDS:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_HPOS_OFFSET:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+AFX_GRID_HSCALE_OFFSET:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(100, 1), AAFRational(100, 1)]
+
+AFX_GRID_SRC_HEI:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_SRC_INSET:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_SRC_OFF_H:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_SRC_OFF_V:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_SRC_WID:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_SUBFIELDS:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_TRANSFER:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_TYPE:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [0, 0]
+
+AFX_GRID_VPOS_OFFSET:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+AFX_GRID_VSCALE_OFFSET:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(100, 1), AAFRational(100, 1)]
+
+Add Ellipse:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Add Rectangle:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Add Text:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [True]
+
+Alignment Horizontal:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [0]
+
+Alignment Vertical:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [0]
+
+Angle  :
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(135, 1)]
+
+Auto-Zoom:
+  Usage: 4 occurrences
+  Types: <class 'bool'>
+  Sample values: [True, True, True]...
+
+AvidBorderSoft:
+  Usage: 12 occurrences
+  Types: <class 'int'>
+  Sample values: [0, 0, 0]...
+
+AvidBorderWidth:
+  Usage: 12 occurrences
+  Types: <class 'int'>
+  Sample values: [0, 0, 0]...
+
+AvidBounds:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 12, 254, 0, 0, 1, 0, 0, 0, 12, 254, 0, 0, 1, 0, 0, 0, 244, 1, 0, 0, 1, 0, 0, 0, 244, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 12, 254, 0, 0, 1, 0, 0, 0, 12, 254, 0, 0, 1, 0, 0, 0, 244, 1, 0, 0, 1, 0, 0, 0, 244, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 12, 254, 0, 0, 1, 0, 0, 0, 12, 254, 0, 0, 1, 0, 0, 0, 244, 1, 0, 0, 1, 0, 0, 0, 244, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]...
+
+AvidColor:
+  Usage: 10 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]...
+
+AvidCrop:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0), (0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0), (0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0)]...
+
+AvidEffectID:
+  Usage: 63 occurrences
+  Types: <class 'list'>
+  Sample values: [[69, 70, 70, 50, 95, 66, 76, 69, 78, 68, 95, 82, 69, 83, 73, 90, 69, 0], [69, 70, 70, 50, 95, 83, 84, 65, 66, 73, 76, 73, 90, 69, 0], [69, 70, 70, 95, 83, 85, 66, 77, 65, 83, 84, 69, 82, 0]]...
+
+AvidEnableKeyFlagsKeyFrame:
+  Usage: 12 occurrences
+  Types: <class 'int'>
+  Sample values: [0, 0, 0]...
+
+AvidGlobalKeyFrame:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0)]...
+
+AvidParameterByteOrder:
+  Usage: 71 occurrences
+  Types: <class 'int'>
+  Sample values: [18761, 18761, 18761]...
+
+AvidScale:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0), (0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0), (0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0)]...
+
+AvidSelectedKeyFrame:
+  Usage: 12 occurrences
+  Types: <class 'bool'>
+  Sample values: [True, True, True]...
+
+AvidSpillSupress:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 0, 0, 0, 0, 0, 0), (32, 0, 0, 0, 32, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0)]...
+
+AvidXPos:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 232, 3, 0, 0, 0, 0, 1, 0), (0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 232, 3, 0, 0, 0, 0, 1, 0), (0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 232, 3, 0, 0, 0, 0, 1, 0)]...
+
+AvidYPos:
+  Usage: 12 occurrences
+  Types: <class 'tuple'>
+  Sample values: [(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 232, 3, 0, 0, 0, 0, 1, 0), (0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 232, 3, 0, 0, 0, 0, 1, 0), (0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 232, 3, 0, 0, 0, 0, 1, 0)]...
+
+Blue   :
+  Usage: 6 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(255, 1), AAFRational(0, 1), AAFRational(255, 1)]...
+
+Bold:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Character Rotation:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Clean Precompute:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Color Gradient:
+  Usage: 6 occurrences
+  Types: <class 'bool'>
+  Sample values: [False, False, False]...
+
+Connect to safe title:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+DVE_BG_L_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_BORDER_ENABLED_U:
+  Usage: 4 occurrences
+  Types: <class 'bool'>
+  Sample values: [False, False, False]...
+
+DVE_BORDER_L_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_CORNER_PIN_X0_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(-999, 2), AAFRational(-999, 2), AAFRational(-999, 2)]...
+
+DVE_CORNER_PIN_X1_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(999, 2), AAFRational(999, 2), AAFRational(999, 2)]...
+
+DVE_CORNER_PIN_X2_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(999, 2), AAFRational(999, 2), AAFRational(999, 2)]...
+
+DVE_CORNER_PIN_X3_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(-999, 2), AAFRational(-999, 2), AAFRational(-999, 2)]...
+
+DVE_CORNER_PIN_Y0_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(999, 2), AAFRational(999, 2), AAFRational(999, 2)]...
+
+DVE_CORNER_PIN_Y1_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(999, 2), AAFRational(999, 2), AAFRational(999, 2)]...
+
+DVE_CORNER_PIN_Y2_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(-999, 2), AAFRational(-999, 2), AAFRational(-999, 2)]...
+
+DVE_CORNER_PIN_Y3_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(-999, 2), AAFRational(-999, 2), AAFRational(-999, 2)]...
+
+DVE_CROP_ENABLED_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+DVE_CUSTOM_HIGHLIGHT_L_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(255, 1), AAFRational(255, 1), AAFRational(255, 1)]...
+
+DVE_DEFOCUS_MODE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_DFCS_HORIZ_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(10, 1), AAFRational(10, 1), AAFRational(10, 1)]...
+
+DVE_DFCS_VERT_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(10, 1), AAFRational(10, 1), AAFRational(10, 1)]...
+
+DVE_ERODE_FILTER_WIDTH_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(3, 1), AAFRational(3, 1), AAFRational(3, 1)]...
+
+DVE_ERODE_MIDPOINT_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(127, 1), AAFRational(127, 1), AAFRational(127, 1)]...
+
+DVE_ERODE_SOFTNESS_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(127, 1), AAFRational(127, 1), AAFRational(127, 1)]...
+
+DVE_FG_ALPHA_FULL_RANGE_U:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(1, 1), AAFRational(1, 1)]
+
+DVE_FG_ALPHA_REPLICATED_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+DVE_FG_KEY_DISC_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(45, 1), AAFRational(45, 1), AAFRational(45, 1)]...
+
+DVE_FG_KEY_ENABLED_U:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+DVE_FG_KEY_HIGH_SAT_U:
+  Usage: 8 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(255, 1), AAFRational(255, 1), AAFRational(255, 1)]...
+
+DVE_FG_KEY_HUE_ANGLE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(155, 1), AAFRational(155, 1), AAFRational(155, 1)]...
+
+DVE_FG_KEY_INVERT_U:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(1, 1), AAFRational(1, 1)]
+
+DVE_FG_KEY_LOW_SAT_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(20, 1), AAFRational(20, 1), AAFRational(20, 1)]...
+
+DVE_FG_KEY_LUM_RANGE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(80, 1), AAFRational(80, 1), AAFRational(80, 1)]...
+
+DVE_FG_KEY_LUM_THRESH_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(128, 1), AAFRational(128, 1), AAFRational(128, 1)]...
+
+DVE_FG_KEY_LUM_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(255, 1), AAFRational(255, 1), AAFRational(255, 1)]...
+
+DVE_FG_KEY_LUM_USE_RANGE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_FG_KEY_OPACITY_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(100, 1), AAFRational(100, 1), AAFRational(100, 1)]...
+
+DVE_FG_KEY_SAT_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(255, 1), AAFRational(255, 1), AAFRational(255, 1)]...
+
+DVE_HLTE_INTSTY_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(50, 1), AAFRational(50, 1), AAFRational(50, 1)]...
+
+DVE_HLTE_RADIUS_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(50, 1), AAFRational(50, 1), AAFRational(50, 1)]...
+
+DVE_HLTE_SOFT_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(50, 1), AAFRational(50, 1), AAFRational(50, 1)]...
+
+DVE_MT_KEY_OPACITY_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(100, 1), AAFRational(100, 1), AAFRational(100, 1)]...
+
+DVE_MT_WARP_FOREGROUND_U:
+  Usage: 8 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_POS_ENABLED_U:
+  Usage: 10 occurrences
+  Types: <class 'bool'>
+  Sample values: [True, True, True]...
+
+DVE_POS_TRACK_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_POS_X_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_POS_Y_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_POS_Z_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_PRSP_Z_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(999, 4), AAFRational(999, 4), AAFRational(999, 4)]...
+
+DVE_SCALE_ENABLED_U:
+  Usage: 10 occurrences
+  Types: <class 'bool'>
+  Sample values: [True, True, True]...
+
+DVE_SCALE_TRACK_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+DVE_SCALE_X_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(100566157, 1000000), AAFRational(100566157, 1000000), AAFRational(100566157, 1000000)]...
+
+DVE_SCALE_Y_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(100566157, 1000000), AAFRational(100566157, 1000000), AAFRational(100566157, 1000000)]...
+
+DVE_SHAPE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(2, 1), AAFRational(2, 1), AAFRational(2, 1)]...
+
+DVE_SHDW_OPACITY_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(50, 1), AAFRational(50, 1), AAFRational(50, 1)]...
+
+DVE_SHDW_X_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(50, 1), AAFRational(50, 1), AAFRational(50, 1)]...
+
+DVE_SHDW_Y_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(-50, 1), AAFRational(-50, 1), AAFRational(-50, 1)]...
+
+DVE_SPILL_REPLACEMENT_L_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(128, 1), AAFRational(128, 1), AAFRational(128, 1)]...
+
+DVE_TRACKING_FOURPT_INVERT:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_TRACKING_POS_INVERT:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_TRACKING_POS_U:
+  Usage: 8 occurrences
+  Types: <class 'int'>
+  Sample values: [0, 0, 0]...
+
+DVE_TRACKING_ROT_INVERT:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_TRACKING_SCALE_INVERT:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(1, 1), AAFRational(1, 1), AAFRational(1, 1)]...
+
+DVE_TRAIL_DECAY_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(75, 1), AAFRational(75, 1), AAFRational(75, 1)]...
+
+DVE_TRGT_SZE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(100, 1), AAFRational(100, 1), AAFRational(100, 1)]...
+
+DVE_WARP_AXIS_ANGLE_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(45, 1), AAFRational(45, 1), AAFRational(45, 1)]...
+
+DVE_WARP_FREQ_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(-37037037, 20000000), AAFRational(-37037037, 20000000), AAFRational(-37037037, 20000000)]...
+
+DVE_WARP_RADIUS_U:
+  Usage: 4 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(15, 1), AAFRational(15, 1), AAFRational(15, 1)]...
+
+Descenders:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [True]
+
+Display:
+  Usage: 2 occurrences
+  Types: <class 'int'>
+  Values: [1, 1]
+
+Distance:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(6, 1)]
+
+Edit Mode:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Effect State:
+  Usage: 2 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 36, 8, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 170, 44, 47, 192, 147, 114, 214, 17, 180, 228, 0, 48, 101, 138, 101, 4, 4, 8, 0, 0, 0, 8, 0, 0, 49, 48, 58, 48, 55, 58, 53, 56, 58, 48, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 78, 69], [80, 85, 86, 65, 36, 8, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 170, 44, 47, 192, 147, 114, 214, 17, 180, 228, 0, 48, 101, 138, 101, 4, 4, 8, 0, 0, 0, 8, 0, 0, 49, 48, 58, 49, 49, 58, 52, 49, 58, 48, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 78, 69]]
+
+Effect position Edit Mode:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Filepath:
+  Usage: 2 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 60, 1, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 170, 44, 47, 192, 147, 114, 214, 17, 180, 228, 0, 48, 101, 138, 101, 4, 28, 1, 0, 0, 24, 1, 0, 0, 92, 0, 92, 0, 82, 0, 97, 0, 100, 0, 105, 0, 97, 0, 110, 0, 116, 0, 78, 0, 101, 0, 120, 0, 105, 0, 115, 0, 48, 0, 48, 0, 92, 0, 66, 0, 76, 0, 73, 0, 78, 0, 75, 0, 95, 0, 87, 0, 87, 0, 50, 0, 32, 0, 68, 0, 69, 0, 67, 0, 79, 0, 68, 0, 69, 0, 68, 0, 95, 0, 67, 0, 76, 0, 73, 0, 69, 0, 78, 0, 84, 0, 92, 0, 65, 0, 82, 0, 67, 0, 72, 0, 73, 0, 86, 0, 69, 0, 32, 0, 65, 0, 78, 0, 68, 0, 32, 0, 68, 0, 79, 0, 87, 0, 78, 0, 76, 0, 79, 0, 65, 0, 68, 0, 83, 0, 92, 0, 65, 0, 82, 0, 67, 0, 72, 0, 73, 0, 86, 0, 69, 0, 95, 0, 50, 0, 48, 0, 50, 0, 53, 0, 95, 0, 48, 0, 52, 0, 95, 0, 48, 0, 51, 0, 95, 0, 72, 0, 69, 0, 73, 0, 78, 0, 90, 0, 32, 0, 76, 0, 73, 0, 78, 0, 71, 0, 69, 0, 32, 0, 69, 0, 86, 0, 65, 0, 32, 0, 66, 0, 82, 0, 65, 0, 85, 0, 78, 0, 92, 0, 87, 0, 87, 0, 50, 0, 68, 0, 95, 0, 65, 0, 82, 0, 67, 0, 95, 0, 57, 0, 54, 0, 54, 0, 95, 0, 77, 0, 95, 0, 71, 0, 69, 0, 84, 0, 84, 0, 89, 0, 95, 0, 53, 0, 51, 0, 55, 0, 49, 0, 51, 0, 51, 0, 54, 0, 57, 0, 53, 0, 46, 0, 106, 0, 112, 0, 103, 0, 0, 0, 0, 68, 78, 69], [80, 85, 86, 65, 60, 1, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 170, 44, 47, 192, 147, 114, 214, 17, 180, 228, 0, 48, 101, 138, 101, 4, 28, 1, 0, 0, 24, 1, 0, 0, 92, 0, 92, 0, 82, 0, 97, 0, 100, 0, 105, 0, 97, 0, 110, 0, 116, 0, 78, 0, 101, 0, 120, 0, 105, 0, 115, 0, 48, 0, 48, 0, 92, 0, 66, 0, 76, 0, 73, 0, 78, 0, 75, 0, 95, 0, 87, 0, 87, 0, 50, 0, 32, 0, 68, 0, 69, 0, 67, 0, 79, 0, 68, 0, 69, 0, 68, 0, 95, 0, 67, 0, 76, 0, 73, 0, 69, 0, 78, 0, 84, 0, 92, 0, 65, 0, 82, 0, 67, 0, 72, 0, 73, 0, 86, 0, 69, 0, 32, 0, 65, 0, 78, 0, 68, 0, 32, 0, 68, 0, 79, 0, 87, 0, 78, 0, 76, 0, 79, 0, 65, 0, 68, 0, 83, 0, 92, 0, 65, 0, 82, 0, 67, 0, 72, 0, 73, 0, 86, 0, 69, 0, 95, 0, 50, 0, 48, 0, 50, 0, 53, 0, 95, 0, 48, 0, 52, 0, 95, 0, 48, 0, 51, 0, 95, 0, 72, 0, 69, 0, 73, 0, 78, 0, 90, 0, 32, 0, 76, 0, 73, 0, 78, 0, 71, 0, 69, 0, 32, 0, 69, 0, 86, 0, 65, 0, 32, 0, 66, 0, 82, 0, 65, 0, 85, 0, 78, 0, 92, 0, 87, 0, 87, 0, 50, 0, 68, 0, 95, 0, 65, 0, 82, 0, 67, 0, 95, 0, 57, 0, 54, 0, 54, 0, 95, 0, 77, 0, 95, 0, 71, 0, 69, 0, 84, 0, 84, 0, 89, 0, 95, 0, 53, 0, 51, 0, 55, 0, 49, 0, 51, 0, 51, 0, 54, 0, 57, 0, 53, 0, 46, 0, 106, 0, 112, 0, 103, 0, 0, 0, 0, 68, 78, 69]]
+
+Font Name:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [189]
+
+Frame Shape:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [0]
+
+Green  :
+  Usage: 6 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(255, 1), AAFRational(255, 1), AAFRational(128, 1)]...
+
+HV Skew:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Height :
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(100, 1), AAFRational(100, 1)]
+
+Hide Anchor Point:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+Hilite:
+  Usage: 6 occurrences
+  Types: <class 'bool'>
+  Sample values: [False, False, False]...
+
+Horizontal Offset:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+Horizontal Origin:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(8196513, 500000000), AAFRational(8196513, 500000000)]
+
+Horizontal Position:
+  Usage: 5 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(96354167, 1000000000), AAFRational(0, 1), AAFRational(229, 400)]...
+
+Horizontal Scale:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(1, 1), AAFRational(1, 1)]
+
+Horizontal Size:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(264088949, 1000000000), AAFRational(264088949, 1000000000)]
+
+Include Spaces:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+Italics:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Justification Horizontal:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [1]
+
+Justification Vertical:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [0]
+
+Kerning:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Leading:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Level:
+  Usage: 12 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(536870912, 1073741824), AAFRational(1073741824, 1073741824), AAFRational(536870912, 1073741824)]...
+
+MC AVX2 EFFECT VERSION:
+  Usage: 19 occurrences
+  Types: <class 'int'>
+  Sample values: [1, 1, 1]...
+
+Notes:
+  Usage: 2 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 120, 0, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 199, 244, 199, 186, 235, 126, 152, 72, 190, 44, 8, 95, 7, 17, 60, 197, 5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 68, 78, 69, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [80, 85, 86, 65, 120, 0, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 199, 244, 199, 186, 235, 126, 152, 72, 190, 44, 8, 95, 7, 17, 60, 197, 5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 68, 78, 69, 0, 0, 0, 66, 2, 95, 0, 69, 0, 70, 0, 70, 0, 69, 0, 67, 0, 84, 0, 95, 0, 80, 0, 76, 0, 85, 0, 71, 0, 73, 0, 78, 0, 95, 0, 83, 0, 75, 0, 85, 0, 0, 0, 72, 50, 247, 14, 251, 127, 0, 0, 0, 52, 247, 14, 251, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+NotesUTF16:
+  Usage: 2 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 120, 0, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 74, 240, 25, 51, 105, 172, 37, 69, 185, 232, 34, 6, 54, 47, 210, 51, 5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 68, 78, 69, 0, 0, 0, 2, 0, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [80, 85, 86, 65, 120, 0, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 74, 240, 25, 51, 105, 172, 37, 69, 185, 232, 34, 6, 54, 47, 210, 51, 5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 68, 78, 69, 127, 0, 0, 32, 52, 247, 14, 251, 127, 0, 0, 216, 247, 79, 146, 1, 0, 0, 0, 104, 247, 79, 146, 1, 0, 0, 0, 24, 4, 0, 0, 0, 0, 0, 0, 216, 247, 79, 146, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 248, 79, 146, 1, 0, 0, 0, 248, 219, 118, 36, 1, 0, 0, 0, 72, 248, 79, 146, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0]]
+
+Opacity:
+  Usage: 6 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(100, 1), AAFRational(100, 1), AAFRational(100, 1)]...
+
+PrivateData:
+  Usage: 1 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 237, 27, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 170, 44, 47, 192, 147, 114, 214, 17, 180, 228, 0, 48, 101, 138, 101, 4, 205, 27, 0, 0, 201, 27, 0, 0, 201, 27, 0, 0, 64, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 137, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 101, 107, 111, 1, 0, 1, 0, 8, 0, 75, 71, 69, 78, 95, 68, 79, 67, 255, 254, 255, 5, 49, 0, 46, 0, 49, 0, 46, 0, 49, 0, 1, 0, 0, 0, 128, 7, 0, 0, 56, 4, 0, 0, 28, 199, 113, 28, 199, 113, 252, 63, 0, 0, 0, 0, 0, 224, 144, 64, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 1, 0, 65, 56, 4, 0, 0, 56, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 56, 4, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 255, 255, 1, 0, 4, 0, 82, 79, 79, 84, 1, 0, 1, 0, 255, 255, 1, 0, 5, 0, 70, 73, 69, 76, 68, 10, 0, 6, 0, 1, 0, 1, 0, 255, 255, 1, 0, 6, 0, 76, 69, 84, 84, 69, 82, 1, 0, 1, 0, 1, 0, 0, 0, 255, 255, 1, 0, 4, 0, 70, 66, 79, 88, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 255, 255, 1, 0, 4, 0, 76, 79, 79, 75, 1, 0, 5, 0, 0, 0, 255, 255, 1, 0, 4, 0, 70, 65, 67, 69, 1, 0, 1, 0, 255, 255, 1, 0, 6, 0, 75, 67, 79, 76, 79, 82, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 255, 255, 1, 0, 4, 0, 69, 68, 71, 69, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 255, 255, 1, 0, 6, 0, 83, 72, 65, 68, 79, 87, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 255, 255, 1, 0, 9, 0, 85, 78, 68, 69, 82, 76, 73, 78, 69, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 1, 0, 5, 0, 70, 82, 65, 77, 69, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 1, 0, 5, 0, 84, 70, 79, 82, 77, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 0, 0, 1, 255, 255, 1, 0, 4, 0, 70, 79, 78, 84, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 103, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 102, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 104, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 102, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 103, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 102, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 103, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 102, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 29, 128, 7, 0, 255, 254, 255, 5, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 255, 254, 255, 0, 27, 128, 1, 0, 2, 0, 0, 0, 0, 0, 222, 123, 33, 132, 0, 1, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 1, 3, 50, 0, 0, 0, 255, 254, 255, 8, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 56, 0, 48, 0, 57, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 0, 0, 104, 0, 0, 0, 5, 128, 1, 0, 1, 0, 1, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 30, 0, 10, 0, 0, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 32, 103, 64, 0, 0, 0, 0, 0, 224, 97, 64, 0, 0, 0, 0, 104, 160, 133, 64, 80, 166, 226, 185, 102, 13, 20, 192, 154, 0, 27, 128, 1, 0, 2, 0, 3, 0, 96, 0, 0, 0, 0, 0, 0, 96, 125, 64, 103, 117, 24, 101, 202, 15, 97, 64, 222, 123, 33, 132, 0, 1, 0, 0, 1, 0, 0, 255, 254, 255, 0, 0, 255, 254, 255, 0, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 255, 255, 1, 0, 7, 0, 84, 65, 66, 76, 73, 83, 84, 1, 0, 0, 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 16, 64, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 128, 1, 0, 0, 0, 0, 0, 0, 0, 139, 192, 0, 0, 0, 0, 0, 0, 123, 64, 0, 0, 0, 0, 0, 0, 139, 64, 0, 0, 0, 0, 0, 0, 123, 192, 9, 128, 1, 0, 5, 0, 0, 0, 11, 128, 1, 0, 1, 0, 13, 128, 1, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 36, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 62, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 16, 64, 18, 128, 1, 0, 1, 0, 13, 128, 1, 0, 16, 16, 16, 255, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 17, 16, 16, 16, 16, 16, 176, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 68, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 224, 96, 64, 0, 0, 0, 0, 0, 0, 24, 64, 21, 128, 1, 0, 1, 0, 13, 128, 1, 0, 234, 234, 234, 255, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 182, 212, 166, 22, 118, 125, 237, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 52, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 128, 1, 0, 1, 0, 13, 128, 1, 0, 125, 125, 125, 255, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 79, 155, 200, 35, 15, 155, 223, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 0, 0, 73, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 89, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 1, 13, 128, 1, 0, 70, 70, 70, 255, 170, 79, 230, 147, 137, 207, 209, 63, 170, 79, 230, 147, 137, 207, 209, 63, 170, 79, 230, 147, 137, 207, 209, 63, 0, 0, 0, 0, 0, 0, 89, 64, 1, 0, 0, 0, 0, 152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 254, 255, 0, 0, 0, 0, 0, 255, 254, 255, 0, 255, 254, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 255, 254, 255, 0, 3, 0, 0, 0, 255, 254, 255, 0, 13, 0, 0, 0, 0, 68, 78, 69]]
+
+PrivateDataXML:
+  Usage: 1 occurrences
+  Types: <class 'list'>
+  Values: [[]]
+
+PrivateJSON:
+  Usage: 1 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 0, 19, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 204, 153, 154, 33, 139, 44, 36, 66, 134, 254, 192, 87, 148, 5, 94, 29, 224, 18, 0, 0, 220, 18, 0, 0, 123, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 52, 0, 48, 0, 52, 0, 48, 0, 52, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 52, 0, 48, 0, 52, 0, 48, 0, 52, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 52, 0, 48, 0, 52, 0, 48, 0, 52, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 52, 0, 48, 0, 52, 0, 48, 0, 52, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 52, 0, 48, 0, 52, 0, 48, 0, 52, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 79, 0, 112, 0, 97, 0, 99, 0, 105, 0, 116, 0, 121, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 66, 0, 97, 0, 99, 0, 107, 0, 103, 0, 114, 0, 111, 0, 117, 0, 110, 0, 100, 0, 86, 0, 105, 0, 115, 0, 105, 0, 98, 0, 108, 0, 101, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 79, 0, 112, 0, 97, 0, 99, 0, 105, 0, 116, 0, 121, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 83, 0, 105, 0, 122, 0, 101, 0, 34, 0, 58, 0, 32, 0, 52, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 83, 0, 111, 0, 102, 0, 116, 0, 110, 0, 101, 0, 115, 0, 115, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 69, 0, 100, 0, 103, 0, 101, 0, 86, 0, 105, 0, 115, 0, 105, 0, 98, 0, 108, 0, 101, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 79, 0, 112, 0, 97, 0, 99, 0, 105, 0, 116, 0, 121, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 97, 0, 99, 0, 101, 0, 86, 0, 105, 0, 115, 0, 105, 0, 98, 0, 108, 0, 101, 0, 34, 0, 58, 0, 32, 0, 116, 0, 114, 0, 117, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 66, 0, 111, 0, 108, 0, 100, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 73, 0, 116, 0, 97, 0, 108, 0, 105, 0, 99, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 75, 0, 101, 0, 114, 0, 110, 0, 105, 0, 110, 0, 103, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 78, 0, 97, 0, 109, 0, 101, 0, 34, 0, 58, 0, 32, 0, 34, 0, 65, 0, 114, 0, 105, 0, 97, 0, 108, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 79, 0, 114, 0, 105, 0, 101, 0, 110, 0, 116, 0, 97, 0, 116, 0, 105, 0, 111, 0, 110, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 82, 0, 111, 0, 116, 0, 97, 0, 116, 0, 105, 0, 111, 0, 110, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 83, 0, 105, 0, 122, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 50, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 83, 0, 107, 0, 101, 0, 119, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 102, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 72, 0, 79, 0, 102, 0, 102, 0, 115, 0, 101, 0, 116, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 72, 0, 101, 0, 105, 0, 103, 0, 104, 0, 116, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 79, 0, 112, 0, 97, 0, 99, 0, 105, 0, 116, 0, 121, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 83, 0, 111, 0, 102, 0, 116, 0, 110, 0, 101, 0, 115, 0, 115, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 86, 0, 79, 0, 102, 0, 102, 0, 115, 0, 101, 0, 116, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 85, 0, 110, 0, 100, 0, 101, 0, 114, 0, 108, 0, 105, 0, 110, 0, 101, 0, 87, 0, 105, 0, 100, 0, 116, 0, 104, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 111, 0, 110, 0, 116, 0, 87, 0, 105, 0, 100, 0, 116, 0, 104, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 56, 0, 48, 0, 56, 0, 48, 0, 56, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 52, 0, 98, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 52, 0, 98, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 52, 0, 98, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 52, 0, 98, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 72, 0, 79, 0, 102, 0, 102, 0, 115, 0, 101, 0, 116, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 72, 0, 101, 0, 105, 0, 103, 0, 104, 0, 116, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 79, 0, 112, 0, 97, 0, 99, 0, 105, 0, 116, 0, 121, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 83, 0, 111, 0, 102, 0, 116, 0, 110, 0, 101, 0, 115, 0, 115, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 86, 0, 79, 0, 102, 0, 102, 0, 115, 0, 101, 0, 116, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 86, 0, 105, 0, 115, 0, 105, 0, 98, 0, 108, 0, 101, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 70, 0, 114, 0, 97, 0, 109, 0, 101, 0, 87, 0, 105, 0, 100, 0, 116, 0, 104, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 71, 0, 101, 0, 110, 0, 101, 0, 114, 0, 97, 0, 108, 0, 83, 0, 104, 0, 111, 0, 119, 0, 71, 0, 117, 0, 105, 0, 100, 0, 101, 0, 115, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 71, 0, 101, 0, 110, 0, 101, 0, 114, 0, 97, 0, 108, 0, 84, 0, 101, 0, 120, 0, 116, 0, 84, 0, 111, 0, 67, 0, 108, 0, 105, 0, 112, 0, 34, 0, 58, 0, 32, 0, 102, 0, 97, 0, 108, 0, 115, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 76, 0, 97, 0, 121, 0, 101, 0, 114, 0, 79, 0, 114, 0, 105, 0, 103, 0, 105, 0, 110, 0, 83, 0, 104, 0, 111, 0, 119, 0, 34, 0, 58, 0, 32, 0, 116, 0, 114, 0, 117, 0, 101, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 65, 0, 110, 0, 103, 0, 108, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 51, 0, 53, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 66, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 76, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 71, 0, 114, 0, 97, 0, 100, 0, 105, 0, 101, 0, 110, 0, 116, 0, 84, 0, 82, 0, 34, 0, 58, 0, 32, 0, 34, 0, 35, 0, 102, 0, 102, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 48, 0, 34, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 67, 0, 111, 0, 108, 0, 111, 0, 114, 0, 84, 0, 121, 0, 112, 0, 101, 0, 34, 0, 58, 0, 32, 0, 49, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 68, 0, 105, 0, 115, 0, 116, 0, 97, 0, 110, 0, 99, 0, 101, 0, 34, 0, 58, 0, 32, 0, 54, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 79, 0, 112, 0, 97, 0, 99, 0, 105, 0, 116, 0, 121, 0, 34, 0, 58, 0, 32, 0, 49, 0, 48, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 83, 0, 111, 0, 102, 0, 116, 0, 110, 0, 101, 0, 115, 0, 115, 0, 34, 0, 58, 0, 32, 0, 48, 0, 44, 0, 10, 0, 32, 0, 32, 0, 32, 0, 32, 0, 34, 0, 83, 0, 104, 0, 97, 0, 100, 0, 111, 0, 119, 0, 86, 0, 105, 0, 115, 0, 105, 0, 98, 0, 108, 0, 101, 0, 34, 0, 58, 0, 32, 0, 116, 0, 114, 0, 117, 0, 101, 0, 10, 0, 125, 0, 10, 0, 0, 68, 78, 69]]
+
+Red    :
+  Usage: 6 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(255, 1)]...
+
+Render Force:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Rotate Baseline:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Scale Fixed Aspect:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+Selection mode:
+  Usage: 1 occurrences
+  Types: <class 'bool'>
+  Values: [False]
+
+Shape:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [0]
+
+Size   :
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(4, 1), AAFRational(120, 1)]
+
+Skew   :
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]
+
+Softness:
+  Usage: 5 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(0, 1), AAFRational(0, 1), AAFRational(0, 1)]...
+
+Synchronize Parameters from private data host:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(1, 1)]
+
+Text Box Text:
+  Usage: 2 occurrences
+  Types: <class 'list'>
+  Values: [[80, 85, 86, 65, 120, 0, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 74, 240, 25, 51, 105, 172, 37, 69, 185, 232, 34, 6, 54, 47, 210, 51, 14, 0, 0, 0, 10, 0, 0, 0, 103, 102, 104, 102, 103, 102, 103, 102, 104, 0, 0, 68, 78, 69, 82, 0, 0, 0, 247, 14, 251, 127, 0, 0, 128, 2, 80, 146, 1, 0, 0, 0, 64, 253, 79, 146, 1, 0, 0, 0, 80, 7, 80, 146, 1, 0, 0, 0, 72, 50, 247, 14, 251, 127, 0, 0, 0, 52, 247, 14, 251, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [80, 85, 86, 65, 120, 0, 0, 0, 73, 73, 1, 0, 0, 0, 73, 73, 74, 240, 25, 51, 105, 172, 37, 69, 185, 232, 34, 6, 54, 47, 210, 51, 14, 0, 0, 0, 10, 0, 0, 0, 103, 102, 104, 102, 103, 102, 103, 102, 104, 0, 0, 68, 78, 69, 82, 0, 0, 0, 247, 14, 251, 127, 0, 0, 128, 2, 80, 146, 1, 0, 0, 0, 64, 253, 79, 146, 1, 0, 0, 0, 80, 7, 80, 146, 1, 0, 0, 0, 72, 50, 247, 14, 251, 127, 0, 0, 0, 52, 247, 14, 251, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Tracker :
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(-1, 1)]
+
+Type:
+  Usage: 3 occurrences
+  Types: <class 'int'>
+  Values: [0, 1, 0]
+
+Underline Shape:
+  Usage: 1 occurrences
+  Types: <class 'int'>
+  Values: [0]
+
+UseUTF16Notes:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+Vertical  Scale:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(1, 1), AAFRational(1, 1)]
+
+Vertical Offset:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+Vertical Origin:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(1, 16), AAFRational(1, 16)]
+
+Vertical Position:
+  Usage: 5 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Sample values: [AAFRational(132407407, 1000000000), AAFRational(132407407, 1000000000), AAFRational(33, 125)]...
+
+Vertical Size:
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(27409831, 200000000), AAFRational(27409831, 200000000)]
+
+Width  :
+  Usage: 2 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1), AAFRational(0, 1)]
+
+Width Percentage:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(100, 1)]
+
+Windows path converted to utf16:
+  Usage: 2 occurrences
+  Types: <class 'bool'>
+  Values: [True, True]
+
+Z Rotation:
+  Usage: 1 occurrences
+  Types: <class 'aaf2.rational.AAFRational'>
+  Values: [AAFRational(0, 1)]

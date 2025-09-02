@@ -1,0 +1,23 @@
+SUMMARY: 71 effects, 276 unique parameters
+
+Top 20 most common parameters:
+  AvidParameterByteOrder: 71 uses
+  AvidEffectID: 63 uses
+  AFX_FIXED_ASPECT_U: 34 uses
+  AFX_FG_KEY2_ENABLED_U: 32 uses
+  AFX_FG_KEY_SS_ENABLED_U: 32 uses
+  MC AVX2 EFFECT VERSION: 19 uses
+  : 16 uses
+  AFX_TRANS_LEN: 15 uses
+  Level: 14 uses
+  AvidBorderWidth: 12 uses
+  AvidBorderSoft: 12 uses
+  AvidXPos: 12 uses
+  AvidYPos: 12 uses
+  AvidCrop: 12 uses
+  AvidScale: 12 uses
+  AvidSpillSupress: 12 uses
+  AvidBounds: 12 uses
+  AvidColor: 12 uses
+  AvidGlobalKeyFrame: 12 uses
+  AvidEnableKeyFlagsKeyFrame: 12 uses
