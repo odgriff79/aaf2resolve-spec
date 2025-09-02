@@ -62,13 +62,13 @@ def extract_keyframe_timing_data(param):
     Returns:
         dict: Keyframe data with normalized timing or None if static parameter
     """
-    if not hasattr(param, 'points') or not param.points:
+    if not hasattr(param, 'pointlist') or not param.pointlist:
         return None
     
     keyframes = []
     
     try:
-        for point in param.points:
+        for point in param.pointlist:
             if hasattr(point, 'time') and hasattr(point, 'value'):
                 # Extract normalized time (0.0-1.0) from ControlPoint
                 normalized_time = float(point.time)
@@ -952,13 +952,13 @@ def extract_keyframe_timing_data(param):
     - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
     - Source: AAF Object Specification v1.1 §6.18-6.19
     """
-    if not hasattr(param, 'points') or not param.points:
+    if not hasattr(param, 'pointlist') or not param.pointlist:
         return None
     
     keyframes = []
     
     try:
-        for point in param.points:
+        for point in param.pointlist:
             if hasattr(point, 'time') and hasattr(point, 'value'):
                 # Extract normalized time (0.0-1.0) from ControlPoint
                 normalized_time = float(point.time)
