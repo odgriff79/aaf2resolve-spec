@@ -36,6 +36,101 @@ except ImportError:
 
 # Setup logging for debugging AAF traversal
 logger = logging.getLogger(__name__)
+def decode_avid_effect_id(byte_array):
+    """Convert AvidEffectID byte array to string"""
+    try:
+        text = bytes(b for b in byte_array if isinstance(b, int) and b != 0).decode('ascii', errors='ignore')
+        return text
+    except:
+        return None
+
+def extract_effect_name_from_operation_group(op_group):
+    """Extract effect name from OperationGroup parameters"""
+    if not hasattr(op_group, 'parameters'):
+        return 'Unknown Effect'
+    
+    try:
+        params = list(op_group.parameters)
+        effect_id = None
+        param_prefixes = set()
+        param_names = []
+        
+        for param in params:
+            if hasattr(param, 'name') and hasattr(param, 'value'):
+                name = str(param.name)
+                param_names.append(name)
+                
+                if name == 'AvidEffectID' and isinstance(param.value, (list, tuple)):
+                    effect_id = decode_avid_effect_id(param.value)
+                
+                if '_' in name:
+                    prefix = name.split('_')[0]
+                    param_prefixes.add(prefix)
+        
+        # Special case for Pan & Zoom
+        if effect_id == 'EFF2_PAN_SCAN':
+            effect_id = 'Avid Pan & Zoom'
+        
+        # Map to effect classes
+        effect_class = 'Effect'
+        if 'AFX' in param_prefixes:
+            effect_class = 'AVX2 Effect'
+        elif 'DVE' in param_prefixes:
+            effect_class = 'Image'
+        elif any(p in param_names for p in ['Level', 'AvidBorderWidth', 'AvidXPos']):
+            effect_class = 'Image'
+            if not effect_id:
+                effect_id = 'Submaster'
+        
+        if effect_id:
+            if effect_class and effect_class != 'Effect':
+                return f'{effect_class} : {effect_id}'
+            else:
+                return effect_id
+        else:
+            return 'Unknown Effect'
+    
+    except Exception as e:
+        logger.debug(f'Error extracting effect name: {e}')
+        return 'Unknown Effect'
+
+def extract_legacy_style_parameters(op_group):
+    """Extract parameters matching legacy format"""
+    if not hasattr(op_group, 'parameters'):
+        return 'No effect data found.'
+    
+    static_params = {}
+    
+    try:
+        params = list(op_group.parameters)
+        for param in params:
+            if hasattr(param, 'name') and hasattr(param, 'value'):
+                param_name = str(param.name)
+                value = param.value
+                
+                # Convert AAF types
+                if hasattr(value, 'numerator'):
+                    clean_value = float(value)
+                elif isinstance(value, (list, tuple)):
+                    clean_value = list(value)
+                else:
+                    clean_value = value
+                
+                static_params[param_name] = clean_value
+        
+        # Build legacy format string
+        if static_params:
+            details = ['--- Static Parameters ---']
+            for pname, value in static_params.items():
+                details.append(f'- Parameter: {pname} -> Value: {value}')
+            return chr(10).join(details)
+        else:
+            return 'No effect data found.'
+            
+    except Exception as e:
+        logger.debug(f'Error extracting parameters: {e}')
+        return 'Error extracting parameters'
+
 
 
 def decode_avid_effect_id(byte_array):
@@ -412,8 +507,9 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
             "source_path": None,
             "effect_params": {
                 "operation": effect_name,
-                "is_filler_effect": True,
-                "length": op_length
+                "is_filler_effect": is_filler_effect,
+                "length": length,
+                "keyframe_details": extract_legacy_style_parameters(operation_group)
             }
         }
         clips.append(filler_event)
@@ -502,11 +598,11 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
         "source_umid": source_umid,
         "source_path": source_path,
         "effect_params": {
-            "operation": effect_name if effect_name != "N/A" else "",
-            "tape_id": tape_id,
-            "disk_label": disk_label,
-            "length": clip_length
-        }
+                "operation": effect_name,
+                "is_filler_effect": is_filler_effect,
+                "length": length,
+                "keyframe_details": extract_legacy_style_parameters(operation_group)
+            }
     }
     
     clips.append(event)
