@@ -18,3 +18,8 @@ adk/monitoring/memory.sqlite
 adk/monitoring/agent_status.json
 adk/monitoring/gui_status.json
 adk/monitoring/pipeline_metrics.json
+
+# local backups
+src/build_canonical.backup.*.py
+src/build_canonical.py.backup
+src/*_fixed.py
