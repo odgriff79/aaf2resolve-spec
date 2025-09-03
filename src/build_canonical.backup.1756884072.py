@@ -59,94 +59,58 @@ def decode_avid_effect_id(byte_array):
         return None
 
 
-def _is_rational(x):
-    return hasattr(x, "numerator") and hasattr(x, "denominator")
-
-def _r2f(x):
-    if x is None: return None
-    if _is_rational(x):
-        den = x.denominator or 1
-        try: return x.numerator / float(den)
-        except Exception: return None
-    try: return float(x)
-    except Exception: return None
-
 def extract_keyframe_timing_data(param):
     """
-    Animated = any parameter that exposes a PointList with >1 ControlPoint.
-    - Parse ControlPoint Time/Value when labeled (preferred).
-    - If unlabeled, infer: 'time' is a rational in [0..1]; 'value' is the other numeric.
-    Returns a truthy dict for animated params even if some values can't be parsed.
+    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
+    
+    Implements verified AAF keyframe timing specification:
+    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
+    - Source: AAF Object Specification v1.1 §6.18-6.19
+    
+    Args:
+        param: AAF parameter object that may contain VaryingValue/ControlPoint data
+    
+    Returns:
+        dict: Keyframe data with normalized timing or None if static parameter
     """
-    try:
-        plist = param.get("PointList")
-        n = len(plist)
-    except Exception:
+    if not hasattr(param, 'pointlist') or not param.pointlist:
         return None
-    if not isinstance(n, int) or n <= 1:
-        return None
-
-    kfs = []
-    for i in range(n):
-        try:
-            cp = plist.get(i)
-        except Exception:
-            continue
-
-        t_raw = t = v_raw = v = None
-
-        # 1) Try labeled props
-        try:
-            for pr in cp.properties():
-                nm = getattr(getattr(pr, "propertydef", None), "name", getattr(pr, "name", None))
-                val = getattr(pr, "value", None)
-                if nm == "Time":
-                    t_raw = val; t = _r2f(val)
-                elif nm == "Value":
-                    v_raw = val; v = _r2f(val)
-        except Exception:
-            pass
-
-        # 2) If unlabeled or partially missing, infer from rationals/numerics
-        if t is None or v is None:
-            rats, nums = [], []
-            try:
-                for pr in cp.properties():
-                    val = getattr(pr, "value", None)
-                    if _is_rational(val): rats.append(val)
-                    else:
-                        try:
-                            nums.append(float(val))
-                        except Exception:
-                            pass
-            except Exception:
-                pass
-
-            if t is None:
-                for q in rats:
-                    qf = _r2f(q)
-                    if qf is not None and 0.0 <= qf <= 1.0:
-                        t_raw, t = q, qf
-                        break
-            if v is None:
-                for q in rats:
-                    if q is not t_raw:
-                        v_raw, v = q, _r2f(q)
-                        if v is not None:
-                            break
-                if v is None and nums:
-                    v = nums[0]
-
-        kfs.append({"normalized_time": t, "value": v, "_time_raw": t_raw, "_value_raw": v_raw})
-
-    # Sort if we have times
+    
+    keyframes = []
+    
     try:
-        if any(k["normalized_time"] is not None for k in kfs):
-            kfs.sort(key=lambda x: (1,0)[x["normalized_time"] is None] if x["normalized_time"] is None else x["normalized_time"])
-    except Exception:
-        pass
+        for point in param.pointlist:
+            if hasattr(point, 'time') and hasattr(point, 'value'):
+                # Extract normalized time (0.0-1.0) from ControlPoint
+                normalized_time = float(point.time)
+                
+                # Ensure time is properly normalized
+                if normalized_time < 0.0 or normalized_time > 1.0:
+                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
+                    normalized_time = max(0.0, min(1.0, normalized_time))
+                
+                # Extract value and clean it
+                keyframe_value = _clean_parameter_value(point.value)
+                
+                keyframes.append({
+                    'normalized_time': normalized_time,
+                    'value': keyframe_value
+                })
+        
+        if keyframes:
+            # Sort keyframes by time to ensure proper ordering
+            keyframes.sort(key=lambda x: x['normalized_time'])
+            return {
+                'type': 'animated',
+                'keyframes': keyframes
+            }
+    
+    except Exception as e:
+        logger.debug(f"Error extracting keyframe timing: {e}")
+    
+    return None
 
-    return {"type": "animated", "point_count": n, "keyframes": kfs}
+
 def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
     """
     Convert AAF normalized keyframe time to FCPXML rational seconds.
@@ -189,7 +153,7 @@ def extract_fcpxml_relevant_parameters(operation_group):
             if not (hasattr(param, 'name') and hasattr(param, 'value')):
                 continue
                 
-            param_name = str((getattr(getattr(param,'parameterdef',None),'name',None) or getattr(param,'name','Unknown')))
+            param_name = str(param.name)
             
             # Only extract parameters that matter for FCPXML conversion
             if not _is_fcpxml_relevant_parameter(param_name):
@@ -325,7 +289,7 @@ def extract_effect_name_from_operation_group(op_group):
         
         for param in params:
             if hasattr(param, 'name') and hasattr(param, 'value'):
-                name = str((getattr(getattr(param,'parameterdef',None),'name',None) or getattr(param,'name','Unknown')))
+                name = str(param.name)
                 param_names.append(name)
                 
                 if name == 'AvidEffectID' and isinstance(param.value, (list, tuple)):
@@ -993,94 +957,52 @@ if __name__ == "__main__":
     _cli()
 
 
-def _is_rational(x):
-    return hasattr(x, "numerator") and hasattr(x, "denominator")
-
-def _r2f(x):
-    if x is None: return None
-    if _is_rational(x):
-        den = x.denominator or 1
-        try: return x.numerator / float(den)
-        except Exception: return None
-    try: return float(x)
-    except Exception: return None
-
 def extract_keyframe_timing_data(param):
     """
-    Animated = any parameter that exposes a PointList with >1 ControlPoint.
-    - Parse ControlPoint Time/Value when labeled (preferred).
-    - If unlabeled, infer: 'time' is a rational in [0..1]; 'value' is the other numeric.
-    Returns a truthy dict for animated params even if some values can't be parsed.
+    Extract keyframe timing data from AAF VaryingValue/ControlPoint structure.
+    
+    Implements verified AAF keyframe timing specification:
+    - ControlPoint.Time: normalized 0.0-1.0 values relative to VaryingValue segment
+    - Source: AAF Object Specification v1.1 §6.18-6.19
     """
-    try:
-        plist = param.get("PointList")
-        n = len(plist)
-    except Exception:
+    if not hasattr(param, 'pointlist') or not param.pointlist:
         return None
-    if not isinstance(n, int) or n <= 1:
-        return None
-
-    kfs = []
-    for i in range(n):
-        try:
-            cp = plist.get(i)
-        except Exception:
-            continue
-
-        t_raw = t = v_raw = v = None
-
-        # 1) Try labeled props
-        try:
-            for pr in cp.properties():
-                nm = getattr(getattr(pr, "propertydef", None), "name", getattr(pr, "name", None))
-                val = getattr(pr, "value", None)
-                if nm == "Time":
-                    t_raw = val; t = _r2f(val)
-                elif nm == "Value":
-                    v_raw = val; v = _r2f(val)
-        except Exception:
-            pass
-
-        # 2) If unlabeled or partially missing, infer from rationals/numerics
-        if t is None or v is None:
-            rats, nums = [], []
-            try:
-                for pr in cp.properties():
-                    val = getattr(pr, "value", None)
-                    if _is_rational(val): rats.append(val)
-                    else:
-                        try:
-                            nums.append(float(val))
-                        except Exception:
-                            pass
-            except Exception:
-                pass
-
-            if t is None:
-                for q in rats:
-                    qf = _r2f(q)
-                    if qf is not None and 0.0 <= qf <= 1.0:
-                        t_raw, t = q, qf
-                        break
-            if v is None:
-                for q in rats:
-                    if q is not t_raw:
-                        v_raw, v = q, _r2f(q)
-                        if v is not None:
-                            break
-                if v is None and nums:
-                    v = nums[0]
-
-        kfs.append({"normalized_time": t, "value": v, "_time_raw": t_raw, "_value_raw": v_raw})
-
-    # Sort if we have times
+    
+    keyframes = []
+    
     try:
-        if any(k["normalized_time"] is not None for k in kfs):
-            kfs.sort(key=lambda x: (1,0)[x["normalized_time"] is None] if x["normalized_time"] is None else x["normalized_time"])
-    except Exception:
-        pass
+        for point in param.pointlist:
+            if hasattr(point, 'time') and hasattr(point, 'value'):
+                # Extract normalized time (0.0-1.0) from ControlPoint
+                normalized_time = float(point.time)
+                
+                # Ensure time is properly normalized
+                if normalized_time < 0.0 or normalized_time > 1.0:
+                    logger.warning(f"ControlPoint time {normalized_time} outside 0.0-1.0 range - clamping")
+                    normalized_time = max(0.0, min(1.0, normalized_time))
+                
+                # Extract value and clean it
+                keyframe_value = _clean_parameter_value(point.value)
+                
+                keyframes.append({
+                    'normalized_time': normalized_time,
+                    'value': keyframe_value
+                })
+        
+        if keyframes:
+            # Sort keyframes by time to ensure proper ordering
+            keyframes.sort(key=lambda x: x['normalized_time'])
+            return {
+                'type': 'animated',
+                'keyframes': keyframes
+            }
+    
+    except Exception as e:
+        logger.debug(f"Error extracting keyframe timing: {e}")
+    
+    return None
 
-    return {"type": "animated", "point_count": n, "keyframes": kfs}
+
 def convert_normalized_time_to_fcpxml_seconds(normalized_time, segment_length_edit_units, track_edit_rate):
     """
     Convert AAF normalized keyframe time to FCPXML rational seconds.
@@ -1181,94 +1103,45 @@ def param_name(p):
             or getattr(getattr(p,"parameter_definition",None),"name",None)
             or getattr(p,"name","Unknown"))
 
-def _is_rational(x):
-    return hasattr(x, "numerator") and hasattr(x, "denominator")
-
-def _r2f(x):
-    if x is None: return None
-    if _is_rational(x):
-        den = x.denominator or 1
-        try: return x.numerator / float(den)
-        except Exception: return None
-    try: return float(x)
-    except Exception: return None
-
 def extract_keyframe_timing_data(param):
-    """
-    Animated = any parameter that exposes a PointList with >1 ControlPoint.
-    - Parse ControlPoint Time/Value when labeled (preferred).
-    - If unlabeled, infer: 'time' is a rational in [0..1]; 'value' is the other numeric.
-    Returns a truthy dict for animated params even if some values can't be parsed.
-    """
+    if type(param).__name__ != "VaryingValue":
+        return None
     try:
         plist = param.get("PointList")
         n = len(plist)
     except Exception:
         return None
-    if not isinstance(n, int) or n <= 1:
+    if n <= 1:
         return None
-
     kfs = []
     for i in range(n):
         try:
             cp = plist.get(i)
         except Exception:
             continue
-
-        t_raw = t = v_raw = v = None
-
-        # 1) Try labeled props
+        t = v = None
         try:
             for pr in cp.properties():
-                nm = getattr(getattr(pr, "propertydef", None), "name", getattr(pr, "name", None))
-                val = getattr(pr, "value", None)
+                nm = getattr(getattr(pr,"propertydef",None),"name", getattr(pr,"name",None))
+                val = getattr(pr,"value",None)
                 if nm == "Time":
-                    t_raw = val; t = _r2f(val)
+                    try: t = float(val)
+                    except: pass
                 elif nm == "Value":
-                    v_raw = val; v = _r2f(val)
+                    try: v = float(val)
+                    except: pass
         except Exception:
             pass
+        if t is not None:
+            kfs.append({"normalized_time": t, "value": 0.0 if v is None else v})
+    if not kfs:
+        return None
+    kfs.sort(key=lambda x: x["normalized_time"])
+    return {"type":"animated","keyframes":kfs}
 
-        # 2) If unlabeled or partially missing, infer from rationals/numerics
-        if t is None or v is None:
-            rats, nums = [], []
-            try:
-                for pr in cp.properties():
-                    val = getattr(pr, "value", None)
-                    if _is_rational(val): rats.append(val)
-                    else:
-                        try:
-                            nums.append(float(val))
-                        except Exception:
-                            pass
-            except Exception:
-                pass
 
-            if t is None:
-                for q in rats:
-                    qf = _r2f(q)
-                    if qf is not None and 0.0 <= qf <= 1.0:
-                        t_raw, t = q, qf
-                        break
-            if v is None:
-                for q in rats:
-                    if q is not t_raw:
-                        v_raw, v = q, _r2f(q)
-                        if v is not None:
-                            break
-                if v is None and nums:
-                    v = nums[0]
-
-        kfs.append({"normalized_time": t, "value": v, "_time_raw": t_raw, "_value_raw": v_raw})
-
-    # Sort if we have times
-    try:
-        if any(k["normalized_time"] is not None for k in kfs):
-            kfs.sort(key=lambda x: (1,0)[x["normalized_time"] is None] if x["normalized_time"] is None else x["normalized_time"])
-    except Exception:
-        pass
-
-    return {"type": "animated", "point_count": n, "keyframes": kfs}
+#--UMID_MAP_RESOLVER--
+import re as _re_umid
 def _umid_to_bytes(umid):
     b = getattr(umid,"bytes",None)
     if isinstance(b,(bytes,bytearray)): return bytes(b)
@@ -1298,21 +1171,3 @@ def resolve_sourceclip_target(sc, mob_by_id):
     if ref and getattr(ref,"mob",None):
         return ref.mob, getattr(ref,"slot",None)
     return None, None
-
-def iter_parameters(op):
-    """Yield parameters from op.parameters or StrongRefVectorProperties 'Parameters'/'NewParameters'."""
-    yielded=False
-    try:
-        for q in getattr(op, "parameters", []) or []:
-            yield q; yielded=True
-    except Exception:
-        pass
-    try:
-        from aaf2.properties import StrongRefVectorProperty
-        for pr in op.properties():
-            nm = getattr(getattr(pr,"propertydef",None),"name", getattr(pr,"name",None))
-            if nm in ("Parameters","NewParameters") and isinstance(pr, StrongRefVectorProperty):
-                for i in range(len(pr)):
-                    yield pr.get(i); yielded=True
-    except Exception:
-        pass
