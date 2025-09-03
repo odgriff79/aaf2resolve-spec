@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# PARSER_RULES:v20250903-0650:varyingvalue-pointlist+resolver-ref+umid+deepwalk3
+# PARSER_RULES:v20250903-1720:use-mob-and-mob_id-attributes
 """
 build_canonical.py — Core AAF → Canonical JSON Implementation (KEYFRAME TIMING)
 
@@ -685,89 +685,146 @@ def _process_operation_group(operation_group, clips: List[Dict[str, Any]], mob_m
         logger.debug(f"Added FX_ON_FILLER event: {effect_name} at {timeline_offset}")
 
 
-def _find_nested_source_clip_deep(node, depth=0) -> Optional[Any]:
+def _find_nested_source_clip_deep(node, depth=0):
     """
-    STAGE 1: Deep recursive search for SourceClip nested anywhere within a node.
+    FIXED: Use 'segments' instead of 'input_segments' based on actual AAF structure.
     
-    This addresses the insufficient search depth issue by traversing ALL levels:
-    OperationGroup → input_segments → Sequence → components → SourceClip (and deeper)
+    Debug showed: OperationGroup has 'segments: 1 items [0]: Sequence', not 'input_segments'
     """
-    if not node or depth > 10:  # Prevent infinite recursion
+    if not node or depth > 15:
         return None
     
     node_type = str(type(node).__name__)
     
     # Found it!
     if "SourceClip" in node_type:
+        logger.debug(f"Found SourceClip at depth {depth}")
         return node
     
-    # Skip ScopeReference - these are internal wiring, not separate events
+    # Skip internal wiring
     if "ScopeReference" in node_type:
-        logger.debug(f"Skipping ScopeReference at depth {depth}")
         return None
     
-    # Search all possible child containers at this depth and deeper
-    search_attributes = [
-        "input_segments", "segments", "inputs", "components", 
-        "choices", "selected", "input_segment", "segment"
-    ]
+    # Follow the correct paths based on your AAF structure
+    search_children = []
     
-    for attr_name in search_attributes:
-        if hasattr(node, attr_name):
-            attr_value = getattr(node, attr_name)
-            children = _iter_safe(attr_value)
-            for child in children:
-                result = _find_nested_source_clip_deep(child, depth + 1)
-                if result:
-                    return result
+    # PRIMARY PATH: segments (NOT input_segments!)
+    if hasattr(node, "segments"):
+        segments_list = _iter_safe(node.segments)
+        search_children.extend(segments_list)
+        logger.debug(f"Found {len(segments_list)} segments at depth {depth}")
+    
+    # SECONDARY PATH: components (for Sequence traversal)
+    if hasattr(node, "components"):
+        components_list = _iter_safe(node.components)
+        search_children.extend(components_list)
+        logger.debug(f"Found {len(components_list)} components at depth {depth}")
+    
+    # FALLBACK: input_segments (in case some OperationGroups use this)
+    if hasattr(node, "input_segments"):
+        input_list = _iter_safe(node.input_segments)
+        search_children.extend(input_list)
+        logger.debug(f"Found {len(input_list)} input_segments at depth {depth}")
+    
+    # Single references
+    for attr in ["segment", "input_segment", "selected"]:
+        if hasattr(node, attr):
+            child = getattr(node, attr)
+            if child:
+                search_children.append(child)
+    
+    # PROPERTY-LEVEL ACCESS for StrongRefVectorProperty
+    try:
+        from aaf2.properties import StrongRefVectorProperty
+        for prop in node.properties():
+            prop_name = getattr(getattr(prop, "propertydef", None), "name", None) or getattr(prop, "name", None)
+            if prop_name in ["InputSegments", "Components", "Segments"] and isinstance(prop, StrongRefVectorProperty):
+                prop_children = []
+                for i in range(len(prop)):
+                    try:
+                        prop_children.append(prop.get(i))
+                    except Exception:
+                        pass
+                search_children.extend(prop_children)
+                logger.debug(f"Property {prop_name} at depth {depth}, found {len(prop_children)} children")
+    except Exception as e:
+        logger.debug(f"Property access error at depth {depth}: {e}")
+    
+    # Recursive search through all discovered children
+    for child in search_children:
+        if child:
+            result = _find_nested_source_clip_deep(child, depth + 1)
+            if result:
+                return result
     
     return None
 
 
-def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict[str, Any], timeline_offset: int, fps: float, effect_name: str, operation_group=None):
+def _process_source_clip(source_clip, clips, mob_map, timeline_offset, fps, effect_name, operation_group=None):
     """
-    Process a SourceClip by walking the mob chain to resolve true source.
-    
-    STAGE 2: Implements true source resolution via mob chain walking
-    STAGE 4: Includes keyframe parameter extraction
+    FIXED: Use SourceClip.mob and SourceClip.mob_id attributes (confirmed by debug output).
     """
     
     clip_length = int(getattr(source_clip, "length", 0))
-    source_id = getattr(source_clip, "source_id", None)
     
-    if not source_id:
-        logger.warning(f"SourceClip at {timeline_offset} has no source_id")
-        # continue: attempt resolver paths and still emit clip
+    # FIXED: Use the correct attributes shown in debug output
+    clip_name = "Unresolved Media"
+    source_path = None
+    source_umid = "Unresolved"
     
-    # STAGE 2: Walk the mob chain to find true source
-    resolved_source = None
-    if source_id is not None:
-        resolved_source = walk_mob_chain_to_import_descriptor(str(source_id), mob_map)
+    try:
+        # Method 1: Use mob attribute directly (confirmed to exist)
+        if hasattr(source_clip, 'mob') and source_clip.mob:
+            target_mob = source_clip.mob
+            
+            # Get mob name
+            mob_name = getattr(target_mob, "name", None)
+            if mob_name:
+                clip_name = str(mob_name)
+                logger.debug(f"Got clip name from mob.name: {clip_name}")
+            
+            # Get UMID
+            if hasattr(source_clip, 'mob_id') and source_clip.mob_id:
+                source_umid = str(source_clip.mob_id)
+                logger.debug(f"Got UMID from mob_id: {source_umid}")
+            
+            # Try to extract source info from the mob
+            resolved_source = extract_source_info_from_mob(target_mob)
+            if resolved_source:
+                # Use resolved info if available
+                if resolved_source.get("clip_name"):
+                    clip_name = resolved_source["clip_name"]
+                if resolved_source.get("source_path"):
+                    source_path = resolved_source["source_path"]
+                if resolved_source.get("source_umid"):
+                    source_umid = resolved_source["source_umid"]
+                logger.debug(f"Enhanced with resolved source info: {clip_name}")
+            
+            logger.debug(f"Successfully resolved SourceClip: {clip_name} (UMID: {source_umid})")
+        
+        else:
+            logger.warning(f"SourceClip at {timeline_offset} has no mob attribute")
+        
+    except Exception as e:
+        logger.error(f"Source resolution error at {timeline_offset}: {e}")
     
-    if resolved_source:
-        clip_name = resolved_source.get("clip_name", "Unknown Media")
-        source_path = resolved_source.get("source_path")
-        source_umid = resolved_source.get("source_umid", str(source_id))
-        tape_id = resolved_source.get("tape_id")
-        disk_label = resolved_source.get("disk_label")
-    else:
-        clip_name = "Unresolved Media"
-        source_path = None
-        source_umid = str(source_id)
-        tape_id = None
-        disk_label = None
-    
-    # STAGE 3: Create event combining media + effect (Media+Effect format)
+    # Create event name
     if effect_name and effect_name != "N/A":
         event_name = f"{clip_name} + {effect_name}"
     else:
         event_name = clip_name
     
-    # STAGE 4: Extract keyframe parameters if operation_group provided
+    # Extract parameters from OperationGroup
     parameters = {}
     if operation_group:
-        parameters = extract_fcpxml_relevant_parameters(operation_group)
+        try:
+            parameters = extract_fcpxml_relevant_parameters(operation_group)
+            logger.debug(f"Extracted {len(parameters)} parameters for {event_name}")
+        except Exception as e:
+            logger.warning(f"Parameter extraction error: {e}")
+            parameters = {"extraction_error": str(e)}
     
+    # Create event
     event = {
         "name": event_name,
         "in": timeline_offset,
@@ -775,12 +832,13 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
         "source_umid": source_umid,
         "source_path": source_path,
         "effect_params": {
-                "operation": effect_name,
-                "parameters": parameters
-            }
+            "operation": effect_name,
+            "parameters": parameters
+        }
     }
     
     clips.append(event)
+    logger.debug(f"Added resolved event: {event_name}")
 
 
 def walk_mob_chain_to_import_descriptor(mob_id: str, mob_map: Dict[str, Any], visited: Optional[Set[str]] = None) -> Optional[Dict[str, Any]]:

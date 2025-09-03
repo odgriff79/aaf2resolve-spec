@@ -1,0 +1,6465 @@
+{
+  "timeline": {
+    "name": "BLINK_WORLD_WW2D EP1 SEQ TEST.Exported.01",
+    "rate": 25,
+    "start": "10:04:17:09",
+    "tracks": [
+      {
+        "clips": [
+          {
+            "name": "B006_C020_012989_001.new.01 + AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 750,
+            "out": 809,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.34456085.07058006.f5cfdc4a.3e8bff6f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    82,
+                    69,
+                    83,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C020_0430NW.new.01 + AVX2 Effect : EFF2_STABILIZE",
+            "in": 834,
+            "out": 864,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.edad5e92.07968006.75215065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_STABILIZE",
+              "parameters": {
+                "DVE_FG_KEY_LUM_USE_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_LUM_RANGE_U": {
+                  "type": "static",
+                  "value": 80.0
+                },
+                "DVE_BG_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_CORNER_PIN_X0_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y0_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X2_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y2_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_X3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CUSTOM_HIGHLIGHT_L_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SPILL_REPLACEMENT_L_U": {
+                  "type": "static",
+                  "value": 128.0
+                },
+                "DVE_ERODE_FILTER_WIDTH_U": {
+                  "type": "static",
+                  "value": 3.0
+                },
+                "DVE_ERODE_MIDPOINT_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_ERODE_SOFTNESS_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_SHAPE_U": {
+                  "type": "static",
+                  "value": 2.0
+                },
+                "DVE_WARP_RADIUS_U": {
+                  "type": "static",
+                  "value": 15.0
+                },
+                "DVE_WARP_AXIS_ANGLE_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_TRACKING_FOURPT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_SCALE_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_ROT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_WARP_FREQ_U": {
+                  "type": "static",
+                  "value": -1.85185185
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_POS_X_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Y_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Z_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_TRACK_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_X_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_Y_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_TRACK_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_TRGT_SZE_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_PRSP_Z_U": {
+                  "type": "static",
+                  "value": 249.75
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    84,
+                    65,
+                    66,
+                    73,
+                    76,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                },
+                "DVE_BORDER_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_HLTE_RADIUS_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_INTSTY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_SOFT_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_DFCS_HORIZ_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_DFCS_VERT_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_SHDW_X_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_SHDW_Y_U": {
+                  "type": "static",
+                  "value": -50.0
+                },
+                "DVE_SHDW_OPACITY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_TRAIL_DECAY_U": {
+                  "type": "static",
+                  "value": 75.0
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_MT_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_HUE_ANGLE_U": {
+                  "type": "static",
+                  "value": 155.0
+                },
+                "DVE_FG_KEY_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_DISC_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_FG_KEY_LOW_SAT_U": {
+                  "type": "static",
+                  "value": 20.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_THRESH_U": {
+                  "type": "static",
+                  "value": 128.0
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C024_04303O.new.01 + Image : EFF_SUBMASTER",
+            "in": 889,
+            "out": 927,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.0e58932b.07968006.51025065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF_SUBMASTER",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    95,
+                    83,
+                    85,
+                    66,
+                    77,
+                    65,
+                    83,
+                    84,
+                    69,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_966_M_GETTY_537133695.jpg + AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 952,
+            "out": 1319,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.9f754550.07688006.80623013.8bebd03f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    82,
+                    69,
+                    83,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_295_S_AP-MOVIETONE_BM64877.new.01 + AVX2 Effect : EFF2_SBLEND",
+            "in": 1344,
+            "out": 1557,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.363ff887.05918006.2c8478ac.c03c8af9",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_SBLEND",
+              "parameters": {
+                "DVE_DEFOCUS_MODE_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_BORDER_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    0
+                  ]
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                }
+              }
+            }
+          },
+          {
+            "name": "A001_C040_0425QP.new.01 + AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+            "in": 1582,
+            "out": 1660,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e9fa1986.07928006.59c3ecb1.d742a090",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+              "parameters": {
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    83,
+                    75,
+                    95,
+                    73,
+                    77,
+                    65,
+                    71,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C001_0430N3.new.01 + AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+            "in": 1685,
+            "out": 1752,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.25304a9c.07968006.ea805065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    70,
+                    76,
+                    73,
+                    80,
+                    95,
+                    86,
+                    69,
+                    82,
+                    84,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C002_0430TV.new.01 + Image : Submaster",
+            "in": 1777,
+            "out": 1893,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e0d32bd1.07968006.ba9e5065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "B006_C020_012989_001.new.01 + AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 1975,
+            "out": 2034,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.34456085.07058006.f5cfdc4a.3e8bff6f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    82,
+                    69,
+                    83,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C020_0430NW.new.01 + AVX2 Effect : EFF2_STABILIZE",
+            "in": 2059,
+            "out": 2089,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.edad5e92.07968006.75215065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_STABILIZE",
+              "parameters": {
+                "DVE_FG_KEY_LUM_USE_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_LUM_RANGE_U": {
+                  "type": "static",
+                  "value": 80.0
+                },
+                "DVE_BG_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_CORNER_PIN_X0_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y0_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X2_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y2_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_X3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CUSTOM_HIGHLIGHT_L_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SPILL_REPLACEMENT_L_U": {
+                  "type": "static",
+                  "value": 128.0
+                },
+                "DVE_ERODE_FILTER_WIDTH_U": {
+                  "type": "static",
+                  "value": 3.0
+                },
+                "DVE_ERODE_MIDPOINT_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_ERODE_SOFTNESS_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_SHAPE_U": {
+                  "type": "static",
+                  "value": 2.0
+                },
+                "DVE_WARP_RADIUS_U": {
+                  "type": "static",
+                  "value": 15.0
+                },
+                "DVE_WARP_AXIS_ANGLE_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_TRACKING_FOURPT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_SCALE_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_ROT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_WARP_FREQ_U": {
+                  "type": "static",
+                  "value": -1.85185185
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_POS_X_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Y_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Z_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_TRACK_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_X_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_Y_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_TRACK_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_TRGT_SZE_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_PRSP_Z_U": {
+                  "type": "static",
+                  "value": 249.75
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    84,
+                    65,
+                    66,
+                    73,
+                    76,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                },
+                "DVE_BORDER_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_HLTE_RADIUS_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_INTSTY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_SOFT_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_DFCS_HORIZ_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_DFCS_VERT_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_SHDW_X_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_SHDW_Y_U": {
+                  "type": "static",
+                  "value": -50.0
+                },
+                "DVE_SHDW_OPACITY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_TRAIL_DECAY_U": {
+                  "type": "static",
+                  "value": 75.0
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_MT_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_HUE_ANGLE_U": {
+                  "type": "static",
+                  "value": 155.0
+                },
+                "DVE_FG_KEY_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_DISC_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_FG_KEY_LOW_SAT_U": {
+                  "type": "static",
+                  "value": 20.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_THRESH_U": {
+                  "type": "static",
+                  "value": 128.0
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C024_04303O.new.01 + Image : EFF_SUBMASTER",
+            "in": 2114,
+            "out": 2152,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.0e58932b.07968006.51025065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF_SUBMASTER",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    95,
+                    83,
+                    85,
+                    66,
+                    77,
+                    65,
+                    83,
+                    84,
+                    69,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_966_M_GETTY_537133695.jpg + 9A3F479D-2D48-4244-822E-0A0CA12EA9DD",
+            "in": 2177,
+            "out": 2544,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.9f754550.07688006.80623013.8bebd03f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "9A3F479D-2D48-4244-822E-0A0CA12EA9DD",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    57,
+                    65,
+                    51,
+                    70,
+                    52,
+                    55,
+                    57,
+                    68,
+                    45,
+                    50,
+                    68,
+                    52,
+                    56,
+                    45,
+                    52,
+                    50,
+                    52,
+                    52,
+                    45,
+                    56,
+                    50,
+                    50,
+                    69,
+                    45,
+                    48,
+                    65,
+                    48,
+                    67,
+                    65,
+                    49,
+                    50,
+                    69,
+                    65,
+                    57,
+                    68,
+                    68,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_295_S_AP-MOVIETONE_BM64877.new.01 + AVX2 Effect : EFF2_SBLEND",
+            "in": 2569,
+            "out": 2782,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.363ff887.05918006.2c8478ac.c03c8af9",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_SBLEND",
+              "parameters": {
+                "DVE_DEFOCUS_MODE_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_BORDER_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    0
+                  ]
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                }
+              }
+            }
+          },
+          {
+            "name": "A001_C040_0425QP.new.01 + AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+            "in": 2807,
+            "out": 2885,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e9fa1986.07928006.59c3ecb1.d742a090",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+              "parameters": {
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    83,
+                    75,
+                    95,
+                    73,
+                    77,
+                    65,
+                    71,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C001_0430N3.new.01 + AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+            "in": 2910,
+            "out": 2977,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.25304a9c.07968006.ea805065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    70,
+                    76,
+                    73,
+                    80,
+                    95,
+                    86,
+                    69,
+                    82,
+                    84,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C002_0430TV.new.01 + AVX2 Effect : EFF2_BLEND_FLIP_BOTH",
+            "in": 3002,
+            "out": 3118,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e0d32bd1.07968006.ba9e5065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_BOTH",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    70,
+                    76,
+                    73,
+                    80,
+                    95,
+                    66,
+                    79,
+                    84,
+                    72,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "B006_C020_012989_001.new.01 + Image : Submaster",
+            "in": 3200,
+            "out": 3259,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.34456085.07058006.f5cfdc4a.3e8bff6f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C020_0430NW.new.01 + Image : Submaster",
+            "in": 3284,
+            "out": 3314,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.edad5e92.07968006.75215065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C024_04303O.new.01 + 177D88F3-B608-3B56-B4EF-4F213B23242C",
+            "in": 3339,
+            "out": 3377,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.0e58932b.07968006.51025065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "177D88F3-B608-3B56-B4EF-4F213B23242C",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    49,
+                    55,
+                    55,
+                    68,
+                    56,
+                    56,
+                    70,
+                    51,
+                    45,
+                    66,
+                    54,
+                    48,
+                    56,
+                    45,
+                    51,
+                    66,
+                    53,
+                    54,
+                    45,
+                    66,
+                    52,
+                    69,
+                    70,
+                    45,
+                    52,
+                    70,
+                    50,
+                    49,
+                    51,
+                    66,
+                    50,
+                    51,
+                    50,
+                    52,
+                    50,
+                    67,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_966_M_GETTY_537133695.jpg + AVX2 Effect : Avid Pan & Zoom",
+            "in": 3402,
+            "out": 3769,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.9f754550.07688006.80623013.8bebd03f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : Avid Pan & Zoom",
+              "parameters": {
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_ASPECT_SOURCE_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_ASPECT_TARGET_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_ENABLED": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_TYPE": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_TRANSFER": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_FIELDS": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SUBFIELDS": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_WID": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_HEI": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_OFF_H": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_OFF_V": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_INSET": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_HPOS_OFFSET": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_VPOS_OFFSET": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_HSCALE_OFFSET": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "AFX_GRID_VSCALE_OFFSET": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    80,
+                    65,
+                    78,
+                    95,
+                    83,
+                    67,
+                    65,
+                    78,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_295_S_AP-MOVIETONE_BM64877.new.01 + AVX2 Effect : EFF2_BLEND_PIP",
+            "in": 3794,
+            "out": 4007,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.363ff887.05918006.2c8478ac.c03c8af9",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_PIP",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_BORDER_FIXED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    80,
+                    73,
+                    80,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A001_C040_0425QP.new.01 + AVX2 Effect : EFF2_BLEND_SUPER",
+            "in": 4032,
+            "out": 4110,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e9fa1986.07928006.59c3ecb1.d742a090",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_SUPER",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    83,
+                    85,
+                    80,
+                    69,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C001_0430N3.new.01 + 2A25DBDD-7326-311D-8316-C84BE0686389",
+            "in": 4135,
+            "out": 4202,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.25304a9c.07968006.ea805065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "2A25DBDD-7326-311D-8316-C84BE0686389",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    50,
+                    65,
+                    50,
+                    53,
+                    68,
+                    66,
+                    68,
+                    68,
+                    45,
+                    55,
+                    51,
+                    50,
+                    54,
+                    45,
+                    51,
+                    49,
+                    49,
+                    68,
+                    45,
+                    56,
+                    51,
+                    49,
+                    54,
+                    45,
+                    67,
+                    56,
+                    52,
+                    66,
+                    69,
+                    48,
+                    54,
+                    56,
+                    54,
+                    51,
+                    56,
+                    57,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C002_0430TV.new.01 + Image : Submaster",
+            "in": 4227,
+            "out": 4343,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e0d32bd1.07968006.ba9e5065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "90_PERCENT_SAFE+AREA + AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+            "in": 4372,
+            "out": 4412,
+            "source_umid": "urn:smpte:umid:060a2b34.01010100.01010f00.13000000.3ca3984d.6ead3046.9b7c8e75.f1c186cf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+              "parameters": {
+                "AFX_FG_ALPHA_FULL_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_ALPHA_REPLICATED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY_INVERT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    84,
+                    84,
+                    69,
+                    95,
+                    75,
+                    69,
+                    89,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "90_PERCENT_SAFE+AREA + Image : EFF2_3DMATTE",
+            "in": 4441,
+            "out": 4481,
+            "source_umid": "urn:smpte:umid:060a2b34.01010100.01010f00.13000000.3ca3984d.6ead3046.9b7c8e75.f1c186cf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF2_3DMATTE",
+              "parameters": {
+                "DVE_FG_ALPHA_REPLICATED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_ALPHA_FULL_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_CROP_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    51,
+                    68,
+                    77,
+                    65,
+                    84,
+                    84,
+                    69,
+                    0
+                  ]
+                },
+                "DVE_FG_KEY_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_INVERT_U": {
+                  "type": "static",
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          {
+            "name": "WW2D_ARC_295_S_AP-MOVIETONE_BM64877.new.01 + AVX2 Effect : EFF2_BLEND_LUMAKEY",
+            "in": 4506,
+            "out": 4719,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.363ff887.05918006.2c8478ac.c03c8af9",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_LUMAKEY",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    76,
+                    85,
+                    77,
+                    65,
+                    75,
+                    69,
+                    89,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C001_0430N3.new.01 + B654B779-8100-3B98-BFBD-864F89C96166",
+            "in": 4744,
+            "out": 4811,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.25304a9c.07968006.ea805065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "B654B779-8100-3B98-BFBD-864F89C96166",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    66,
+                    54,
+                    53,
+                    52,
+                    66,
+                    55,
+                    55,
+                    57,
+                    45,
+                    56,
+                    49,
+                    48,
+                    48,
+                    45,
+                    51,
+                    66,
+                    57,
+                    56,
+                    45,
+                    66,
+                    70,
+                    66,
+                    68,
+                    45,
+                    56,
+                    54,
+                    52,
+                    70,
+                    56,
+                    57,
+                    67,
+                    57,
+                    54,
+                    49,
+                    54,
+                    54,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "B006_C020_012989_001.new.01 + AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+            "in": 4893,
+            "out": 4952,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.34456085.07058006.f5cfdc4a.3e8bff6f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    84,
+                    84,
+                    69,
+                    95,
+                    75,
+                    69,
+                    89,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C002_0430TV.new.01 + A1030EAA-7868-3296-B8E8-9306C77736EA",
+            "in": 4977,
+            "out": 5093,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.e0d32bd1.07968006.ba9e5065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "A1030EAA-7868-3296-B8E8-9306C77736EA",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    65,
+                    49,
+                    48,
+                    51,
+                    48,
+                    69,
+                    65,
+                    65,
+                    45,
+                    55,
+                    56,
+                    54,
+                    56,
+                    45,
+                    51,
+                    50,
+                    57,
+                    54,
+                    45,
+                    66,
+                    56,
+                    69,
+                    56,
+                    45,
+                    57,
+                    51,
+                    48,
+                    54,
+                    67,
+                    55,
+                    55,
+                    55,
+                    51,
+                    54,
+                    69,
+                    65,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "B006_C020_012989_001.new.01 + AVX2 Effect : EFF2_14x9_LETTERBOX",
+            "in": 5180,
+            "out": 5239,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.34456085.07058006.f5cfdc4a.3e8bff6f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_14x9_LETTERBOX",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    49,
+                    52,
+                    120,
+                    57,
+                    95,
+                    76,
+                    69,
+                    84,
+                    84,
+                    69,
+                    82,
+                    66,
+                    79,
+                    88,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C020_0430NW.new.01 + AVX2 Effect : EFF2_16x9_LETTERBOX",
+            "in": 5264,
+            "out": 5294,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.edad5e92.07968006.75215065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_16x9_LETTERBOX",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    49,
+                    54,
+                    120,
+                    57,
+                    95,
+                    76,
+                    69,
+                    84,
+                    84,
+                    69,
+                    82,
+                    66,
+                    79,
+                    88,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A004_C024_04303O.new.01 + AVX2 Effect : EFF2_4x3_SIDEBAR",
+            "in": 5319,
+            "out": 5357,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.0e58932b.07968006.51025065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_4x3_SIDEBAR",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    52,
+                    120,
+                    51,
+                    95,
+                    83,
+                    73,
+                    68,
+                    69,
+                    66,
+                    65,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "B006_C020_012989_001.new.01 + E4FE520A-B815-447F-A969-2D5E1C5F6C14",
+            "in": 5432,
+            "out": 5491,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.34456085.07058006.f5cfdc4a.3e8bff6f",
+            "source_path": null,
+            "effect_params": {
+              "operation": "E4FE520A-B815-447F-A969-2D5E1C5F6C14",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    52,
+                    70,
+                    69,
+                    53,
+                    50,
+                    48,
+                    65,
+                    45,
+                    66,
+                    56,
+                    49,
+                    53,
+                    45,
+                    52,
+                    52,
+                    55,
+                    70,
+                    45,
+                    65,
+                    57,
+                    54,
+                    57,
+                    45,
+                    50,
+                    68,
+                    53,
+                    69,
+                    49,
+                    67,
+                    53,
+                    70,
+                    54,
+                    67,
+                    49,
+                    52,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "A005_C001_0430N3.new.01 + 169317AB-ACAA-416F-84CE-249BFE0B09ED",
+            "in": 5516,
+            "out": 5583,
+            "source_umid": "urn:smpte:umid:060a2b34.01010105.01010f10.13000000.25304a9c.07968006.ea805065.f31b9dcf",
+            "source_path": null,
+            "effect_params": {
+              "operation": "169317AB-ACAA-416F-84CE-249BFE0B09ED",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    49,
+                    54,
+                    57,
+                    51,
+                    49,
+                    55,
+                    65,
+                    66,
+                    45,
+                    65,
+                    67,
+                    65,
+                    65,
+                    45,
+                    52,
+                    49,
+                    54,
+                    70,
+                    45,
+                    56,
+                    52,
+                    67,
+                    69,
+                    45,
+                    50,
+                    52,
+                    57,
+                    66,
+                    70,
+                    69,
+                    48,
+                    66,
+                    48,
+                    57,
+                    69,
+                    68,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 6333,
+            "out": 6392,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    82,
+                    69,
+                    83,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_STABILIZE",
+            "in": 6417,
+            "out": 6447,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_STABILIZE",
+              "parameters": {
+                "DVE_FG_KEY_LUM_USE_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_LUM_RANGE_U": {
+                  "type": "static",
+                  "value": 80.0
+                },
+                "DVE_BG_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_CORNER_PIN_X0_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y0_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X2_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y2_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_X3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CUSTOM_HIGHLIGHT_L_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SPILL_REPLACEMENT_L_U": {
+                  "type": "static",
+                  "value": 128.0
+                },
+                "DVE_ERODE_FILTER_WIDTH_U": {
+                  "type": "static",
+                  "value": 3.0
+                },
+                "DVE_ERODE_MIDPOINT_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_ERODE_SOFTNESS_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_SHAPE_U": {
+                  "type": "static",
+                  "value": 2.0
+                },
+                "DVE_WARP_RADIUS_U": {
+                  "type": "static",
+                  "value": 15.0
+                },
+                "DVE_WARP_AXIS_ANGLE_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_TRACKING_FOURPT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_SCALE_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_ROT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_WARP_FREQ_U": {
+                  "type": "static",
+                  "value": -1.85185185
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_POS_X_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Y_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Z_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_TRACK_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_X_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_Y_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_TRACK_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_TRGT_SZE_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_PRSP_Z_U": {
+                  "type": "static",
+                  "value": 249.75
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    84,
+                    65,
+                    66,
+                    73,
+                    76,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                },
+                "DVE_BORDER_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_HLTE_RADIUS_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_INTSTY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_SOFT_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_DFCS_HORIZ_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_DFCS_VERT_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_SHDW_X_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_SHDW_Y_U": {
+                  "type": "static",
+                  "value": -50.0
+                },
+                "DVE_SHDW_OPACITY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_TRAIL_DECAY_U": {
+                  "type": "static",
+                  "value": 75.0
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_MT_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_HUE_ANGLE_U": {
+                  "type": "static",
+                  "value": 155.0
+                },
+                "DVE_FG_KEY_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_DISC_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_FG_KEY_LOW_SAT_U": {
+                  "type": "static",
+                  "value": 20.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_THRESH_U": {
+                  "type": "static",
+                  "value": 128.0
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : EFF_SUBMASTER",
+            "in": 6472,
+            "out": 6510,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF_SUBMASTER",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    95,
+                    83,
+                    85,
+                    66,
+                    77,
+                    65,
+                    83,
+                    84,
+                    69,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 6535,
+            "out": 6902,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    82,
+                    69,
+                    83,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_SBLEND",
+            "in": 6927,
+            "out": 7140,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_SBLEND",
+              "parameters": {
+                "DVE_DEFOCUS_MODE_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_BORDER_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    0
+                  ]
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+            "in": 7165,
+            "out": 7243,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+              "parameters": {
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    83,
+                    75,
+                    95,
+                    73,
+                    77,
+                    65,
+                    71,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+            "in": 7268,
+            "out": 7335,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    70,
+                    76,
+                    73,
+                    80,
+                    95,
+                    86,
+                    69,
+                    82,
+                    84,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 7360,
+            "out": 7476,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_RESIZE",
+            "in": 7558,
+            "out": 7617,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_RESIZE",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    82,
+                    69,
+                    83,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_STABILIZE",
+            "in": 7642,
+            "out": 7672,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_STABILIZE",
+              "parameters": {
+                "DVE_FG_KEY_LUM_USE_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_LUM_RANGE_U": {
+                  "type": "static",
+                  "value": 80.0
+                },
+                "DVE_BG_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_CORNER_PIN_X0_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y0_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y1_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_X2_U": {
+                  "type": "static",
+                  "value": 499.5
+                },
+                "DVE_CORNER_PIN_Y2_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_X3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CORNER_PIN_Y3_U": {
+                  "type": "static",
+                  "value": -499.5
+                },
+                "DVE_CUSTOM_HIGHLIGHT_L_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SPILL_REPLACEMENT_L_U": {
+                  "type": "static",
+                  "value": 128.0
+                },
+                "DVE_ERODE_FILTER_WIDTH_U": {
+                  "type": "static",
+                  "value": 3.0
+                },
+                "DVE_ERODE_MIDPOINT_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_ERODE_SOFTNESS_U": {
+                  "type": "static",
+                  "value": 127.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_SHAPE_U": {
+                  "type": "static",
+                  "value": 2.0
+                },
+                "DVE_WARP_RADIUS_U": {
+                  "type": "static",
+                  "value": 15.0
+                },
+                "DVE_WARP_AXIS_ANGLE_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_TRACKING_FOURPT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_SCALE_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_ROT_INVERT": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_WARP_FREQ_U": {
+                  "type": "static",
+                  "value": -1.85185185
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_POS_X_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Y_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_Z_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_TRACK_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_X_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_Y_U": {
+                  "type": "static",
+                  "value": 100.566157
+                },
+                "DVE_SCALE_TRACK_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_TRGT_SZE_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_PRSP_Z_U": {
+                  "type": "static",
+                  "value": 249.75
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    84,
+                    65,
+                    66,
+                    73,
+                    76,
+                    73,
+                    90,
+                    69,
+                    0
+                  ]
+                },
+                "DVE_BORDER_L_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_HLTE_RADIUS_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_INTSTY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_HLTE_SOFT_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_DFCS_HORIZ_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_DFCS_VERT_U": {
+                  "type": "static",
+                  "value": 10.0
+                },
+                "DVE_SHDW_X_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_SHDW_Y_U": {
+                  "type": "static",
+                  "value": -50.0
+                },
+                "DVE_SHDW_OPACITY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "DVE_TRAIL_DECAY_U": {
+                  "type": "static",
+                  "value": 75.0
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_MT_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "DVE_FG_KEY_HUE_ANGLE_U": {
+                  "type": "static",
+                  "value": 155.0
+                },
+                "DVE_FG_KEY_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_DISC_U": {
+                  "type": "static",
+                  "value": 45.0
+                },
+                "DVE_FG_KEY_LOW_SAT_U": {
+                  "type": "static",
+                  "value": 20.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                },
+                "DVE_FG_KEY_LUM_THRESH_U": {
+                  "type": "static",
+                  "value": 128.0
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : EFF_SUBMASTER",
+            "in": 7697,
+            "out": 7735,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF_SUBMASTER",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    95,
+                    83,
+                    85,
+                    66,
+                    77,
+                    65,
+                    83,
+                    84,
+                    69,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 9A3F479D-2D48-4244-822E-0A0CA12EA9DD",
+            "in": 7760,
+            "out": 8127,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "9A3F479D-2D48-4244-822E-0A0CA12EA9DD",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    57,
+                    65,
+                    51,
+                    70,
+                    52,
+                    55,
+                    57,
+                    68,
+                    45,
+                    50,
+                    68,
+                    52,
+                    56,
+                    45,
+                    52,
+                    50,
+                    52,
+                    52,
+                    45,
+                    56,
+                    50,
+                    50,
+                    69,
+                    45,
+                    48,
+                    65,
+                    48,
+                    67,
+                    65,
+                    49,
+                    50,
+                    69,
+                    65,
+                    57,
+                    68,
+                    68,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_SBLEND",
+            "in": 8152,
+            "out": 8365,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_SBLEND",
+              "parameters": {
+                "DVE_DEFOCUS_MODE_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_TRACKING_POS_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_BORDER_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    83,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    0
+                  ]
+                },
+                "DVE_MT_WARP_FOREGROUND_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_HIGH_SAT_U": {
+                  "type": "static",
+                  "value": 255.0
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+            "in": 8390,
+            "out": 8468,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MASK_IMAGE",
+              "parameters": {
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    83,
+                    75,
+                    95,
+                    73,
+                    77,
+                    65,
+                    71,
+                    69,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+            "in": 8493,
+            "out": 8560,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_VERT",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    70,
+                    76,
+                    73,
+                    80,
+                    95,
+                    86,
+                    69,
+                    82,
+                    84,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_FLIP_BOTH",
+            "in": 8585,
+            "out": 8701,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_FLIP_BOTH",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    70,
+                    76,
+                    73,
+                    80,
+                    95,
+                    66,
+                    79,
+                    84,
+                    72,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 8783,
+            "out": 8842,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 8867,
+            "out": 8897,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 177D88F3-B608-3B56-B4EF-4F213B23242C",
+            "in": 8922,
+            "out": 8960,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "177D88F3-B608-3B56-B4EF-4F213B23242C",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    49,
+                    55,
+                    55,
+                    68,
+                    56,
+                    56,
+                    70,
+                    51,
+                    45,
+                    66,
+                    54,
+                    48,
+                    56,
+                    45,
+                    51,
+                    66,
+                    53,
+                    54,
+                    45,
+                    66,
+                    52,
+                    69,
+                    70,
+                    45,
+                    52,
+                    70,
+                    50,
+                    49,
+                    51,
+                    66,
+                    50,
+                    51,
+                    50,
+                    52,
+                    50,
+                    67,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "Pan & Zoom on Filler",
+            "in": 8985,
+            "out": 9352,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : Avid Pan & Zoom",
+              "parameters": {
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_ASPECT_SOURCE_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_ASPECT_TARGET_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_ENABLED": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_TYPE": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_TRANSFER": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_FIELDS": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SUBFIELDS": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_WID": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_HEI": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_OFF_H": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_OFF_V": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_SRC_INSET": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_HPOS_OFFSET": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_VPOS_OFFSET": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_GRID_HSCALE_OFFSET": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "AFX_GRID_VSCALE_OFFSET": {
+                  "type": "static",
+                  "value": 100.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    80,
+                    65,
+                    78,
+                    95,
+                    83,
+                    67,
+                    65,
+                    78,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_PIP",
+            "in": 9377,
+            "out": 9590,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_PIP",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_BORDER_FIXED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    80,
+                    73,
+                    80,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_SUPER",
+            "in": 9615,
+            "out": 9693,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_SUPER",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY_OPACITY_U": {
+                  "type": "static",
+                  "value": 50.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    83,
+                    85,
+                    80,
+                    69,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 2A25DBDD-7326-311D-8316-C84BE0686389",
+            "in": 9718,
+            "out": 9785,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "2A25DBDD-7326-311D-8316-C84BE0686389",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    50,
+                    65,
+                    50,
+                    53,
+                    68,
+                    66,
+                    68,
+                    68,
+                    45,
+                    55,
+                    51,
+                    50,
+                    54,
+                    45,
+                    51,
+                    49,
+                    49,
+                    68,
+                    45,
+                    56,
+                    51,
+                    49,
+                    54,
+                    45,
+                    67,
+                    56,
+                    52,
+                    66,
+                    69,
+                    48,
+                    54,
+                    56,
+                    54,
+                    51,
+                    56,
+                    57,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : Submaster",
+            "in": 9810,
+            "out": 9926,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : Submaster",
+              "parameters": {
+                "Level": {
+                  "type": "static",
+                  "value": 0.5
+                },
+                "AvidBorderWidth": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidBorderSoft": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidXPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidYPos": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    232,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidCrop": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidScale": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ]
+                },
+                "AvidColor": {
+                  "type": "static",
+                  "value": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+            "in": 9965,
+            "out": 9994,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+              "parameters": {
+                "AFX_FG_ALPHA_FULL_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_ALPHA_REPLICATED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY_INVERT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    84,
+                    84,
+                    69,
+                    95,
+                    75,
+                    69,
+                    89,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: Image : EFF2_3DMATTE",
+            "in": 10024,
+            "out": 10064,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "Image : EFF2_3DMATTE",
+              "parameters": {
+                "DVE_FG_ALPHA_REPLICATED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_POS_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_ALPHA_FULL_RANGE_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_SCALE_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_CROP_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    51,
+                    68,
+                    77,
+                    65,
+                    84,
+                    84,
+                    69,
+                    0
+                  ]
+                },
+                "DVE_FG_KEY_ENABLED_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "DVE_FG_KEY_INVERT_U": {
+                  "type": "static",
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_LUMAKEY",
+            "in": 10089,
+            "out": 10302,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_LUMAKEY",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    76,
+                    85,
+                    77,
+                    65,
+                    75,
+                    69,
+                    89,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: B654B779-8100-3B98-BFBD-864F89C96166",
+            "in": 10327,
+            "out": 10394,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "B654B779-8100-3B98-BFBD-864F89C96166",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    66,
+                    54,
+                    53,
+                    52,
+                    66,
+                    55,
+                    55,
+                    57,
+                    45,
+                    56,
+                    49,
+                    48,
+                    48,
+                    45,
+                    51,
+                    66,
+                    57,
+                    56,
+                    45,
+                    66,
+                    70,
+                    66,
+                    68,
+                    45,
+                    56,
+                    54,
+                    52,
+                    70,
+                    56,
+                    57,
+                    67,
+                    57,
+                    54,
+                    49,
+                    54,
+                    54,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+            "in": 10476,
+            "out": 10535,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_BLEND_MATTE_KEY",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    66,
+                    76,
+                    69,
+                    78,
+                    68,
+                    95,
+                    77,
+                    65,
+                    84,
+                    84,
+                    69,
+                    95,
+                    75,
+                    69,
+                    89,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: A1030EAA-7868-3296-B8E8-9306C77736EA",
+            "in": 10560,
+            "out": 10676,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "A1030EAA-7868-3296-B8E8-9306C77736EA",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    65,
+                    49,
+                    48,
+                    51,
+                    48,
+                    69,
+                    65,
+                    65,
+                    45,
+                    55,
+                    56,
+                    54,
+                    56,
+                    45,
+                    51,
+                    50,
+                    57,
+                    54,
+                    45,
+                    66,
+                    56,
+                    69,
+                    56,
+                    45,
+                    57,
+                    51,
+                    48,
+                    54,
+                    67,
+                    55,
+                    55,
+                    55,
+                    51,
+                    54,
+                    69,
+                    65,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_14x9_LETTERBOX",
+            "in": 10763,
+            "out": 10822,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_14x9_LETTERBOX",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    49,
+                    52,
+                    120,
+                    57,
+                    95,
+                    76,
+                    69,
+                    84,
+                    84,
+                    69,
+                    82,
+                    66,
+                    79,
+                    88,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_16x9_LETTERBOX",
+            "in": 10847,
+            "out": 10877,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_16x9_LETTERBOX",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    49,
+                    54,
+                    120,
+                    57,
+                    95,
+                    76,
+                    69,
+                    84,
+                    84,
+                    69,
+                    82,
+                    66,
+                    79,
+                    88,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: AVX2 Effect : EFF2_4x3_SIDEBAR",
+            "in": 10902,
+            "out": 10940,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "AVX2 Effect : EFF2_4x3_SIDEBAR",
+              "parameters": {
+                "AFX_FIXED_ASPECT_U": {
+                  "type": "static",
+                  "value": 1.0
+                },
+                "AFX_FG_KEY2_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AFX_FG_KEY_SS_ENABLED_U": {
+                  "type": "static",
+                  "value": 0.0
+                },
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    70,
+                    70,
+                    50,
+                    95,
+                    52,
+                    120,
+                    51,
+                    95,
+                    83,
+                    73,
+                    68,
+                    69,
+                    66,
+                    65,
+                    82,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: E4FE520A-B815-447F-A969-2D5E1C5F6C14",
+            "in": 11015,
+            "out": 11074,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "E4FE520A-B815-447F-A969-2D5E1C5F6C14",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    69,
+                    52,
+                    70,
+                    69,
+                    53,
+                    50,
+                    48,
+                    65,
+                    45,
+                    66,
+                    56,
+                    49,
+                    53,
+                    45,
+                    52,
+                    52,
+                    55,
+                    70,
+                    45,
+                    65,
+                    57,
+                    54,
+                    57,
+                    45,
+                    50,
+                    68,
+                    53,
+                    69,
+                    49,
+                    67,
+                    53,
+                    70,
+                    54,
+                    67,
+                    49,
+                    52,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 169317AB-ACAA-416F-84CE-249BFE0B09ED",
+            "in": 11099,
+            "out": 11166,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "169317AB-ACAA-416F-84CE-249BFE0B09ED",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    49,
+                    54,
+                    57,
+                    51,
+                    49,
+                    55,
+                    65,
+                    66,
+                    45,
+                    65,
+                    67,
+                    65,
+                    65,
+                    45,
+                    52,
+                    49,
+                    54,
+                    70,
+                    45,
+                    56,
+                    52,
+                    67,
+                    69,
+                    45,
+                    50,
+                    52,
+                    57,
+                    66,
+                    70,
+                    69,
+                    48,
+                    66,
+                    48,
+                    57,
+                    69,
+                    68,
+                    0
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "name": "FX_ON_FILLER: 8BA34E51-D647-443E-BFB5-30DFCECE5415",
+            "in": 11198,
+            "out": 11223,
+            "source_umid": "FX_ON_FILLER",
+            "source_path": null,
+            "effect_params": {
+              "operation": "8BA34E51-D647-443E-BFB5-30DFCECE5415",
+              "parameters": {
+                "AvidEffectID": {
+                  "type": "static",
+                  "value": [
+                    56,
+                    66,
+                    65,
+                    51,
+                    52,
+                    69,
+                    53,
+                    49,
+                    45,
+                    68,
+                    54,
+                    52,
+                    55,
+                    45,
+                    52,
+                    52,
+                    51,
+                    69,
+                    45,
+                    66,
+                    70,
+                    66,
+                    53,
+                    45,
+                    51,
+                    48,
+                    68,
+                    70,
+                    67,
+                    69,
+                    67,
+                    69,
+                    53,
+                    52,
+                    49,
+                    53,
+                    0
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
