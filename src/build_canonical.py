@@ -737,10 +737,12 @@ def _process_source_clip(source_clip, clips: List[Dict[str, Any]], mob_map: Dict
     
     if not source_id:
         logger.warning(f"SourceClip at {timeline_offset} has no source_id")
-        return
+        # continue: attempt resolver paths and still emit clip
     
     # STAGE 2: Walk the mob chain to find true source
-    resolved_source = walk_mob_chain_to_import_descriptor(str(source_id), mob_map)
+    resolved_source = None
+    if source_id is not None:
+        resolved_source = walk_mob_chain_to_import_descriptor(str(source_id), mob_map)
     
     if resolved_source:
         clip_name = resolved_source.get("clip_name", "Unknown Media")

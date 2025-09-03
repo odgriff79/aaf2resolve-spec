@@ -23,3 +23,8 @@ adk/monitoring/pipeline_metrics.json
 src/build_canonical.backup.*.py
 src/build_canonical.py.backup
 src/*_fixed.py
+
+# local backups
+src/build_canonical.backup.*.py
+src/build_canonical.py.backup
+src/*_fixed.py
